@@ -1,0 +1,7 @@
+{
+  "pnpm": {
+    "executionEnv": { "nodeVersion": "" },
+    "patchedDependencies": {},
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

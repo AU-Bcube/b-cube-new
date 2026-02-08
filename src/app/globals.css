@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 45 920;
+  font-display: swap;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-pretendard: "Pretendard", sans-serif;
+
+  --color-primary: #14439F;
+  --color-primary-light: #518CFF;
+  --color-accent: #7380B0;
+  --color-surface: #06132D;
+  --color-surface-light: #091b41;
+  --color-surface-card: #101C35;
+  --color-on-surface: #F6F6F7;
+  --color-on-surface-dim: #DEE5FF;
+  --color-border: #1a2340;
+  --color-muted: #4a5580;
+
+  --animate-float: float 8s ease-in-out infinite;
+  --animate-float-slow: float-slow 12s ease-in-out infinite;
+  --animate-glow: glow-pulse 4s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(20px, -20px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-15px, 15px); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a2340;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #253050;
+}
+
+/* Selection */
+::selection {
+  background: rgba(81, 140, 255, 0.3);
+  color: #fff;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-pretendard);
+  color: var(--color-on-surface);
+  background: var(--color-surface);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
 }
