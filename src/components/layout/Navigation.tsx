@@ -13,7 +13,12 @@ const NAV_ITEMS = [
   { href: "/recruit", label: "리크루팅" },
 ];
 
-export default function Navigation() {
+interface NavigationProps {
+  isRecruiting: boolean;
+  recruitLink: string;
+}
+
+export default function Navigation({ isRecruiting, recruitLink }: NavigationProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
 
@@ -47,6 +52,18 @@ export default function Navigation() {
                   </Link>
                 </li>
               ))}
+              {isRecruiting && recruitLink && (
+                <li>
+                  <Link
+                    href={recruitLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 rounded-full bg-primary-light px-5 py-2 text-sm font-bold text-surface transition-all duration-200 hover:bg-primary-light/85"
+                  >
+                    지원하기
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
 
@@ -121,6 +138,18 @@ export default function Navigation() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Mobile floating "지원하기" button */}
+      {isRecruiting && recruitLink && (
+        <Link
+          href={recruitLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-primary-light px-8 py-3 text-sm font-bold text-surface shadow-lg shadow-primary-light/25 transition-all duration-200 hover:bg-primary-light/85 md:hidden"
+        >
+          지원하기
+        </Link>
+      )}
     </>
   );
 }

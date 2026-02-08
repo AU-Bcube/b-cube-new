@@ -48,7 +48,7 @@ export default function Carousel({
           {children.map((child, i) => (
             <div
               key={i}
-              className="min-w-0 flex-[0_0_85%] px-2 md:flex-[0_0_33.333%] md:px-3 lg:flex-[0_0_25%]"
+              className="min-w-0 flex-[0_0_85%] px-2 md:flex-[0_0_33.333%] md:px-3 lg:flex-[0_0_25%] 2xl:flex-[0_0_16.667%]"
             >
               {child}
             </div>

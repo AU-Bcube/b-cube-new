@@ -3,6 +3,8 @@ import './globals.css';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { getContact } from '@/actions/data';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   title: '비큐브 B-cube',
@@ -45,13 +47,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contact = await getContact();
+
   return (
     <html lang="ko">
+      <GoogleAnalytics gaId="G-16CC2DB93Q" />
       <body>
         {/* Gradient mesh background */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -65,7 +70,10 @@ export default function RootLayout({
           <div className="absolute -right-32 -top-32 h-150 w-150 animate-float rounded-full bg-primary/15 blur-[150px]" />
           <div className="absolute -left-32 top-1/2 h-125 w-125 animate-float-slow rounded-full bg-primary-light/10 blur-[120px]" />
         </div>
-        <Navigation />
+        <Navigation
+          isRecruiting={contact.isRecruiting}
+          recruitLink={contact.recruitLink}
+        />
         {children}
         <Footer />
         <SpeedInsights />

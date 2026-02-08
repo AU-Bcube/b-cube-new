@@ -3,11 +3,15 @@ import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Study from "@/lib/models/Study";
 import { uploadImage, deleteAsset } from "@/lib/storage";
+import { requireAuth } from "@/lib/auth";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
+
   await dbConnect();
   const { id } = await params;
   const item = await Study.findById(id);
@@ -44,9 +48,12 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
+
   await dbConnect();
   const { id } = await params;
   const study = await Study.findById(id);

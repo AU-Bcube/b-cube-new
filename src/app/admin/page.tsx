@@ -40,6 +40,12 @@ export default function AdminPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [editItem, setEditItem] = useState<Item | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [recruitSettings, setRecruitSettings] = useState({
+    isRecruiting: false,
+    recruitMessage: "",
+    recruitLink: "",
+  });
+  const [recruitLoading, setRecruitLoading] = useState(false);
 
   // Check existing session on mount
   useEffect(() => {
@@ -77,6 +83,19 @@ export default function AdminPage() {
       if (!res.ok) { setItems([]); return; }
       const data = await res.json();
       setItems(Array.isArray(data) ? data : [data]);
+      if (t === "contact") {
+        const c = Array.isArray(data) ? data[0] : data;
+        if (c) {
+          const recruiting = c.isRecruiting ?? false;
+          setRecruitSettings({
+            isRecruiting: recruiting,
+            recruitMessage: c.recruitMessage || (recruiting
+              ? "B-CUBE와 함께할 새로운 멤버를 모집하고 있습니다.\n모집 마감: 2025년 3월 15일"
+              : "지금은 모집 기간이 아닙니다.\n다음 모집은 2025년 9월에 예정되어 있습니다."),
+            recruitLink: c.recruitLink ?? "",
+          });
+        }
+      }
     } catch {
       setItems([]);
     }
@@ -90,6 +109,31 @@ export default function AdminPage() {
     if (!confirm("정말 삭제하시겠습니까?")) return;
     await fetch(`/api/${tab}/${itemId}`, { method: "DELETE" });
     fetchItems(tab);
+  };
+
+  const saveRecruitSettings = async () => {
+    if (recruitSettings.isRecruiting && !recruitSettings.recruitLink.trim()) {
+      setMsg("모집 중 상태에서는 지원 링크를 입력해야 합니다.");
+      return;
+    }
+    setRecruitLoading(true);
+    setMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(recruitSettings),
+      });
+      if (res.ok) {
+        setMsg("모집 설정 저장 완료");
+      } else {
+        const err = await res.json().catch(() => null);
+        setMsg(`모집 설정 저장 실패: ${err?.error || res.status}`);
+      }
+    } catch {
+      setMsg("오류 발생");
+    }
+    setRecruitLoading(false);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -212,12 +256,22 @@ export default function AdminPage() {
       {/* Fixed Header */}
       <header className="flex shrink-0 items-center justify-between border-b border-white/10 px-6 py-4">
         <h1 className="text-xl font-bold">B-CUBE Admin</h1>
-        <button
-          onClick={logout}
-          className="rounded-lg bg-red-600/20 px-4 py-2 text-sm text-red-400 hover:bg-red-600/30"
-        >
-          로그아웃
-        </button>
+        <div className="flex items-center gap-3">
+          <a
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-lg bg-white/5 px-4 py-2 text-sm text-gray-300 hover:bg-white/10 hover:text-white"
+          >
+            사이트 보기
+          </a>
+          <button
+            onClick={logout}
+            className="rounded-lg bg-red-600/20 px-4 py-2 text-sm text-red-400 hover:bg-red-600/30"
+          >
+            로그아웃
+          </button>
+        </div>
       </header>
 
       <div className="flex min-h-0 flex-1">
@@ -275,7 +329,69 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* Add Form */}
+          {/* Recruit Settings */}
+          {!editItem && tab === "contact" && (
+            <div className="mb-6 rounded-xl bg-[#111827] p-6">
+              <h2 className="mb-4 text-lg font-semibold">모집 설정</h2>
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="flex items-center gap-3 md:col-span-2">
+                  <button
+                    type="button"
+                    onClick={() => setRecruitSettings((s) => {
+                      const next = !s.isRecruiting;
+                      const defaults = [
+                        "B-CUBE와 함께할 새로운 멤버를 모집하고 있습니다.\n모집 마감: 2025년 3월 15일",
+                        "지금은 모집 기간이 아닙니다.\n다음 모집은 2025년 9월에 예정되어 있습니다.",
+                      ];
+                      const msg = defaults.includes(s.recruitMessage) || !s.recruitMessage
+                        ? (next ? defaults[0] : defaults[1])
+                        : s.recruitMessage;
+                      return { ...s, isRecruiting: next, recruitMessage: msg };
+                    })}
+                    className={`relative h-7 w-12 rounded-full transition-colors ${recruitSettings.isRecruiting ? "bg-green-500" : "bg-gray-600"}`}
+                  >
+                    <span className={`absolute top-0.5 left-0.5 h-6 w-6 rounded-full bg-white transition-transform ${recruitSettings.isRecruiting ? "translate-x-5" : ""}`} />
+                  </button>
+                  <span className="text-sm text-gray-300">
+                    {recruitSettings.isRecruiting ? "모집 중" : "모집 마감"}
+                  </span>
+                </label>
+                <label className="flex flex-col gap-1.5 md:col-span-2">
+                  <span className="text-sm text-gray-400">배너 멘트</span>
+                  <textarea
+                    rows={3}
+                    value={recruitSettings.recruitMessage}
+                    onChange={(e) => setRecruitSettings((s) => ({ ...s, recruitMessage: e.target.value }))}
+                    className="rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </label>
+                {recruitSettings.isRecruiting && (
+                  <label className="flex flex-col gap-1.5 md:col-span-2">
+                    <span className="text-sm text-gray-400">지원 링크 (Google Form 등)</span>
+                    <input
+                      type="url"
+                      value={recruitSettings.recruitLink}
+                      onChange={(e) => setRecruitSettings((s) => ({ ...s, recruitLink: e.target.value }))}
+                      placeholder="https://forms.google.com/..."
+                      className="rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </label>
+                )}
+                <div className="md:col-span-2">
+                  <button
+                    type="button"
+                    onClick={saveRecruitSettings}
+                    disabled={recruitLoading}
+                    className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {recruitLoading ? "저장 중..." : "모집 설정 저장"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Contact Form */}
           {!editItem && tab === "contact" && (
             <div className="mb-6 rounded-xl bg-[#111827] p-6">
               <h2 className="mb-4 text-lg font-semibold">연락처 수정</h2>

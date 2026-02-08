@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Activities from "@/lib/models/Activities";
 import { uploadImage, uploadPdf } from "@/lib/storage";
+import { requireAuth } from "@/lib/auth";
 
 export async function GET() {
   await dbConnect();
@@ -19,6 +20,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const authErr = requireAuth(req);
+  if (authErr) return authErr;
+
   await dbConnect();
   const formData = await req.formData();
   const title = formData.get("title") as string;

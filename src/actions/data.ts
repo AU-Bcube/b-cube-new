@@ -58,12 +58,15 @@ export async function getExecutives(): Promise<Executive[]> {
 export async function getContact(): Promise<Contact> {
   await dbConnect();
   const doc = await ContactModel.findOne().lean();
-  if (!doc) return { id: "", email: "", kakaotalkLink: "", instagramLink: "" };
+  if (!doc) return { id: "", email: "", kakaotalkLink: "", instagramLink: "", isRecruiting: false, recruitLink: "" };
   return {
     id: (doc._id as object).toString(),
     email: doc.email,
     kakaotalkLink: doc.kakaotalkLink,
     instagramLink: doc.instagramLink,
+    isRecruiting: doc.isRecruiting ?? false,
+    recruitMessage: doc.recruitMessage,
+    recruitLink: doc.recruitLink ?? "",
   };
 }
 

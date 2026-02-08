@@ -27,7 +27,7 @@ export default function Banner({
             {title}
           </h1>
           {description && (
-            <p className="text-sm font-medium leading-relaxed text-on-surface-dim/70 md:text-lg md:leading-relaxed">
+            <p className="whitespace-pre-line text-sm font-medium leading-relaxed text-on-surface-dim/70 md:text-lg md:leading-relaxed">
               {description}
             </p>
           )}

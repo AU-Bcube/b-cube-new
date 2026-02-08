@@ -26,6 +26,9 @@ export type Contact = {
   email: string;
   kakaotalkLink: string;
   instagramLink: string;
+  isRecruiting: boolean;
+  recruitMessage?: string;
+  recruitLink: string;
 };
 
 export type Photo = {

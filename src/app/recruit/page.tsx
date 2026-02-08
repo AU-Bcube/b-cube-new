@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getContact } from "@/actions/data";
 import Banner from "@/components/ui/Banner";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -14,13 +15,24 @@ export default async function RecruitPage() {
     <main>
       <InteractiveGridPattern className="z-0" />
       <Banner
-        title="모집이 종료되었습니다!"
+        title={contact.isRecruiting ? "모집 중입니다!" : "모집이 종료되었습니다!"}
         description={
-          <>
-            지금은 모집 기간이 아닙니다.
-            <br />
-            다음 모집은 2026년 2월에 예정되어 있습니다.
-          </>
+          contact.recruitMessage
+            || (contact.isRecruiting
+              ? "B-CUBE와 함께할 새로운 멤버를 모집하고 있습니다."
+              : "지금은 모집 기간이 아닙니다.\n다음 모집은 추후 공지 예정입니다.")
+        }
+        action={
+          contact.isRecruiting && contact.recruitLink ? (
+            <Link
+              href={contact.recruitLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-fit rounded-full bg-primary-light px-8 py-3.5 text-base font-bold text-surface shadow-lg shadow-primary-light/25 transition-all duration-200 hover:bg-primary-light/85 md:px-10 md:py-4 md:text-lg"
+            >
+              지원하기
+            </Link>
+          ) : undefined
         }
       />
 
