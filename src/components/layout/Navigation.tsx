@@ -24,7 +24,7 @@ export default function Navigation() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/[0.04] bg-surface/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-surface/80 backdrop-blur-2xl backdrop-saturate-150">
         <div className="flex items-center justify-between px-6 py-4 lg:mx-auto lg:max-w-screen-xl">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.svg" alt="logo" width={28} height={28} />
@@ -37,10 +37,10 @@ export default function Navigation() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${
+                    className={`relative rounded-lg px-4 py-2 text-sm font-semibold tracking-tight transition-all duration-200 ${
                       isActive(item.href)
-                        ? "bg-white/10 text-white"
-                        : "text-muted hover:bg-white/[0.04] hover:text-on-surface-dim"
+                        ? "bg-on-surface/[0.08] text-on-surface"
+                        : "text-muted hover:text-on-surface-dim"
                     }`}
                   >
                     {item.label}
@@ -75,7 +75,7 @@ export default function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-50 w-full bg-surface md:hidden"
+              className="fixed inset-y-0 right-0 z-50 w-full border-l border-border/50 bg-surface md:hidden"
             >
               <div className="flex items-center justify-between px-6 py-4">
                 <div className="flex items-center gap-3">
@@ -105,10 +105,10 @@ export default function Navigation() {
                   >
                     <Link
                       href={item.href}
-                      className={`block rounded-xl px-4 py-3 text-2xl font-bold transition-colors ${
+                    className={`block rounded-xl px-4 py-3 text-2xl font-bold tracking-tight transition-colors ${
                         isActive(item.href)
-                          ? "bg-primary-light/10 text-primary-light"
-                          : "text-white/70 hover:bg-white/[0.04] hover:text-white"
+                          ? "bg-on-surface/[0.06] text-on-surface"
+                          : "text-muted hover:text-on-surface-dim"
                       }`}
                       onClick={() => setSidebarOpen(false)}
                     >

@@ -52,17 +52,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        {/* Gradient mesh background */}
+        {/* Background */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, #050e20 0%, #06132D 50%, #0a1a3a 100%)",
-            }}
-          />
-          <div className="absolute -right-32 -top-32 h-[600px] w-[600px] animate-float rounded-full bg-primary/15 blur-[150px]" />
-          <div className="absolute -left-32 top-1/2 h-[500px] w-[500px] animate-float-slow rounded-full bg-primary-light/10 blur-[120px]" />
+          <div className="absolute inset-0 bg-surface" />
+          <div className="absolute -right-40 -top-40 h-[700px] w-[700px] animate-float rounded-full bg-primary/[0.07] blur-[200px]" />
+          <div className="absolute -left-40 top-1/2 h-[600px] w-[600px] animate-float-slow rounded-full bg-accent/[0.05] blur-[180px]" />
         </div>
         <Navigation />
         {children}

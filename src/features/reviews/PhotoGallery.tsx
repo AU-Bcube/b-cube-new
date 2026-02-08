@@ -23,7 +23,7 @@ export default function PhotoGallery({ photos }: Props) {
       <div className="flex w-full max-w-3xl items-center justify-center gap-3 px-4 md:gap-6">
         <button
           onClick={prev}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] text-white/70 backdrop-blur-sm transition-all hover:bg-white/[0.06] hover:text-white md:h-12 md:w-12"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-light text-on-surface-dim transition-all duration-200 hover:border-on-surface-dim/30 hover:text-on-surface md:h-12 md:w-12"
           aria-label="이전"
         >
           <svg
@@ -41,7 +41,7 @@ export default function PhotoGallery({ photos }: Props) {
           </svg>
         </button>
 
-        <div className="relative aspect-video w-full max-w-[560px] overflow-hidden rounded-2xl border border-white/[0.06]">
+        <div className="relative aspect-video w-full max-w-[560px] overflow-hidden rounded-xl border border-border">
           <Image
             src={photos[currentIndex].imagePath}
             alt={photos[currentIndex].description}
@@ -52,7 +52,7 @@ export default function PhotoGallery({ photos }: Props) {
 
         <button
           onClick={next}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] text-white/70 backdrop-blur-sm transition-all hover:bg-white/[0.06] hover:text-white md:h-12 md:w-12"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-light text-on-surface-dim transition-all duration-200 hover:border-on-surface-dim/30 hover:text-on-surface md:h-12 md:w-12"
           aria-label="다음"
         >
           <svg
@@ -71,7 +71,7 @@ export default function PhotoGallery({ photos }: Props) {
         </button>
       </div>
 
-      <p className="mt-5 text-center text-sm font-medium text-on-surface/70 md:text-base">
+      <p className="mt-5 text-center text-sm font-medium text-on-surface-dim md:text-base">
         {photos[currentIndex].description}
       </p>
 
@@ -88,8 +88,8 @@ export default function PhotoGallery({ photos }: Props) {
               key={photo.id}
               className={`relative h-16 w-24 shrink-0 cursor-pointer overflow-hidden rounded-lg border transition-all duration-300 md:h-20 md:w-[120px] ${
                 currentIndex === i
-                  ? "scale-110 border-primary-light/40 opacity-100"
-                  : "border-white/[0.06] opacity-50 hover:opacity-80"
+                  ? "scale-105 border-on-surface-dim/40 opacity-100"
+                  : "border-border opacity-40 hover:opacity-70"
               }`}
               onClick={() => setCurrentIndex(i)}
             >

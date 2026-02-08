@@ -12,12 +12,12 @@ interface ContactItemProps {
 
 function ContactItem({ title, value, icon }: ContactItemProps) {
   return (
-    <div className="flex w-full items-center justify-between gap-4 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-light/20 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-primary/5 md:flex-col md:items-center md:gap-5 md:p-8">
+    <div className="flex w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-border bg-surface-light p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-on-surface-dim/20 md:flex-col md:items-center md:gap-5 md:p-8">
       <div className="flex items-center gap-4 md:flex-col md:gap-4">
-        <div className="flex h-8 w-8 items-center justify-center md:h-16 md:w-16">
-          <Image src={icon} alt={`${title} logo`} width={64} height={64} />
+        <div className="flex h-8 w-8 items-center justify-center md:h-14 md:w-14">
+          <Image src={icon} alt={`${title} logo`} width={56} height={56} />
         </div>
-        <h6 className="text-sm font-bold text-primary-light md:text-base">
+        <h6 className="text-sm font-bold text-on-surface-dim md:text-base">
           {title}
         </h6>
       </div>

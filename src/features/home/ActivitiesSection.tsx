@@ -24,7 +24,7 @@ export default function ActivitiesSection({ activities }: ActivitiesSectionProps
         {activities.map((item) => (
           <div
             key={item.id}
-            className="group relative aspect-4/3 w-full cursor-pointer overflow-hidden rounded-2xl"
+            className="group relative aspect-4/3 w-full cursor-pointer overflow-hidden rounded-xl border border-border"
             onClick={() =>
               setSelectedPdf({ pdfUrl: item.pdfPath, title: item.title })
             }
@@ -35,12 +35,12 @@ export default function ActivitiesSection({ activities }: ActivitiesSectionProps
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-4 left-5 right-5 text-white md:bottom-6 md:left-6 md:right-6">
-              <p className="text-xs font-medium text-white/70 md:text-sm">
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
+            <div className="absolute bottom-4 left-5 right-5 md:bottom-6 md:left-6 md:right-6">
+              <p className="text-xs font-medium text-on-surface-dim md:text-sm">
                 {item.description}
               </p>
-              <h5 className="mt-1 text-base font-bold md:text-lg">
+              <h5 className="mt-1 text-base font-bold tracking-tight text-on-surface md:text-lg">
                 {item.title}
               </h5>
             </div>

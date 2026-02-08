@@ -15,11 +15,11 @@ export default function StudySection({ data }: Props) {
   return (
     <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-center overflow-hidden px-8 md:px-12">
       <div className="flex w-full max-w-screen-lg flex-col items-start justify-start gap-10 md:gap-20">
-        <section className="flex w-full flex-col gap-2 md:gap-8">
-          <h2 className="text-xl font-semibold sm:text-5xl bg-gradient-to-r from-accent to-primary-light bg-clip-text text-transparent">
+        <section className="flex w-full flex-col gap-2 md:gap-4">
+          <h2 className="text-xl font-bold tracking-tight text-on-surface sm:text-4xl">
             스터디
           </h2>
-          <p className="text-sm text-on-surface sm:text-xl">
+          <p className="text-sm text-muted sm:text-lg">
             파이썬, JAVA 등 실제 업무에 사용되는 프로그래밍 언어를 배우고 활용해보는 정기 활동
           </p>
         </section>

@@ -13,15 +13,15 @@ interface BigCardProps {
 
 function BigCard({ title, content }: BigCardProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm transition-all duration-300 hover:border-primary-light/20 hover:bg-white/[0.06]">
-      <div className="flex flex-col gap-4 p-8 md:flex-row md:gap-8 md:p-10">
-        <h3 className="text-lg font-bold text-on-surface md:min-w-[300px] md:text-xl">
+    <div className="overflow-hidden rounded-xl border border-border bg-surface-light transition-all duration-300 hover:border-on-surface-dim/20">
+      <div className="flex flex-col gap-4 p-6 md:flex-row md:gap-8 md:p-8">
+        <h3 className="text-base font-bold tracking-tight text-on-surface md:min-w-[280px] md:text-lg">
           {title}
         </h3>
-        <ol className="flex flex-col gap-3">
+        <ol className="flex flex-col gap-2.5">
           {content.map((item, i) => (
             <li key={i}>
-              <p className="text-sm font-medium leading-6 text-on-surface/60 md:text-base md:leading-7">
+              <p className="text-sm leading-relaxed text-muted md:text-base md:leading-relaxed">
                 {item}
               </p>
             </li>

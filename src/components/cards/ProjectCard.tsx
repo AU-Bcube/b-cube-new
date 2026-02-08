@@ -27,7 +27,7 @@ export default function ProjectCard({
     <>
       <div
         onClick={() => pdfUrl && setIsOpen(true)}
-        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-light/20 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-primary/5"
+        className="group cursor-pointer overflow-hidden rounded-xl border border-border bg-surface-light transition-all duration-300 hover:-translate-y-0.5 hover:border-on-surface-dim/20"
       >
         <div className="relative aspect-video w-full overflow-hidden">
           <Image
@@ -36,22 +36,22 @@ export default function ProjectCard({
             fill
             className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-surface/60 to-transparent" />
           {award && (
-            <span className="absolute right-3 top-3 rounded-full bg-amber-500/90 px-3 py-1 text-xs font-bold text-black backdrop-blur-sm">
-              🏆 {award}
+            <span className="absolute right-3 top-3 rounded-md bg-amber-400/90 px-2.5 py-1 text-xs font-bold text-surface backdrop-blur-sm">
+              {award}
             </span>
           )}
         </div>
-        <div className="space-y-1.5 p-5">
+        <div className="flex flex-col gap-1.5 p-5">
           <span className="text-xs font-semibold text-primary-light">
             {year}
           </span>
-          <h5 className="truncate text-lg font-bold text-on-surface">
+          <h5 className="truncate text-base font-bold tracking-tight text-on-surface">
             {title}
           </h5>
           {participants && (
-            <p className="text-sm text-on-surface/40">{participants}</p>
+            <p className="text-sm text-muted">{participants}</p>
           )}
         </div>
       </div>

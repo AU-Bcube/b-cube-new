@@ -16,12 +16,12 @@ export default function ExecutivesSection({ executives }: ExecutivesSectionProps
   );
 
   return (
-    <ul className="mt-8 flex flex-col flex-wrap items-center justify-center gap-12 md:mt-12 md:flex-row md:gap-20">
+    <ul className="mt-8 flex flex-col flex-wrap items-center justify-center gap-12 md:mt-12 md:flex-row md:gap-16">
       {sorted.map((exec, index) => (
         <li key={exec.id}>
           <FadeUp delay={index}>
-            <div className="flex flex-col items-center gap-5">
-              <div className="relative size-36 overflow-hidden rounded-full md:size-52">
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative size-32 overflow-hidden rounded-full ring-2 ring-border md:size-44">
                 <Image
                   src={exec.imagePath}
                   alt={`${exec.name} 프로필`}
@@ -29,9 +29,9 @@ export default function ExecutivesSection({ executives }: ExecutivesSectionProps
                   className="object-cover"
                 />
               </div>
-              <div className="flex flex-col items-center gap-2 text-center font-semibold text-on-surface">
-                <h5 className="text-lg md:text-xl">{exec.role}</h5>
-                <h6 className="text-base md:text-lg">
+              <div className="flex flex-col items-center gap-1.5 text-center">
+                <h5 className="text-base font-bold tracking-tight text-on-surface md:text-lg">{exec.role}</h5>
+                <h6 className="text-sm text-muted md:text-base">
                   {exec.studentId}학번&nbsp;{exec.name}
                 </h6>
               </div>

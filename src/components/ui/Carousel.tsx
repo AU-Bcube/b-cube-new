@@ -58,13 +58,13 @@ export default function Carousel({
       {/* Navigation arrows */}
       <button
         onClick={scrollPrev}
-        className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-card/90 text-white/80 backdrop-blur-sm transition hover:bg-surface-light hover:text-white md:left-5 md:h-11 md:w-11"
+        className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg border border-border bg-surface-light/90 text-on-surface-dim backdrop-blur-sm transition-all duration-200 hover:border-on-surface-dim/30 hover:text-on-surface md:left-4 md:h-10 md:w-10"
         aria-label="이전 슬라이드"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
+          width="16"
+          height="16"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -77,13 +77,13 @@ export default function Carousel({
       </button>
       <button
         onClick={scrollNext}
-        className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-card/90 text-white/80 backdrop-blur-sm transition hover:bg-surface-light hover:text-white md:right-5 md:h-11 md:w-11"
+        className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg border border-border bg-surface-light/90 text-on-surface-dim backdrop-blur-sm transition-all duration-200 hover:border-on-surface-dim/30 hover:text-on-surface md:right-4 md:h-10 md:w-10"
         aria-label="다음 슬라이드"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
+          width="16"
+          height="16"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -100,10 +100,10 @@ export default function Carousel({
         {children.map((_, i) => (
           <button
             key={i}
-            className={`h-2 rounded-full transition-all duration-300 ${
+            className={`h-1.5 rounded-full transition-all duration-300 ${
               i === selectedIndex
-                ? "w-6 bg-primary-light"
-                : "w-2 bg-white/20 hover:bg-white/40"
+                ? "w-6 bg-on-surface"
+                : "w-1.5 bg-border hover:bg-muted"
             }`}
             onClick={() => emblaApi?.scrollTo(i)}
             aria-label={`슬라이드 ${i + 1}`}

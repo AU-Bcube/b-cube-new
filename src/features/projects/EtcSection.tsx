@@ -15,11 +15,11 @@ export default function EtcSection({ data }: Props) {
   return (
     <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-center overflow-hidden px-8 md:px-12">
       <div className="flex w-full max-w-screen-lg flex-col items-start justify-start gap-10 md:gap-20">
-        <section className="flex w-full flex-col gap-2 md:gap-8">
-          <h2 className="text-xl font-semibold sm:text-5xl bg-gradient-to-r from-accent to-primary-light bg-clip-text text-transparent">
+        <section className="flex w-full flex-col gap-2 md:gap-4">
+          <h2 className="text-xl font-bold tracking-tight text-on-surface sm:text-4xl">
             기타활동
           </h2>
-          <p className="text-sm text-on-surface sm:text-xl">
+          <p className="text-sm text-muted sm:text-lg">
             아이디어톤 등과 같이 매년 진행되는 프로젝트 외의 활동
           </p>
         </section>

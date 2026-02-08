@@ -14,17 +14,19 @@ export default async function HomePage() {
   return (
     <main>
       {/* Hero Section */}
-      <div className="relative flex h-screen min-h-150 flex-col items-center justify-center px-4 md:min-h-180 md:px-5">
+      <div className="relative flex min-h-[100svh] flex-col items-center justify-center px-6 md:px-8">
+        {/* Ambient glow */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute left-1/2 top-1/3 h-[500px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.08] blur-[150px]" />
+        </div>
 
-        <div className="flex flex-[3]" />
-
-        {/* Main title */}
-        <div className="relative">
+        <div className="relative flex flex-col items-center gap-8 md:gap-12">
+          {/* Main title */}
           <h1
-            className="text-center text-[50px] font-bold leading-[65px] md:text-[110px] md:leading-[140px]"
+            className="text-center text-[52px] font-extrabold leading-[1.1] tracking-tighter md:text-[120px]"
             style={{
               backgroundImage:
-                "radial-gradient(87.73% 87.73% at 50% 58.48%, #F6F6F7 41.5%, #14439F 100%)",
+                "linear-gradient(180deg, #fafafa 0%, #71717a 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
@@ -36,53 +38,41 @@ export default async function HomePage() {
             <br />
             BUILDER
           </h1>
+
+          {/* Subtitle & description */}
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-center text-lg font-semibold tracking-tight text-on-surface-dim md:text-3xl">
+              아주대학교 경영인텔리전스학과 소학회
+            </h2>
+            <p className="max-w-xl text-center text-sm leading-relaxed text-muted md:text-base md:leading-relaxed">
+              비큐브는 최신 IT 기술에 대한 이해를 바탕으로 웹 및 앱 서비스를 직접
+              기획하고 개발하는 소학회입니다.
+              <br />
+              아이디어를 구현하는 과정에서 기획 능력과 개발 능력을 함께 성장시킬 수
+              있습니다.
+            </p>
+          </div>
         </div>
-
-        <div className="flex flex-[3]" />
-
-        <div className="flex flex-col gap-5">
-          <h2
-            className="px-2 text-center text-xl font-semibold md:text-4xl"
-            style={{
-              backgroundImage:
-                "linear-gradient(90deg, #A8B3D8 37.39%, #518CFF 61.51%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            아주대학교 경영인텔리전스학과 소학회
-          </h2>
-          <p className="px-6 text-center text-sm font-medium leading-6 text-on-surface-dim md:text-xl md:leading-9">
-            비큐브는 최신 IT 기술에 대한 이해를 바탕으로 웹 및 앱 서비스를 직접
-            기획하고 개발하는 소학회입니다.
-            <br />
-            아이디어를 구현하는 과정에서 기획 능력과 개발 능력을 함께 성장시킬 수
-            있습니다.
-          </p>
-        </div>
-
-        <div className="flex flex-[4]" />
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-          <span className="text-xs tracking-widest text-on-surface-dim/50">
-            SCROLL
+          <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted">
+            Scroll
           </span>
-          <div className="h-8 w-[1px] animate-pulse bg-gradient-to-b from-primary-light/60 to-transparent" />
+          <div className="h-8 w-px animate-pulse bg-gradient-to-b from-on-surface-dim/40 to-transparent" />
         </div>
       </div>
 
       {/* Introduction Section */}
-      <section className="flex flex-col md:mt-12">
+      <section className="flex flex-col pt-24 md:pt-32">
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
           <FadeUp>
             <SectionHeading subject="Introduction" title="주요 활동" />
           </FadeUp>
-          <div className="mt-10 grid auto-rows-fr gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
+          <div className="mt-10 grid auto-rows-fr gap-3 md:mt-14 md:grid-cols-3 md:gap-4">
             <FadeUp delay={1}>
               <ActivityCard
-                title="🎨 디자인톤"
+                title="디자인톤"
                 content={
                   <>
                     서비스 기획부터 UI 디자인, 개발 및 배포까지
@@ -94,7 +84,7 @@ export default async function HomePage() {
             </FadeUp>
             <FadeUp delay={2}>
               <ActivityCard
-                title="📱 섹시한 IT"
+                title="섹시한 IT"
                 content={
                   <>
                     최신 IT 트렌드를 카드뉴스로 제작하고
@@ -106,7 +96,7 @@ export default async function HomePage() {
             </FadeUp>
             <FadeUp delay={3}>
               <ActivityCard
-                title="📚 IT 스터디"
+                title="IT 스터디"
                 content={
                   <>
                     java, javascript, python 등<br />
@@ -117,7 +107,7 @@ export default async function HomePage() {
             </FadeUp>
             <FadeUp delay={4}>
               <ActivityCard
-                title="🗣️ B-CUBE I TALK"
+                title="B-CUBE I TALK"
                 content={
                   <>
                     IT 관련 지식과 트렌드를 공유하고
@@ -131,7 +121,7 @@ export default async function HomePage() {
             </FadeUp>
             <FadeUp delay={5}>
               <ActivityCard
-                title="🖥️ 웹사이트 기획 및 개발"
+                title="웹사이트 기획 및 개발"
                 content={
                   <>
                     기획팀, 디자인팀, 개발팀으로 나누어
@@ -145,7 +135,7 @@ export default async function HomePage() {
             </FadeUp>
             <FadeUp delay={6}>
               <ActivityCard
-                title="💡 신입생 아이디어톤"
+                title="신입생 아이디어톤"
                 content={
                   <>
                     신입생끼리 서비스를 직접 기획해보고,
@@ -162,15 +152,15 @@ export default async function HomePage() {
       </section>
 
       {/* Project Carousel Section */}
-      <section className="mt-32 flex flex-col md:mt-48">
+      <section className="mt-28 flex flex-col md:mt-40">
         <SectionHeading subject="Project" title="프로젝트" />
-        <div className="mt-8 w-full md:mt-14">
+        <div className="mt-8 w-full md:mt-12">
           <ActivitiesSection activities={activities} />
         </div>
       </section>
 
       {/* Executives Section */}
-      <section className="mb-32 mt-32 flex flex-col items-center justify-center md:mb-48 md:mt-48">
+      <section className="mb-28 mt-28 flex flex-col items-center justify-center md:mb-40 md:mt-40">
         <FadeUp>
           <div className="flex flex-col gap-4 md:gap-6">
             <SectionHeading subject="Executives" title="운영진 소개" />
