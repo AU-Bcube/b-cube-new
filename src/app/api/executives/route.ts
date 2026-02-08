@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Executives from "@/lib/models/Executives";
 import { uploadImage } from "@/lib/storage";
@@ -28,5 +29,6 @@ export async function POST(req: NextRequest) {
   const imageUrl = await uploadImage(imageFile, "bcube/executives");
   await Executives.create({ name, role, studentId, imagePath: imageUrl });
 
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "운영진 업로드 완료" });
 }

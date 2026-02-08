@@ -39,13 +39,14 @@ function ContactItem({ title, value, icon, href }: ContactItemProps) {
         target="_blank"
         rel="noopener noreferrer"
         className={className}
+        data-no-grid
       >
         {inner}
       </Link>
     );
   }
 
-  return <div className={className}>{inner}</div>;
+  return <div data-no-grid className={className}>{inner}</div>;
 }
 
 interface ContactSectionProps {

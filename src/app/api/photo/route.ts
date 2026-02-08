@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Photo from "@/lib/models/Photo";
 import { uploadImage } from "@/lib/storage";
@@ -26,5 +27,6 @@ export async function POST(req: NextRequest) {
   const imageUrl = await uploadImage(imageFile, "bcube/photo");
   await Photo.create({ description, date: new Date(date), imagePath: imageUrl });
 
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "사진 업로드 완료" });
 }

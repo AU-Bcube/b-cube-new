@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import SexyIt from "@/lib/models/SexyIt";
 import { uploadImage } from "@/lib/storage";
@@ -33,5 +34,6 @@ export async function POST(req: NextRequest) {
     url,
   });
 
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "섹시한 IT 업로드 완료" });
 }

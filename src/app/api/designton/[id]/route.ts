@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Designton from "@/lib/models/Designton";
 import { uploadImage, uploadPdf, deleteAsset } from "@/lib/storage";
@@ -44,6 +45,7 @@ export async function PATCH(
   }
 
   await item.save();
+  revalidatePath("/", "layout");
   return NextResponse.json({
     id: item._id.toString(),
     title: item.title,
@@ -68,5 +70,6 @@ export async function DELETE(
   await deleteAsset(item.imagePath);
   await deleteAsset(item.pdfPath);
   await Designton.findByIdAndDelete(id);
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "삭제 완료" });
 }

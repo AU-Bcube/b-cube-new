@@ -35,6 +35,7 @@ export default function AdminPage() {
   const [pw, setPw] = useState("");
   const [tab, setTab] = useState<Tab>("designton");
   const [msg, setMsg] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
   const [editItem, setEditItem] = useState<Item | null>(null);
@@ -49,13 +50,20 @@ export default function AdminPage() {
 
   const login = async (e: FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/auth", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, password: pw }),
-    });
-    if (res.ok) setAuthed(true);
-    else setMsg("로그인 실패");
+    setLoginLoading(true);
+    setMsg("");
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, password: pw }),
+      });
+      if (res.ok) setAuthed(true);
+      else setMsg("로그인 실패");
+    } catch {
+      setMsg("네트워크 오류");
+    }
+    setLoginLoading(false);
   };
 
   const logout = async () => {
@@ -187,8 +195,11 @@ export default function AdminPage() {
             placeholder="비밀번호"
             className="rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700">
-            로그인
+          <button
+            disabled={loginLoading}
+            className="rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {loginLoading ? "로그인 중..." : "로그인"}
           </button>
           {msg && <p className="text-center text-red-400">{msg}</p>}
         </form>

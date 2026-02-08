@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Contact from "@/lib/models/Contact";
 
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
     );
 
   await Contact.create(body);
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "연락처 등록 완료" });
 }
 
@@ -45,6 +47,7 @@ export async function PATCH(req: NextRequest) {
   if (body.instagramLink) contact.instagramLink = body.instagramLink;
 
   await contact.save();
+  revalidatePath("/", "layout");
   return NextResponse.json({
     id: contact._id.toString(),
     email: contact.email,

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Photo from "@/lib/models/Photo";
 import { uploadImage, deleteAsset } from "@/lib/storage";
@@ -33,6 +34,7 @@ export async function PATCH(
   }
 
   await item.save();
+  revalidatePath("/", "layout");
   return NextResponse.json({
     id: item._id.toString(),
     description: item.description,
@@ -53,5 +55,6 @@ export async function DELETE(
 
   await deleteAsset(photo.imagePath);
   await Photo.findByIdAndDelete(id);
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "삭제 완료" });
 }

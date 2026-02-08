@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Activities from "@/lib/models/Activities";
 import { uploadImage, uploadPdf } from "@/lib/storage";
@@ -34,5 +35,6 @@ export async function POST(req: NextRequest) {
     pdfPath: pdfUrl,
   });
 
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "활동 업로드 완료" });
 }

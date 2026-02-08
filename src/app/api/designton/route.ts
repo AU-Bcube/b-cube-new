@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import Designton from "@/lib/models/Designton";
 import { uploadImage, uploadPdf } from "@/lib/storage";
@@ -40,5 +41,6 @@ export async function POST(req: NextRequest) {
     ...(award && { award }),
   });
 
+  revalidatePath("/", "layout");
   return NextResponse.json({ message: "디자인톤 업로드 완료" });
 }
