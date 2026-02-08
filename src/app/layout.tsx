@@ -1,46 +1,47 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Navigation from "@/components/layout/Navigation";
-import Footer from "@/components/layout/Footer";
+import type { Metadata } from 'next';
+import './globals.css';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
-  title: "비큐브 B-cube",
-  description: "아주대학교 경영인텔리전스학과 소학회",
-  icons: { icon: "/logo.svg" },
+  title: '비큐브 B-cube',
+  description: '아주대학교 경영인텔리전스학과 소학회',
+  icons: { icon: '/logo.svg' },
   keywords: [
-    "B-cube",
-    "bcube",
-    "비큐브",
-    "동아리",
-    "IT동아리",
-    "아주대학교",
-    "경영인텔리전스학과",
-    "소학회",
-    "이비즈",
-    "e-비즈니스학과",
-    "e-business",
-    "IT기획",
-    "웹개발",
-    "앱개발",
-    "백엔드",
-    "프론트엔드",
-    "피그마",
+    'B-cube',
+    'bcube',
+    '비큐브',
+    '동아리',
+    'IT동아리',
+    '아주대학교',
+    '경영인텔리전스학과',
+    '소학회',
+    '이비즈',
+    'e-비즈니스학과',
+    'e-business',
+    'IT기획',
+    '웹개발',
+    '앱개발',
+    '백엔드',
+    '프론트엔드',
+    '피그마',
   ],
-  metadataBase: new URL("https://b-cube.kr"),
+  metadataBase: new URL('https://b-cube.kr'),
   openGraph: {
-    title: "비큐브 B-cube",
-    description: "아주대학교 경영인텔리전스학과 소학회",
-    images: "/opengraph-image.png",
-    url: "https://b-cube.kr",
-    siteName: "비큐브 B-cube",
-    locale: "ko_KR",
-    type: "website",
+    title: '비큐브 B-cube',
+    description: '아주대학교 경영인텔리전스학과 소학회',
+    images: '/opengraph-image.png',
+    url: 'https://b-cube.kr',
+    siteName: '비큐브 B-cube',
+    locale: 'ko_KR',
+    type: 'website',
   },
   other: {
-    "naver-site-verification": "faeee0c5c10843f8a1f21c3ef305b36b5c7ac22b",
+    'naver-site-verification': 'faeee0c5c10843f8a1f21c3ef305b36b5c7ac22b',
   },
   alternates: {
-    canonical: "https://b-cube.kr",
+    canonical: 'https://b-cube.kr',
   },
 };
 
@@ -58,15 +59,16 @@ export default function RootLayout({
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(180deg, #050e20 0%, #06132D 50%, #0a1a3a 100%)",
+                'linear-gradient(180deg, #050e20 0%, #06132D 50%, #0a1a3a 100%)',
             }}
           />
-          <div className="absolute -right-32 -top-32 h-[600px] w-[600px] animate-float rounded-full bg-primary/15 blur-[150px]" />
-          <div className="absolute -left-32 top-1/2 h-[500px] w-[500px] animate-float-slow rounded-full bg-primary-light/10 blur-[120px]" />
+          <div className="absolute -right-32 -top-32 h-150 w-150 animate-float rounded-full bg-primary/15 blur-[150px]" />
+          <div className="absolute -left-32 top-1/2 h-125 w-125 animate-float-slow rounded-full bg-primary-light/10 blur-[120px]" />
         </div>
         <Navigation />
         {children}
         <Footer />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -17,7 +17,7 @@ export default function ReviewTabs({ interviews, photos }: ReviewTabsProps) {
   const { selectedIndex, setSelectedIndex } = useTabs(TAB_LIST);
 
   return (
-    <div>
+    <div className="relative z-10">
       <section className="flex flex-col items-center justify-center">
         <div className="my-8 grid grid-cols-2 gap-2 md:my-16">
           {TAB_LIST.map((tab, i) => (

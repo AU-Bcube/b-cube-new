@@ -26,8 +26,9 @@ export default function ProjectCard({
   return (
     <>
       <div
+        data-no-grid
         onClick={() => pdfUrl && setIsOpen(true)}
-        className="group cursor-pointer overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary-light/20 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-primary/5"
+        className="group cursor-pointer overflow-hidden glass hover:border-primary-light/20 hover:bg-white/6"
       >
         <div className="relative aspect-video w-full overflow-hidden">
           <Image
@@ -36,15 +37,15 @@ export default function ProjectCard({
             fill
             className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-[rgba(8,14,30,0.8)] to-transparent" />
           {award && (
-            <span className="absolute right-3 top-3 rounded-full bg-amber-500/90 px-3 py-1 text-xs font-bold text-black backdrop-blur-sm">
-              🏆 {award}
+            <span className="absolute right-3 top-3 rounded-full border border-amber-400/30 bg-amber-500/90 px-3 py-1 text-xs font-bold text-black">
+              {award}
             </span>
           )}
         </div>
         <div className="space-y-1.5 p-5">
-          <span className="text-xs font-semibold text-primary-light">
+          <span className="text-xs font-semibold tracking-wide text-primary-light">
             {year}
           </span>
           <h5 className="truncate text-lg font-bold text-on-surface">

@@ -35,7 +35,7 @@ export default function ActivitiesSection({ activities }: ActivitiesSectionProps
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute bottom-4 left-5 right-5 text-white md:bottom-6 md:left-6 md:right-6">
               <p className="text-xs font-medium text-white/70 md:text-sm">
                 {item.description}

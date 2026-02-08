@@ -2,6 +2,7 @@
 
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
   children: ReactNode[];
@@ -47,7 +48,7 @@ export default function Carousel({
           {children.map((child, i) => (
             <div
               key={i}
-              className="min-w-0 flex-[0_0_85%] px-2 md:flex-[0_0_33.333%] md:px-3 lg:flex-[0_0_20%]"
+              className="min-w-0 flex-[0_0_85%] px-2 md:flex-[0_0_33.333%] md:px-3 lg:flex-[0_0_25%]"
             >
               {child}
             </div>
@@ -61,38 +62,14 @@ export default function Carousel({
         className="absolute left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-card/90 text-white/80 backdrop-blur-sm transition hover:bg-surface-light hover:text-white md:left-5 md:h-11 md:w-11"
         aria-label="이전 슬라이드"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
+        <ChevronLeft size={18} />
       </button>
       <button
         onClick={scrollNext}
         className="absolute right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-card/90 text-white/80 backdrop-blur-sm transition hover:bg-surface-light hover:text-white md:right-5 md:h-11 md:w-11"
         aria-label="다음 슬라이드"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
+        <ChevronRight size={18} />
       </button>
 
       {/* Dot indicators */}

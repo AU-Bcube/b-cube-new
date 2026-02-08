@@ -3,6 +3,8 @@ import FadeUp from "@/components/ui/FadeUp";
 import ActivityCard from "@/components/cards/ActivityCard";
 import ActivitiesSection from "@/features/home/ActivitiesSection";
 import ExecutivesSection from "@/features/home/ExecutivesSection";
+import InteractiveCube from "@/features/home/InteractiveCube";
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 import { getActivities, getExecutives } from "@/actions/data";
 
 export default async function HomePage() {
@@ -13,74 +15,72 @@ export default async function HomePage() {
 
   return (
     <main>
+      {/* Interactive grid background */}
+      <InteractiveGridPattern className="z-0" />
+
       {/* Hero Section */}
-      <div className="relative flex h-screen min-h-150 flex-col items-center justify-center px-4 md:min-h-180 md:px-5">
+      <div className="relative z-10 flex h-screen min-h-150 flex-col items-center justify-center overflow-hidden px-6 md:min-h-180 md:px-12 lg:px-20">
+        <div className="flex w-full max-w-6xl flex-col items-center gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
+          {/* Text content */}
+          <div className="order-2 flex flex-col items-center gap-4 md:order-1 md:flex-1 md:items-start md:gap-5">
+            <h1
+              className="text-center text-5xl font-bold leading-tight tracking-tight md:text-left md:text-7xl lg:text-8xl"
+              style={{
+                backgroundImage:
+                  "linear-gradient(180deg, #FFFFFF 0%, #F6F6F7 40%, #518CFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              BROAD
+              <br />
+              BUSINESS
+              <br />
+              BUILDER
+            </h1>
+            <h2
+              className="text-center text-lg font-semibold md:text-left md:text-xl lg:text-2xl"
+              style={{
+                backgroundImage:
+                  "linear-gradient(90deg, #7380B0 0%, #518CFF 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              아주대학교 경영인텔리전스학과 소학회
+            </h2>
+            <p className="max-w-lg text-center text-sm font-medium leading-6 text-on-surface-dim/70 md:text-left md:text-base md:leading-7">
+              비큐브는 최신 IT 기술에 대한 이해를 바탕으로 웹 및 앱 서비스를 직접
+              기획하고 개발하는 소학회입니다. 아이디어를 구현하는 과정에서 기획
+              능력과 개발 능력을 함께 성장시킬 수 있습니다.
+            </p>
+          </div>
 
-        <div className="flex flex-[3]" />
-
-        {/* Main title */}
-        <div className="relative">
-          <h1
-            className="text-center text-[50px] font-bold leading-[65px] md:text-[110px] md:leading-[140px]"
-            style={{
-              backgroundImage:
-                "radial-gradient(87.73% 87.73% at 50% 58.48%, #F6F6F7 41.5%, #14439F 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            BROAD
-            <br />
-            BUSINESS
-            <br />
-            BUILDER
-          </h1>
+          {/* Interactive 3D Cube */}
+          <div className="order-1 flex min-w-0 items-center justify-center md:order-2">
+            <InteractiveCube />
+          </div>
         </div>
-
-        <div className="flex flex-[3]" />
-
-        <div className="flex flex-col gap-5">
-          <h2
-            className="px-2 text-center text-xl font-semibold md:text-4xl"
-            style={{
-              backgroundImage:
-                "linear-gradient(90deg, #A8B3D8 37.39%, #518CFF 61.51%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            아주대학교 경영인텔리전스학과 소학회
-          </h2>
-          <p className="px-6 text-center text-sm font-medium leading-6 text-on-surface-dim md:text-xl md:leading-9">
-            비큐브는 최신 IT 기술에 대한 이해를 바탕으로 웹 및 앱 서비스를 직접
-            기획하고 개발하는 소학회입니다.
-            <br />
-            아이디어를 구현하는 과정에서 기획 능력과 개발 능력을 함께 성장시킬 수
-            있습니다.
-          </p>
-        </div>
-
-        <div className="flex flex-[4]" />
 
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
           <span className="text-xs tracking-widest text-on-surface-dim/50">
             SCROLL
           </span>
-          <div className="h-8 w-[1px] animate-pulse bg-gradient-to-b from-primary-light/60 to-transparent" />
+          <div className="h-8 w-px animate-pulse bg-linear-to-b from-primary-light/60 to-transparent" />
         </div>
       </div>
 
       {/* Introduction Section */}
-      <section className="flex flex-col md:mt-12">
+      <section className="relative z-10 flex flex-col md:mt-12">
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
           <FadeUp>
             <SectionHeading subject="Introduction" title="주요 활동" />
           </FadeUp>
           <div className="mt-10 grid auto-rows-fr gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
-            <FadeUp delay={1}>
+            <FadeUp delay={1} className="h-full">
               <ActivityCard
                 title="🎨 디자인톤"
                 content={
@@ -92,7 +92,7 @@ export default async function HomePage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={2}>
+            <FadeUp delay={2} className="h-full">
               <ActivityCard
                 title="📱 섹시한 IT"
                 content={
@@ -104,7 +104,7 @@ export default async function HomePage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={3}>
+            <FadeUp delay={3} className="h-full">
               <ActivityCard
                 title="📚 IT 스터디"
                 content={
@@ -115,7 +115,7 @@ export default async function HomePage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={4}>
+            <FadeUp delay={4} className="h-full">
               <ActivityCard
                 title="🗣️ B-CUBE I TALK"
                 content={
@@ -129,7 +129,7 @@ export default async function HomePage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={5}>
+            <FadeUp delay={5} className="h-full">
               <ActivityCard
                 title="🖥️ 웹사이트 기획 및 개발"
                 content={
@@ -143,7 +143,7 @@ export default async function HomePage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={6}>
+            <FadeUp delay={6} className="h-full">
               <ActivityCard
                 title="💡 신입생 아이디어톤"
                 content={
@@ -162,7 +162,7 @@ export default async function HomePage() {
       </section>
 
       {/* Project Carousel Section */}
-      <section className="mt-32 flex flex-col md:mt-48">
+      <section className="relative z-10 mt-32 flex flex-col md:mt-48">
         <SectionHeading subject="Project" title="프로젝트" />
         <div className="mt-8 w-full md:mt-14">
           <ActivitiesSection activities={activities} />
@@ -170,7 +170,7 @@ export default async function HomePage() {
       </section>
 
       {/* Executives Section */}
-      <section className="mb-32 mt-32 flex flex-col items-center justify-center md:mb-48 md:mt-48">
+      <section className="relative z-10 mb-32 mt-32 flex flex-col items-center justify-center md:mb-48 md:mt-48">
         <FadeUp>
           <div className="flex flex-col gap-4 md:gap-6">
             <SectionHeading subject="Executives" title="운영진 소개" />

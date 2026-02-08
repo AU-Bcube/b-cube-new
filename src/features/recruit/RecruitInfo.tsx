@@ -13,9 +13,9 @@ interface BigCardProps {
 
 function BigCard({ title, content }: BigCardProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] backdrop-blur-sm transition-all duration-300 hover:border-primary-light/20 hover:bg-white/[0.06]">
+    <div className="overflow-hidden glass hover:border-primary-light/20 hover:bg-white/6">
       <div className="flex flex-col gap-4 p-8 md:flex-row md:gap-8 md:p-10">
-        <h3 className="text-lg font-bold text-on-surface md:min-w-[300px] md:text-xl">
+        <h3 className="text-lg font-bold text-on-surface md:min-w-75 md:text-xl">
           {title}
         </h3>
         <ol className="flex flex-col gap-3">

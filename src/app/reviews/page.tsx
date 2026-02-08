@@ -1,6 +1,7 @@
 import { getInterviews, getPhotos } from "@/actions/data";
 import Banner from "@/components/ui/Banner";
 import ReviewTabs from "@/features/reviews/ReviewTabs";
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 
 export default async function ReviewsPage() {
   const [interviews, photos] = await Promise.all([
@@ -10,6 +11,7 @@ export default async function ReviewsPage() {
 
   return (
     <main>
+      <InteractiveGridPattern className="z-0" />
       <Banner
         title={
           <>

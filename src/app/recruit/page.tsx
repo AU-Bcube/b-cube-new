@@ -5,12 +5,14 @@ import FadeUp from "@/components/ui/FadeUp";
 import ActivityCard from "@/components/cards/ActivityCard";
 import RecruitInfo from "@/features/recruit/RecruitInfo";
 import ContactSection from "@/features/recruit/ContactSection";
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 
 export default async function RecruitPage() {
   const contact = await getContact();
 
   return (
     <main>
+      <InteractiveGridPattern className="z-0" />
       <Banner
         title="모집이 종료되었습니다!"
         description={
@@ -22,14 +24,14 @@ export default async function RecruitPage() {
         }
       />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
+      <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
         {/* 모집 개요 */}
         <section className="mb-32 flex flex-col items-center justify-center md:mb-48">
           <FadeUp>
             <SectionHeading subject="Introduction" title="모집 개요" />
           </FadeUp>
           <div className="mt-10 grid w-full auto-rows-fr grid-cols-1 gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
-            <FadeUp delay={1}>
+            <FadeUp delay={1} className="h-full">
               <ActivityCard
                 title="인재상"
                 content={
@@ -43,7 +45,7 @@ export default async function RecruitPage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={2}>
+            <FadeUp delay={2} className="h-full">
               <ActivityCard
                 title="지원자격"
                 content={
@@ -55,7 +57,7 @@ export default async function RecruitPage() {
                 }
               />
             </FadeUp>
-            <FadeUp delay={3}>
+            <FadeUp delay={3} className="h-full">
               <ActivityCard
                 title="지원방법"
                 content={

@@ -24,7 +24,7 @@ export default function Navigation() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/[0.04] bg-surface/70 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/4 bg-surface/70 backdrop-blur-xl">
         <div className="flex items-center justify-between px-6 py-4 lg:mx-auto lg:max-w-screen-xl">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.svg" alt="logo" width={28} height={28} />
@@ -40,7 +40,7 @@ export default function Navigation() {
                     className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${
                       isActive(item.href)
                         ? "bg-white/10 text-white"
-                        : "text-muted hover:bg-white/[0.04] hover:text-on-surface-dim"
+                        : "text-muted hover:bg-white/4 hover:text-on-surface-dim"
                     }`}
                   >
                     {item.label}
@@ -108,7 +108,7 @@ export default function Navigation() {
                       className={`block rounded-xl px-4 py-3 text-2xl font-bold transition-colors ${
                         isActive(item.href)
                           ? "bg-primary-light/10 text-primary-light"
-                          : "text-white/70 hover:bg-white/[0.04] hover:text-white"
+                          : "text-white/70 hover:bg-white/4 hover:text-white"
                       }`}
                       onClick={() => setSidebarOpen(false)}
                     >

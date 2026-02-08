@@ -16,7 +16,7 @@ export default function SexyItSection({ data }: Props) {
   return (
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 overflow-hidden px-6 md:gap-16 md:px-12">
       <section className="flex w-full flex-col gap-4 md:gap-6">
-        <h2 className="bg-gradient-to-r from-accent to-primary-light bg-clip-text text-xl font-semibold text-transparent sm:text-5xl">
+        <h2 className="text-xl font-semibold sm:text-5xl text-gradient">
           섹시한 IT
         </h2>
         <p className="text-sm text-on-surface/70 sm:text-lg">
@@ -56,14 +56,14 @@ export default function SexyItSection({ data }: Props) {
               rel="noopener noreferrer"
               className="group"
             >
-              <div className="relative aspect-square w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.03] transition-all duration-300 hover:-translate-y-1 hover:border-primary-light/20 hover:shadow-xl hover:shadow-primary/5">
+              <div className="relative aspect-square w-full overflow-hidden glass glass-hover">
                 <Image
                   src={card.imagePath}
                   alt={card.title}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <p className="text-xs text-white/60">{card.date}</p>
                   <h3 className="mt-1 text-base font-bold">{card.title}</h3>

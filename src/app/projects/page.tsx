@@ -1,6 +1,7 @@
 import { getDesigntons, getSexyIts, getStudies, getEtcs } from "@/actions/data";
 import Banner from "@/components/ui/Banner";
 import ProjectTabs from "@/features/projects/ProjectTabs";
+import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 
 export default async function ProjectsPage() {
   const [designtons, sexyIts, studies, etcs] = await Promise.all([
@@ -12,6 +13,7 @@ export default async function ProjectsPage() {
 
   return (
     <main>
+      <InteractiveGridPattern className="z-0" />
       <Banner
         title={
           <>

@@ -13,10 +13,10 @@ export default function EtcSection({ data }: Props) {
   const [visiblePosts, setVisiblePosts] = useState(6);
 
   return (
-    <div className="mx-auto flex max-w-[1280px] flex-col items-center justify-center overflow-hidden px-8 md:px-12">
+    <div className="mx-auto flex max-w-7xl flex-col items-center justify-center overflow-hidden px-8 md:px-12">
       <div className="flex w-full max-w-screen-lg flex-col items-start justify-start gap-10 md:gap-20">
         <section className="flex w-full flex-col gap-2 md:gap-8">
-          <h2 className="text-xl font-semibold sm:text-5xl bg-gradient-to-r from-accent to-primary-light bg-clip-text text-transparent">
+          <h2 className="text-xl font-semibold sm:text-5xl text-gradient">
             기타활동
           </h2>
           <p className="text-sm text-on-surface sm:text-xl">

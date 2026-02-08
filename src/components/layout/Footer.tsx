@@ -27,7 +27,7 @@ export default function Footer() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <footer className="relative z-40 border-t border-white/[0.06] bg-surface/70 backdrop-blur-xl">
+    <footer className="relative z-40 border-t border-white/6 bg-surface/70 backdrop-blur-xl">
       {/* Desktop */}
       <div className="hidden items-center justify-between px-6 py-8 md:flex lg:mx-auto lg:max-w-screen-xl">
         <div className="flex items-center gap-8">
@@ -47,7 +47,7 @@ export default function Footer() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] opacity-60 transition-all hover:border-white/10 hover:bg-white/[0.06] hover:opacity-100"
+                className="flex h-9 w-9 items-center justify-center rounded-full glass opacity-60 hover:border-white/10 hover:bg-white/6 hover:opacity-100"
               >
                 <Image
                   src={link.icon}
@@ -82,7 +82,7 @@ export default function Footer() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.03] opacity-60 transition-all hover:opacity-100"
+              className="flex h-11 w-11 items-center justify-center rounded-full glass opacity-60 hover:opacity-100"
             >
               <Image
                 src={link.icon}

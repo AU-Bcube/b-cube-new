@@ -7,11 +7,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "url parameter is required" }, { status: 400 });
   }
 
-  // Only allow Cloudinary URLs for security
+  // Only allow Cloudinary / Cloudflare R2 URLs for security
   try {
     const parsed = new URL(url);
-    if (!parsed.hostname.endsWith("cloudinary.com")) {
-      return NextResponse.json({ error: "Only Cloudinary URLs are allowed" }, { status: 403 });
+    if (!parsed.hostname.endsWith("cloudinary.com") && !parsed.hostname.endsWith("r2.dev")) {
+      return NextResponse.json({ error: "Only allowed storage URLs are permitted" }, { status: 403 });
     }
   } catch {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
