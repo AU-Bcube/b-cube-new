@@ -55,19 +55,28 @@ export async function getExecutives(): Promise<Executive[]> {
   }));
 }
 
+const CONTACT_FALLBACK: Contact = {
+  id: "", email: "", kakaotalkLink: "", instagramLink: "",
+  isRecruiting: false, recruitLink: "",
+};
+
 export async function getContact(): Promise<Contact> {
-  await dbConnect();
-  const doc = await ContactModel.findOne().lean();
-  if (!doc) return { id: "", email: "", kakaotalkLink: "", instagramLink: "", isRecruiting: false, recruitLink: "" };
-  return {
-    id: (doc._id as object).toString(),
-    email: doc.email,
-    kakaotalkLink: doc.kakaotalkLink,
-    instagramLink: doc.instagramLink,
-    isRecruiting: doc.isRecruiting ?? false,
-    recruitMessage: doc.recruitMessage,
-    recruitLink: doc.recruitLink ?? "",
-  };
+  try {
+    await dbConnect();
+    const doc = await ContactModel.findOne().lean();
+    if (!doc) return CONTACT_FALLBACK;
+    return {
+      id: (doc._id as object).toString(),
+      email: doc.email,
+      kakaotalkLink: doc.kakaotalkLink,
+      instagramLink: doc.instagramLink,
+      isRecruiting: doc.isRecruiting ?? false,
+      recruitMessage: doc.recruitMessage,
+      recruitLink: doc.recruitLink ?? "",
+    };
+  } catch {
+    return CONTACT_FALLBACK;
+  }
 }
 
 export async function getPhotos(): Promise<Photo[]> {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,14 +13,21 @@ const NAV_ITEMS = [
   { href: "/recruit", label: "리크루팅" },
 ];
 
-interface NavigationProps {
-  isRecruiting: boolean;
-  recruitLink: string;
-}
-
-export default function Navigation({ isRecruiting, recruitLink }: NavigationProps) {
+export default function Navigation() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isRecruiting, setIsRecruiting] = useState(false);
+  const [recruitLink, setRecruitLink] = useState("");
   const pathname = usePathname();
+
+  useEffect(() => {
+    fetch("/api/contact")
+      .then((r) => r.json())
+      .then((data) => {
+        setIsRecruiting(data.isRecruiting ?? false);
+        setRecruitLink(data.recruitLink ?? "");
+      })
+      .catch(() => {});
+  }, []);
 
   if (pathname.startsWith("/admin")) return null;
 
