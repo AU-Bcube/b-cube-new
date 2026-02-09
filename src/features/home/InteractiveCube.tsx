@@ -446,6 +446,7 @@ export default function InteractiveCube() {
       clickPos.current = { x: e.clientX, y: e.clientY };
       lastInteract.current = Date.now();
       el.style.cursor = 'grabbing';
+      el.setPointerCapture(e.pointerId);
 
       // Detect which cubelet and face was clicked
       const target = e.target as HTMLElement;
@@ -579,12 +580,14 @@ export default function InteractiveCube() {
     };
 
     el.addEventListener('pointerdown', onDown);
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
+    el.addEventListener('pointermove', onMove);
+    el.addEventListener('pointerup', onUp);
+    el.addEventListener('pointercancel', onUp);
     return () => {
       el.removeEventListener('pointerdown', onDown);
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
+      el.removeEventListener('pointermove', onMove);
+      el.removeEventListener('pointerup', onUp);
+      el.removeEventListener('pointercancel', onUp);
     };
   }, [doSlice, mounted]);
 
@@ -607,6 +610,7 @@ export default function InteractiveCube() {
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'grab',
+          touchAction: 'none',
         }}>
         <div
           ref={cubeGroupRef}
