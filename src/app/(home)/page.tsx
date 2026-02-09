@@ -71,13 +71,6 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2">
-          <span className="text-xs tracking-widest text-on-surface-dim/50">
-            SCROLL
-          </span>
-          <div className="h-8 w-px animate-pulse bg-linear-to-b from-primary-light/60 to-transparent" />
-        </div>
       </div>
 
       {/* Introduction Section */}
