@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getContact } from "@/actions/data";
 import Banner from "@/components/ui/Banner";
@@ -7,6 +8,21 @@ import ActivityCard from "@/components/cards/ActivityCard";
 import RecruitInfo from "@/features/recruit/RecruitInfo";
 import ContactSection from "@/features/recruit/ContactSection";
 import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
+
+export const metadata: Metadata = {
+  title: "리크루팅",
+  description:
+    "비큐브와 함께할 새로운 멤버를 모집합니다. 모집 개요와 지원 방법을 확인해 보세요.",
+  openGraph: {
+    title: "리크루팅 | 비큐브 B-cube",
+    description:
+      "비큐브와 함께할 새로운 멤버를 모집합니다. 모집 개요와 지원 방법을 확인해 보세요.",
+    url: "/recruit",
+  },
+  alternates: {
+    canonical: "/recruit",
+  },
+};
 
 export default async function RecruitPage() {
   const contact = await getContact();

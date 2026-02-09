@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FadeUp from "@/components/ui/FadeUp";
 import ActivityCard from "@/components/cards/ActivityCard";
@@ -6,6 +7,12 @@ import ExecutivesSection from "@/features/home/ExecutivesSection";
 import InteractiveCube from "@/features/home/InteractiveCube";
 import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
 import { getActivities, getExecutives } from "@/actions/data";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default async function HomePage() {
   const [activities, executives] = await Promise.all([

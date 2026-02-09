@@ -6,7 +6,10 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleAnalytics } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
-  title: '비큐브 B-cube',
+  title: {
+    default: '비큐브 B-cube',
+    template: '%s | 비큐브 B-cube',
+  },
   description: '아주대학교 경영인텔리전스학과 소학회',
   icons: { icon: '/logo.svg' },
   keywords: [
@@ -28,12 +31,12 @@ export const metadata: Metadata = {
     '프론트엔드',
     '피그마',
   ],
-  metadataBase: new URL('https://b-cube.kr'),
+  metadataBase: new URL('https://www.b-cube.kr'),
   openGraph: {
     title: '비큐브 B-cube',
     description: '아주대학교 경영인텔리전스학과 소학회',
     images: '/opengraph-image.png',
-    url: 'https://b-cube.kr',
+    url: '/',
     siteName: '비큐브 B-cube',
     locale: 'ko_KR',
     type: 'website',
@@ -42,7 +45,7 @@ export const metadata: Metadata = {
     'naver-site-verification': 'faeee0c5c10843f8a1f21c3ef305b36b5c7ac22b',
   },
   alternates: {
-    canonical: 'https://b-cube.kr',
+    canonical: '/',
   },
 };
 

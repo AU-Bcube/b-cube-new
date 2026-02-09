@@ -85,16 +85,21 @@ function isOuterFace(pos: Vec3, dir: string): boolean {
 
 const OUTER_FACE_BG = 'hsla(210, 60%, 75%, 0.15)';
 
+const FACE_SHADOW_OUTER =
+  'inset 0 0 0 0.5px rgba(255,255,255,0.3), inset 0 0 20px rgba(100,170,255,0.15), 0 0 6px rgba(150,200,255,0.25), 0 0 20px rgba(80,140,255,0.1)';
+const FACE_SHADOW_INNER =
+  'inset 0 0 0 0.5px rgba(255,255,255,0.2), inset 0 0 14px rgba(100,160,255,0.2), 0 0 6px rgba(150,200,255,0.2), 0 0 18px rgba(80,140,255,0.08)';
+
 function applyFaceStyle(el: HTMLElement, outer: boolean) {
+  el.style.border = 'none';
   if (outer) {
     el.style.background = OUTER_FACE_BG;
-    el.style.boxShadow =
-      'inset 0 0 0 1px rgba(255,255,255,0.25), inset 0 0 18px rgba(100,180,255,0.15)';
+    el.style.boxShadow = FACE_SHADOW_OUTER;
     el.style.backdropFilter = 'blur(8px)';
     el.style.setProperty('-webkit-backdrop-filter', 'blur(8px)');
   } else {
-    el.style.background = 'rgba(8, 12, 25, 0.6)';
-    el.style.boxShadow = 'inset 0 0 10px rgba(0,0,0,0.3)';
+    el.style.background = 'rgba(60, 100, 180, 0.55)';
+    el.style.boxShadow = FACE_SHADOW_INNER;
     el.style.backdropFilter = 'none';
     el.style.setProperty('-webkit-backdrop-filter', 'none');
   }
@@ -132,13 +137,67 @@ const LOGO_CONFIG = [
   { path: '/cube_logo/Git.svg', face: '-z', pos: [-1, 1, -1] as Vec3 },
   { path: '/cube_logo/notion.svg', face: '-z', pos: [-1, -1, -1] as Vec3 },
   { path: '/cube_logo/NGINX (1).svg', face: '-z', pos: [1, 1, -1] as Vec3 },
-  { path: '/cube_logo/Visual Studio Code (VS Code).svg', face: '-z', pos: [1, -1, -1] as Vec3 },
+  {
+    path: '/cube_logo/Visual Studio Code (VS Code).svg',
+    face: '-z',
+    pos: [1, -1, -1] as Vec3,
+  },
 ];
 
+// Face → two perpendicular rotation axes
+const FACE_PERP_AXES: Record<string, [Axis, Axis]> = {
+  '+x': ['y', 'z'],
+  '-x': ['y', 'z'],
+  '+y': ['x', 'z'],
+  '-y': ['x', 'z'],
+  '+z': ['x', 'y'],
+  '-z': ['x', 'y'],
+};
+
+// CSS-space face centers (Y inverted from world)
+const FACE_CENTERS: Record<string, Vec3> = {
+  '+x': [1, 0, 0],
+  '-x': [-1, 0, 0],
+  '+y': [0, -1, 0],
+  '-y': [0, 1, 0],
+  '+z': [0, 0, 1],
+  '-z': [0, 0, -1],
+};
+
+// CSS angular velocity for dir=1 (accounts for sign flip in animation)
+const OMEGA_CSS: Record<Axis, Vec3> = {
+  x: [-1, 0, 0],
+  y: [0, 1, 0],
+  z: [0, 0, -1],
+};
+
+/** Screen-space direction a face moves when rotating around `axis` with dir=1 */
+function getScreenTangent(
+  face: string,
+  axis: Axis,
+  rx: number,
+  ry: number,
+): [number, number] {
+  const P = FACE_CENTERS[face];
+  const w = OMEGA_CSS[axis];
+  // v = ω × P (surface velocity in CSS object space)
+  const vx = w[1] * P[2] - w[2] * P[1];
+  const vy = w[2] * P[0] - w[0] * P[2];
+  const vz = w[0] * P[1] - w[1] * P[0];
+  // Project to screen: M = Rx(rx) * Ry(ry)
+  const a = (rx * Math.PI) / 180;
+  const b = (ry * Math.PI) / 180;
+  const sa = Math.sin(a),
+    ca = Math.cos(a);
+  const sb = Math.sin(b),
+    cb = Math.cos(b);
+  return [cb * vx + sb * vz, sa * sb * vx + ca * vy - sa * cb * vz];
+}
+
 const LOGO_COLORS = LOGO_CONFIG.map((_, i) => {
-  const hue = 200 + (i * 7) % 50; // 200~250 range (blue to indigo)
-  const sat = 50 + (i * 3) % 30;  // 50~80%
-  const lit = 55 + (i * 5) % 25;  // 55~80%
+  const hue = 200 + ((i * 7) % 50); // 200~250 range (blue to indigo)
+  const sat = 50 + ((i * 3) % 30); // 50~80%
+  const lit = 55 + ((i * 5) % 25); // 55~80%
   return `hsla(${hue}, ${sat}%, ${lit}%, 0.2)`;
 });
 
@@ -147,6 +206,10 @@ const LOGO_COLORS = LOGO_CONFIG.map((_, i) => {
 export default function InteractiveCube() {
   const [mounted, setMounted] = useState(false);
   const [size, setSize] = useState(170);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [autoSlice, setAutoSlice] = useState(true);
+  const autoRotateRef = useRef(true);
+  const autoSliceRef = useRef(true);
 
   useEffect(() => {
     setMounted(true);
@@ -186,6 +249,10 @@ export default function InteractiveCube() {
     dir: 1 | -1;
     ids: Set<number>;
     start: number;
+    interactive?: boolean;
+    dragAngle?: number;
+    releaseTime?: number;
+    releaseAngle?: number;
   } | null>(null);
 
   // Logo tracking — accumulates rotation to preserve image orientation
@@ -206,23 +273,31 @@ export default function InteractiveCube() {
     });
   }, []);
 
-  const doSlice = useCallback(() => {
-    if (sliceRef.current) return;
+  const clickedCubeletId = useRef<number | null>(null);
+  const clickedFaceDir = useRef<string | null>(null);
+  const dragTangent = useRef<[number, number] | null>(null);
 
-    const axes: Axis[] = ['x', 'y', 'z'];
-    const axis = axes[Math.floor(Math.random() * 3)];
-    const layer = [-1, 1][Math.floor(Math.random() * 2)];
-    const dir = (Math.random() > 0.5 ? 1 : -1) as 1 | -1;
-    const ai = axis === 'x' ? 0 : axis === 'y' ? 1 : 2;
+  const doSlice = useCallback(
+    (preferredAxis?: Axis, preferredDir?: 1 | -1, preferredLayer?: number) => {
+      if (sliceRef.current) return;
 
-    const ids = new Set<number>();
-    for (const c of cubeletsRef.current) {
-      if (c.pos[ai] === layer) ids.add(c.id);
-    }
+      const axis =
+        preferredAxis ??
+        (['x', 'y', 'z'] as Axis[])[Math.floor(Math.random() * 3)];
+      const layer = preferredLayer ?? [-1, 1][Math.floor(Math.random() * 2)];
+      const dir = preferredDir ?? ((Math.random() > 0.5 ? 1 : -1) as 1 | -1);
+      const ai = axis === 'x' ? 0 : axis === 'y' ? 1 : 2;
 
-    sliceRef.current = { axis, dir, ids, start: performance.now() };
-    lastInteract.current = Date.now();
-  }, []);
+      const ids = new Set<number>();
+      for (const c of cubeletsRef.current) {
+        if (c.pos[ai] === layer) ids.add(c.id);
+      }
+
+      sliceRef.current = { axis, dir, ids, start: performance.now() };
+      lastInteract.current = Date.now();
+    },
+    [],
+  );
 
   // Animation loop
   useEffect(() => {
@@ -238,7 +313,7 @@ export default function InteractiveCube() {
 
       const { step: s, half: h } = geoRef.current;
 
-      if (!isDragging.current) {
+      if (!isDragging.current && autoRotateRef.current) {
         autoY.current += dt * 8;
         rot.current.x += (-25 - rot.current.x) * dt * 2;
         rot.current.y += (autoY.current - rot.current.y) * dt * 2;
@@ -254,8 +329,22 @@ export default function InteractiveCube() {
       const sl = sliceRef.current;
       let sliceRotStr = '';
       if (sl) {
-        const rawAngle =
-          easeInOutCubic(Math.min((now - sl.start) / 550, 1)) * 90 * sl.dir;
+        let rawAngle: number;
+        if (sl.interactive) {
+          // Interactive drag: angle follows cursor
+          rawAngle = (sl.dragAngle ?? 0) * sl.dir;
+        } else if (
+          sl.releaseTime !== undefined &&
+          sl.releaseAngle !== undefined
+        ) {
+          // Completing from release angle to 90
+          const t = easeInOutCubic(Math.min((now - sl.releaseTime) / 300, 1));
+          rawAngle = (sl.releaseAngle + (90 - sl.releaseAngle) * t) * sl.dir;
+        } else {
+          // Auto: full timed animation
+          rawAngle =
+            easeInOutCubic(Math.min((now - sl.start) / 550, 1)) * 90 * sl.dir;
+        }
         const cssAngle = sl.axis === 'y' ? rawAngle : -rawAngle;
         sliceRotStr =
           sl.axis === 'x'
@@ -283,8 +372,11 @@ export default function InteractiveCube() {
       }
 
       // Slice completion
-      if (sl) {
-        const t = Math.min((now - sl.start) / 550, 1);
+      if (sl && !sl.interactive) {
+        const isRelease = sl.releaseTime !== undefined;
+        const t = isRelease
+          ? Math.min((now - sl.releaseTime!) / 300, 1)
+          : Math.min((now - sl.start) / 550, 1);
         if (t >= 1) {
           // Compute final slice rotation string
           const finalCssAngle = (sl.axis === 'y' ? 1 : -1) * 90 * sl.dir;
@@ -326,7 +418,11 @@ export default function InteractiveCube() {
         }
       }
 
-      if (!sliceRef.current && Date.now() - lastInteract.current > 4000) {
+      if (
+        !sliceRef.current &&
+        autoSliceRef.current &&
+        Date.now() - lastInteract.current > 4000
+      ) {
         doSlice();
         lastInteract.current = Date.now() - 2000;
       }
@@ -350,12 +446,102 @@ export default function InteractiveCube() {
       clickPos.current = { x: e.clientX, y: e.clientY };
       lastInteract.current = Date.now();
       el.style.cursor = 'grabbing';
+
+      // Detect which cubelet and face was clicked
+      const target = e.target as HTMLElement;
+      clickedCubeletId.current = null;
+      clickedFaceDir.current = target.dataset.dir ?? null;
+      for (const [id, cbEl] of cubeletRefs.current) {
+        if (cbEl.contains(target)) {
+          clickedCubeletId.current = id;
+          break;
+        }
+      }
     };
+    let wasShiftDrag = false;
     const onMove = (e: PointerEvent) => {
       if (!isDragging.current) return;
-      rot.current.y += (e.clientX - dragStart.current.x) * 0.5;
-      rot.current.x -= (e.clientY - dragStart.current.y) * 0.5;
-      dragStart.current = { x: e.clientX, y: e.clientY };
+      if (e.shiftKey) {
+        wasShiftDrag = true;
+        rot.current.y += (e.clientX - dragStart.current.x) * 0.5;
+        rot.current.x -= (e.clientY - dragStart.current.y) * 0.5;
+        dragStart.current = { x: e.clientX, y: e.clientY };
+      } else {
+        const dx = e.clientX - clickPos.current.x;
+        const dy = e.clientY - clickPos.current.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Start interactive slice when drag exceeds threshold
+        if (!sliceRef.current && dist > 10) {
+          const face = clickedFaceDir.current;
+          const cubelet =
+            clickedCubeletId.current !== null
+              ? cubeletsRef.current.find(
+                  (c) => c.id === clickedCubeletId.current,
+                )
+              : undefined;
+
+          if (face && FACE_PERP_AXES[face]) {
+            const [ax1, ax2] = FACE_PERP_AXES[face];
+            const t1 = getScreenTangent(
+              face,
+              ax1,
+              rot.current.x,
+              rot.current.y,
+            );
+            const t2 = getScreenTangent(
+              face,
+              ax2,
+              rot.current.x,
+              rot.current.y,
+            );
+            const dot1 = dx * t1[0] + dy * t1[1];
+            const dot2 = dx * t2[0] + dy * t2[1];
+
+            let chosenAxis: Axis, dir: 1 | -1, tangent: [number, number];
+            if (Math.abs(dot1) > Math.abs(dot2)) {
+              chosenAxis = ax1;
+              dir = dot1 > 0 ? 1 : -1;
+              tangent = t1;
+            } else {
+              chosenAxis = ax2;
+              dir = dot2 > 0 ? 1 : -1;
+              tangent = t2;
+            }
+
+            const len = Math.sqrt(tangent[0] ** 2 + tangent[1] ** 2);
+            dragTangent.current =
+              len > 0.001 ? [tangent[0] / len, tangent[1] / len] : [1, 0];
+
+            const ai = chosenAxis === 'x' ? 0 : chosenAxis === 'y' ? 1 : 2;
+            const layer = cubelet
+              ? cubelet.pos[ai]
+              : [-1, 1][Math.floor(Math.random() * 2)];
+            const ids = new Set<number>();
+            for (const c of cubeletsRef.current) {
+              if (c.pos[ai] === layer) ids.add(c.id);
+            }
+            sliceRef.current = {
+              axis: chosenAxis,
+              dir,
+              ids,
+              start: performance.now(),
+              interactive: true,
+              dragAngle: 0,
+            };
+          }
+        }
+
+        // Update drag angle by projecting onto tangent direction
+        if (sliceRef.current?.interactive && dragTangent.current) {
+          const proj =
+            dx * dragTangent.current[0] + dy * dragTangent.current[1];
+          sliceRef.current.dragAngle = Math.max(
+            0,
+            Math.min(proj * sliceRef.current.dir * 0.9, 90),
+          );
+        }
+      }
       lastInteract.current = Date.now();
     };
     const onUp = (e: PointerEvent) => {
@@ -363,6 +549,30 @@ export default function InteractiveCube() {
       isDragging.current = false;
       autoY.current = rot.current.y;
       el.style.cursor = 'grab';
+
+      if (wasShiftDrag) {
+        wasShiftDrag = false;
+        dragTangent.current = null;
+        return;
+      }
+
+      // Release interactive slice → snap to 90°
+      if (sliceRef.current?.interactive) {
+        const angle = sliceRef.current.dragAngle ?? 0;
+        if (angle > 15) {
+          sliceRef.current.interactive = false;
+          sliceRef.current.releaseAngle = angle;
+          sliceRef.current.releaseTime = performance.now();
+        } else {
+          sliceRef.current = null;
+        }
+        dragTangent.current = null;
+        return;
+      }
+
+      dragTangent.current = null;
+
+      // Click → random slice
       const dx = e.clientX - clickPos.current.x;
       const dy = e.clientY - clickPos.current.y;
       if (dx * dx + dy * dy < 25) doSlice();
@@ -382,7 +592,7 @@ export default function InteractiveCube() {
 
   return (
     <motion.div
-      className="relative select-none"
+      className="group/cube relative select-none"
       style={{ width: size * 1.6, height: size * 1.6, maxWidth: '100%' }}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -433,10 +643,10 @@ export default function InteractiveCube() {
                       borderRadius: faceRadius,
                       background: outer
                         ? OUTER_FACE_BG
-                        : 'rgba(8, 12, 25, 0.6)',
+                        : 'rgba(60, 100, 180, 0.55)',
                       boxShadow: outer
-                        ? 'inset 0 0 0 1px rgba(255,255,255,0.25), inset 0 0 18px rgba(100,180,255,0.15)'
-                        : 'inset 0 0 10px rgba(0,0,0,0.3)',
+                        ? FACE_SHADOW_OUTER
+                        : FACE_SHADOW_INNER,
                       backdropFilter: outer ? 'blur(8px)' : 'none',
                       WebkitBackdropFilter: outer ? 'blur(8px)' : 'none',
                       backfaceVisibility: 'hidden',
@@ -483,6 +693,81 @@ export default function InteractiveCube() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Controls — top-right, visible on hover */}
+      <div className="pointer-events-none absolute right-1 top-1 flex flex-col gap-1 opacity-0 transition-opacity duration-300 group-hover/cube:opacity-100">
+        <button
+          type="button"
+          onClick={() => {
+            const next = !autoRotate;
+            setAutoRotate(next);
+            autoRotateRef.current = next;
+            if (next) autoY.current = rot.current.y;
+          }}
+          className="pointer-events-auto flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-white/40 transition-colors hover:text-white/60">
+          <span
+            className="flex h-3 w-3 shrink-0 items-center justify-center rounded border transition-all duration-150"
+            style={{
+              borderColor: autoRotate
+                ? 'rgba(96,165,250,0.7)'
+                : 'rgba(255,255,255,0.2)',
+              background: autoRotate ? 'rgba(96,165,250,0.25)' : 'transparent',
+            }}>
+            {autoRotate && (
+              <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M2.5 6L5 8.5L9.5 3.5"
+                  stroke="rgba(147,197,253,0.9)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </span>
+          자동 회전
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            const next = !autoSlice;
+            setAutoSlice(next);
+            autoSliceRef.current = next;
+          }}
+          className="pointer-events-auto flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-white/40 transition-colors hover:text-white/60">
+          <span
+            className="flex h-3 w-3 shrink-0 items-center justify-center rounded border transition-all duration-150"
+            style={{
+              borderColor: autoSlice
+                ? 'rgba(96,165,250,0.7)'
+                : 'rgba(255,255,255,0.2)',
+              background: autoSlice ? 'rgba(96,165,250,0.25)' : 'transparent',
+            }}>
+            {autoSlice && (
+              <svg width="8" height="8" viewBox="0 0 12 12" fill="none">
+                <path
+                  d="M2.5 6L5 8.5L9.5 3.5"
+                  stroke="rgba(147,197,253,0.9)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </span>
+          자동 섞기
+        </button>
+      </div>
+
+      {/* Hints — bottom-right, visible on hover */}
+      <div className="pointer-events-none absolute bottom-2 right-1 flex flex-col items-end gap-0.5 opacity-0 transition-opacity duration-300 group-hover/cube:opacity-100">
+        <span className="text-[9px] tracking-wide text-white/25">
+          드래그 — 슬라이스
+        </span>
+        <span className="text-[9px] tracking-wide text-white/25">
+          Shift + 드래그 — 회전
+        </span>
       </div>
     </motion.div>
   );
