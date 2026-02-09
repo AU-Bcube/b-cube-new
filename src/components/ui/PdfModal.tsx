@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 interface PdfModalProps {
@@ -29,8 +30,8 @@ export default function PdfModal({ title, pdfUrl, onClose }: PdfModalProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center">
+  return createPortal(
+    <div className="fixed inset-0 z-9999 flex items-center justify-center">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
@@ -61,6 +62,7 @@ export default function PdfModal({ title, pdfUrl, onClose }: PdfModalProps) {
           />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
