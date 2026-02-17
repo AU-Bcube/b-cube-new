@@ -1,43 +1,43 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_ITEMS = [
-  { href: "/", label: "홈" },
-  { href: "/projects", label: "프로젝트" },
-  { href: "/reviews", label: "후기" },
-  { href: "/recruit", label: "리크루팅" },
+  { href: '/', label: '홈' },
+  { href: '/projects', label: '프로젝트' },
+  { href: '/reviews', label: '후기' },
+  { href: '/recruit', label: '리크루팅' },
 ];
 
 export default function Navigation() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isRecruiting, setIsRecruiting] = useState(false);
-  const [recruitLink, setRecruitLink] = useState("");
+  const [recruitLink, setRecruitLink] = useState('');
   const pathname = usePathname();
 
   useEffect(() => {
-    fetch("/api/contact")
+    fetch('/api/contact')
       .then((r) => r.json())
       .then((data) => {
         setIsRecruiting(data.isRecruiting ?? false);
-        setRecruitLink(data.recruitLink ?? "");
+        setRecruitLink(data.recruitLink ?? '');
       })
       .catch(() => {});
   }, []);
 
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith('/admin')) return null;
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+    href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-white/4 bg-surface/70 backdrop-blur-xl">
-        <div className="flex items-center justify-between px-6 py-4 lg:mx-auto lg:max-w-screen-xl">
+        <div className="flex items-center justify-between px-6 py-4 lg:mx-auto lg:max-w-7xl">
           <Link href="/" className="flex items-center gap-3">
             <Image src="/logo.svg" alt="logo" width={28} height={28} />
             <Image src="/BCUBE.svg" alt="BCUBE" width={72} height={18} />
@@ -51,10 +51,9 @@ export default function Navigation() {
                     href={item.href}
                     className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${
                       isActive(item.href)
-                        ? "bg-white/10 text-white"
-                        : "text-muted hover:bg-white/4 hover:text-on-surface-dim"
-                    }`}
-                  >
+                        ? 'bg-white/10 text-white'
+                        : 'text-muted hover:bg-white/4 hover:text-on-surface-dim'
+                    }`}>
                     {item.label}
                   </Link>
                 </li>
@@ -65,8 +64,7 @@ export default function Navigation() {
                     href={recruitLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="ml-2 rounded-full bg-primary-light px-5 py-2 text-sm font-bold text-surface transition-all duration-200 hover:bg-primary-light/85"
-                  >
+                    className="ml-2 rounded-full bg-primary-light px-5 py-2 text-sm font-bold text-surface transition-all duration-200 hover:bg-primary-light/85">
                     지원하기
                   </Link>
                 </li>
@@ -77,8 +75,7 @@ export default function Navigation() {
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-1 md:hidden"
-            aria-label="메뉴 열기"
-          >
+            aria-label="메뉴 열기">
             <Image src="/hamburger.svg" alt="menu" width={24} height={24} />
           </button>
         </div>
@@ -95,12 +92,11 @@ export default function Navigation() {
               onClick={() => setSidebarOpen(false)}
             />
             <motion.div
-              initial={{ x: "100%" }}
+              initial={{ x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-50 w-full bg-surface md:hidden"
-            >
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 right-0 z-50 w-full bg-surface md:hidden">
               <div className="flex items-center justify-between px-6 py-4">
                 <div className="flex items-center gap-3">
                   <Image src="/logo.svg" alt="logo" width={28} height={28} />
@@ -109,8 +105,7 @@ export default function Navigation() {
                 <button
                   onClick={() => setSidebarOpen(false)}
                   className="p-1"
-                  aria-label="메뉴 닫기"
-                >
+                  aria-label="메뉴 닫기">
                   <Image
                     src="/mobileCancel.svg"
                     alt="close"
@@ -125,17 +120,15 @@ export default function Navigation() {
                     key={item.href}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
+                    transition={{ delay: i * 0.05 }}>
                     <Link
                       href={item.href}
                       className={`block rounded-xl px-4 py-3 text-2xl font-bold transition-colors ${
                         isActive(item.href)
-                          ? "bg-primary-light/10 text-primary-light"
-                          : "text-white/70 hover:bg-white/4 hover:text-white"
+                          ? 'bg-primary-light/10 text-primary-light'
+                          : 'text-white/70 hover:bg-white/4 hover:text-white'
                       }`}
-                      onClick={() => setSidebarOpen(false)}
-                    >
+                      onClick={() => setSidebarOpen(false)}>
                       {item.label}
                     </Link>
                   </motion.div>
@@ -152,8 +145,7 @@ export default function Navigation() {
           href={recruitLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-primary-light px-8 py-3 text-sm font-bold text-surface shadow-lg shadow-primary-light/25 transition-all duration-200 hover:bg-primary-light/85 md:hidden"
-        >
+          className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-primary-light px-8 py-3 text-sm font-bold text-surface shadow-lg shadow-primary-light/25 transition-all duration-200 hover:bg-primary-light/85 md:hidden">
           지원하기
         </Link>
       )}

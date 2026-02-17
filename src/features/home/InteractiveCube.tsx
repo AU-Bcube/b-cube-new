@@ -83,25 +83,21 @@ function isOuterFace(pos: Vec3, dir: string): boolean {
   }
 }
 
-const OUTER_FACE_BG = 'hsla(210, 60%, 75%, 0.15)';
+const OUTER_FACE_BG = 'hsla(220, 40%, 42%, 0.85)';
 
 const FACE_SHADOW_OUTER =
-  'inset 0 0 0 0.5px rgba(255,255,255,0.3), inset 0 0 20px rgba(100,170,255,0.15), 0 0 6px rgba(150,200,255,0.25), 0 0 20px rgba(80,140,255,0.1)';
+  'inset 0 0 0 0.5px rgba(255,255,255,0.08), inset 0 0 18px rgba(180,210,255,0.1), 0 0 10px rgba(200,220,255,0.12), 0 0 24px rgba(180,200,255,0.06)';
 const FACE_SHADOW_INNER =
-  'inset 0 0 0 0.5px rgba(255,255,255,0.2), inset 0 0 14px rgba(100,160,255,0.2), 0 0 6px rgba(150,200,255,0.2), 0 0 18px rgba(80,140,255,0.08)';
+  'inset 0 0 0 0.5px rgba(255,255,255,0.06), inset 0 0 14px rgba(160,190,240,0.1), 0 0 8px rgba(180,200,255,0.08)';
 
 function applyFaceStyle(el: HTMLElement, outer: boolean) {
   el.style.border = 'none';
   if (outer) {
     el.style.background = OUTER_FACE_BG;
     el.style.boxShadow = FACE_SHADOW_OUTER;
-    el.style.backdropFilter = 'blur(8px)';
-    el.style.setProperty('-webkit-backdrop-filter', 'blur(8px)');
   } else {
-    el.style.background = 'rgba(60, 100, 180, 0.55)';
+    el.style.background = 'rgba(50, 75, 130, 0.75)';
     el.style.boxShadow = FACE_SHADOW_INNER;
-    el.style.backdropFilter = 'none';
-    el.style.setProperty('-webkit-backdrop-filter', 'none');
   }
 }
 
@@ -195,11 +191,16 @@ function getScreenTangent(
 }
 
 const LOGO_COLORS = LOGO_CONFIG.map((_, i) => {
-  const hue = 200 + ((i * 7) % 50); // 200~250 range (blue to indigo)
-  const sat = 50 + ((i * 3) % 30); // 50~80%
-  const lit = 55 + ((i * 5) % 25); // 55~80%
+  const hue = 200 + ((i * 7) % 50);
+  const sat = 50 + ((i * 3) % 30);
+  const lit = 55 + ((i * 5) % 25);
   return `hsla(${hue}, ${sat}%, ${lit}%, 0.2)`;
 });
+
+// Logos with their own solid backgrounds — skip blur texture
+const LOGO_BG_OVERRIDE: Record<number, string> = {
+  3: '#3178c6',   // TypeScript — already has blue bg in SVG
+};
 
 // ── Main Component ──────────────────────────────────────────────
 
@@ -647,12 +648,11 @@ export default function InteractiveCube() {
                       borderRadius: faceRadius,
                       background: outer
                         ? OUTER_FACE_BG
-                        : 'rgba(60, 100, 180, 0.55)',
+                        : 'rgba(50, 75, 130, 0.75)',
+                      border: '1px solid rgba(80,130,200,0.25)',
                       boxShadow: outer
                         ? FACE_SHADOW_OUTER
                         : FACE_SHADOW_INNER,
-                      backdropFilter: outer ? 'blur(8px)' : 'none',
-                      WebkitBackdropFilter: outer ? 'blur(8px)' : 'none',
                       backfaceVisibility: 'hidden',
                     }}
                   />
@@ -681,7 +681,8 @@ export default function InteractiveCube() {
                 pointerEvents: 'none',
                 borderRadius: faceRadius,
                 overflow: 'hidden',
-                background: LOGO_COLORS[i],
+                border: '1px solid rgba(80,130,200,0.3)',
+                backgroundColor: LOGO_BG_OVERRIDE[i] ?? LOGO_COLORS[i],
               }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
