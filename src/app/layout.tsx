@@ -56,6 +56,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <script
+          defer
+          src="https://external.searchos.io/meta-loader/v1.js"
+          data-id="698c258ed125feae13f0260e"
+          data-endpoint="https://api.searchos.kr/meta"></script>
+      </head>
       <GoogleAnalytics gaId="G-16CC2DB93Q" />
       <body>
         {/* Gradient mesh background */}
