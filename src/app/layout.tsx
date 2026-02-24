@@ -92,7 +92,7 @@ export default function RootLayout({
         />
         <script
           defer
-          src="https://external.searchos.io/meta-loader/v1.js"
+          src="https://external.searchos.io/meta-loader/v1-dev.js"
           data-id="698c258ed125feae13f0260e"
           data-endpoint="https://api.searchos.kr/meta"></script>
       </head>
