@@ -49,6 +49,35 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.b-cube.kr/#organization',
+      name: 'B-CUBE 비큐브',
+      url: 'https://www.b-cube.kr',
+      logo: 'https://www.b-cube.kr/logo.svg',
+      description:
+        '아주대학교 경영인텔리전스학과 IT 소학회. 웹/앱 서비스 기획 및 개발, 디자인톤, IT 스터디 등 다양한 활동을 진행합니다.',
+      sameAs: ['https://www.instagram.com/ajou_bcube/'],
+      foundingDate: '2017',
+      parentOrganization: {
+        '@type': 'CollegeOrUniversity',
+        name: '아주대학교',
+      },
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.b-cube.kr/#website',
+      url: 'https://www.b-cube.kr',
+      name: '비큐브 B-CUBE',
+      publisher: { '@id': 'https://www.b-cube.kr/#organization' },
+      inLanguage: 'ko',
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -57,6 +86,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <script
           defer
           src="https://external.searchos.io/meta-loader/v1.js"

@@ -20,8 +20,33 @@ export default async function HomePage() {
     getExecutives(),
   ]);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: '비큐브 B-CUBE',
+    description:
+      '아주대학교 경영인텔리전스학과 IT 소학회. 웹/앱 서비스 기획 및 개발.',
+    url: 'https://www.b-cube.kr',
+    isPartOf: { '@id': 'https://www.b-cube.kr/#website' },
+    about: { '@id': 'https://www.b-cube.kr/#organization' },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: activities.length,
+      itemListElement: activities.map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: a.title,
+        description: a.description,
+      })),
+    },
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Interactive grid background */}
       <InteractiveGridPattern className="z-0" />
 

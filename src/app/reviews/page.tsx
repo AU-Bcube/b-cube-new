@@ -25,8 +25,36 @@ export default async function ReviewsPage() {
     getPhotos(),
   ]);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: '후기 | 비큐브 B-CUBE',
+    description:
+      '비큐브 선배들의 생생한 인터뷰와 활동 사진을 확인해 보세요.',
+    url: 'https://www.b-cube.kr/reviews',
+    isPartOf: { '@id': 'https://www.b-cube.kr/#website' },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: interviews.length,
+      itemListElement: interviews.map((iv, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        item: {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: iv.name },
+          reviewBody: iv.introduction,
+          itemReviewed: { '@id': 'https://www.b-cube.kr/#organization' },
+        },
+      })),
+    },
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <InteractiveGridPattern className="z-0" />
       <Banner
         title={

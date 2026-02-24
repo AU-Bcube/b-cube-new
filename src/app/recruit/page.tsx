@@ -27,8 +27,30 @@ export const metadata: Metadata = {
 export default async function RecruitPage() {
   const contact = await getContact();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: '리크루팅 | 비큐브 B-CUBE',
+    description: contact.isRecruiting
+      ? '비큐브에서 새로운 멤버를 모집하고 있습니다. 지금 지원하세요!'
+      : '비큐브와 함께할 새로운 멤버를 모집합니다. 모집 개요와 지원 방법을 확인해 보세요.',
+    url: 'https://www.b-cube.kr/recruit',
+    isPartOf: { '@id': 'https://www.b-cube.kr/#website' },
+    ...(contact.isRecruiting && contact.recruitLink && {
+      potentialAction: {
+        '@type': 'ApplyAction',
+        name: '비큐브 지원하기',
+        target: contact.recruitLink,
+      },
+    }),
+  };
+
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <InteractiveGridPattern className="z-0" />
       <Banner
         title={contact.isRecruiting ? "모집 중입니다!" : "모집이 종료되었습니다!"}
