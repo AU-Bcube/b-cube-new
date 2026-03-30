@@ -55,17 +55,13 @@ interface ContactSectionProps {
 
 export default function ContactSection({ contact }: ContactSectionProps) {
   return (
-    <section className="mb-32 mt-32 flex w-full flex-col items-center justify-center md:mb-48 md:mt-48">
+    <section className="mt-32 mb-32 flex w-full flex-col items-center justify-center md:mt-48 md:mb-48">
       <FadeUp>
         <SectionHeading subject="Contact" title="Contact Us" />
       </FadeUp>
       <div className="mt-10 grid w-full auto-rows-fr grid-cols-1 gap-4 md:mt-14 md:grid-cols-3 md:gap-6">
         <FadeUp delay={1} className="h-full">
-          <ContactItem
-            title="MAIL"
-            value={contact.email}
-            icon={<Mail size={24} />}
-          />
+          <ContactItem title="MAIL" value={contact.email} icon={<Mail size={24} />} />
         </FadeUp>
         <FadeUp delay={2} className="h-full">
           <ContactItem
@@ -78,7 +74,7 @@ export default function ContactSection({ contact }: ContactSectionProps) {
         <FadeUp delay={3} className="h-full">
           <ContactItem
             title="INSTAGRAM"
-            value="섹시한 IT"
+            value="bcube_ajou"
             icon={<Instagram size={24} />}
             href={contact.instagramLink}
           />
