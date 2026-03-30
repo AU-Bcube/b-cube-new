@@ -4,26 +4,28 @@ import { useState, useEffect, useCallback, type FormEvent } from "react";
 import Image from "next/image";
 
 type Tab =
-  | "designton"
-  | "sexyit"
-  | "study"
-  | "etc"
-  | "activities"
-  | "interview"
-  | "executives"
-  | "photo"
-  | "contact";
+  | 'designton'
+  | 'sexyit'
+  | 'study'
+  | 'etc'
+  | 'main-activities'
+  | 'activities'
+  | 'interview'
+  | 'executives'
+  | 'photo'
+  | 'contact';
 
 const TABS: { key: Tab; label: string }[] = [
-  { key: "designton", label: "디자인톤" },
-  { key: "sexyit", label: "섹시한 IT" },
-  { key: "study", label: "스터디" },
-  { key: "etc", label: "기타" },
-  { key: "activities", label: "주요활동" },
-  { key: "interview", label: "인터뷰" },
-  { key: "executives", label: "운영진" },
-  { key: "photo", label: "활동사진" },
-  { key: "contact", label: "연락처" },
+  { key: 'designton', label: '디자인톤' },
+  { key: 'sexyit', label: '섹시한 IT' },
+  { key: 'study', label: '스터디' },
+  { key: 'etc', label: '기타' },
+  { key: 'main-activities', label: '주요 활동' },
+  { key: 'activities', label: '프로젝트' },
+  { key: 'interview', label: '인터뷰' },
+  { key: 'executives', label: '운영진' },
+  { key: 'photo', label: '활동사진' },
+  { key: 'contact', label: '연락처' },
 ];
 
 type Item = Record<string, unknown>;
@@ -554,8 +556,8 @@ function Input({
 
 function renderFields(tab: Tab) {
   switch (tab) {
-    case "designton":
-    case "etc":
+    case 'designton':
+    case 'etc':
       return (
         <>
           <Input name="title" label="제목" />
@@ -566,7 +568,7 @@ function renderFields(tab: Tab) {
           <Input name="pdfPath" label="PDF" type="file" />
         </>
       );
-    case "sexyit":
+    case 'sexyit':
       return (
         <>
           <Input name="title" label="제목" />
@@ -575,7 +577,7 @@ function renderFields(tab: Tab) {
           <Input name="imagePath" label="이미지" type="file" />
         </>
       );
-    case "study":
+    case 'study':
       return (
         <>
           <Input name="title" label="제목" />
@@ -583,7 +585,7 @@ function renderFields(tab: Tab) {
           <Input name="imagePath" label="이미지" type="file" />
         </>
       );
-    case "activities":
+    case 'activities':
       return (
         <>
           <Input name="title" label="제목" />
@@ -592,7 +594,14 @@ function renderFields(tab: Tab) {
           <Input name="pdfPath" label="PDF" type="file" />
         </>
       );
-    case "interview":
+    case 'main-activities':
+      return (
+        <>
+          <Input name="title" label="제목" />
+          <Input name="description" label="설명" type="textarea" />
+        </>
+      );
+    case 'interview':
       return (
         <>
           <Input name="name" label="이름" />
@@ -601,7 +610,7 @@ function renderFields(tab: Tab) {
           <Input name="imagePath" label="프로필 이미지" type="file" />
         </>
       );
-    case "executives":
+    case 'executives':
       return (
         <>
           <Input name="name" label="이름" />
@@ -610,7 +619,7 @@ function renderFields(tab: Tab) {
           <Input name="imagePath" label="프로필 이미지" type="file" />
         </>
       );
-    case "photo":
+    case 'photo':
       return (
         <>
           <Input name="description" label="설명" />
@@ -637,67 +646,94 @@ function renderEditFields(tab: Tab, item: Item) {
   const v = (key: string) => String(item[key] || "");
 
   switch (tab) {
-    case "designton":
-    case "etc":
+    case 'designton':
+    case 'etc':
       return (
         <>
-          <Input name="title" label="제목" defaultValue={v("title")} />
-          <Input name="year" label="연도" defaultValue={v("year")} />
-          <Input name="participant" label="참가자" required={false} defaultValue={v("participant")} />
-          <Input name="award" label="수상" required={false} defaultValue={v("award")} />
+          <Input name="title" label="제목" defaultValue={v('title')} />
+          <Input name="year" label="연도" defaultValue={v('year')} />
+          <Input
+            name="participant"
+            label="참가자"
+            required={false}
+            defaultValue={v('participant')}
+          />
+          <Input name="award" label="수상" required={false} defaultValue={v('award')} />
           <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false} />
           <Input name="pdfPath" label="PDF (변경 시에만)" type="file" required={false} />
         </>
       );
-    case "sexyit":
+    case 'sexyit':
       return (
         <>
-          <Input name="title" label="제목" defaultValue={v("title")} />
-          <Input name="date" label="날짜" type="date" defaultValue={v("date")?.split("T")[0]} />
-          <Input name="url" label="인스타그램 URL" required={false} defaultValue={v("url")} />
+          <Input name="title" label="제목" defaultValue={v('title')} />
+          <Input name="date" label="날짜" type="date" defaultValue={v('date')?.split('T')[0]} />
+          <Input name="url" label="인스타그램 URL" required={false} defaultValue={v('url')} />
           <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false} />
         </>
       );
-    case "study":
+    case 'study':
       return (
         <>
-          <Input name="title" label="제목" defaultValue={v("title")} />
-          <Input name="year" label="연도" defaultValue={v("year")} />
+          <Input name="title" label="제목" defaultValue={v('title')} />
+          <Input name="year" label="연도" defaultValue={v('year')} />
           <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false} />
         </>
       );
-    case "activities":
+    case 'activities':
       return (
         <>
-          <Input name="title" label="제목" defaultValue={v("title")} />
-          <Input name="description" label="설명" type="textarea" defaultValue={v("description")} />
+          <Input name="title" label="제목" defaultValue={v('title')} />
+          <Input name="description" label="설명" type="textarea" defaultValue={v('description')} />
           <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false} />
           <Input name="pdfPath" label="PDF (변경 시에만)" type="file" required={false} />
         </>
       );
-    case "interview":
+    case 'main-activities':
       return (
         <>
-          <Input name="name" label="이름" defaultValue={v("name")} />
-          <Input name="studentId" label="학번" type="number" defaultValue={v("studentId")} />
-          <Input name="introduction" label="소개" type="textarea" defaultValue={v("introduction")} />
-          <Input name="imagePath" label="프로필 이미지 (변경 시에만)" type="file" required={false} />
+          <Input name="title" label="제목" defaultValue={v('title')} />
+          <Input name="description" label="설명" type="textarea" defaultValue={v('description')} />
         </>
       );
-    case "executives":
+    case 'interview':
       return (
         <>
-          <Input name="name" label="이름" defaultValue={v("name")} />
-          <Input name="role" label="직책" defaultValue={v("role")} />
-          <Input name="studentId" label="학번" type="number" defaultValue={v("studentId")} />
-          <Input name="imagePath" label="프로필 이미지 (변경 시에만)" type="file" required={false} />
+          <Input name="name" label="이름" defaultValue={v('name')} />
+          <Input name="studentId" label="학번" type="number" defaultValue={v('studentId')} />
+          <Input
+            name="introduction"
+            label="소개"
+            type="textarea"
+            defaultValue={v('introduction')}
+          />
+          <Input
+            name="imagePath"
+            label="프로필 이미지 (변경 시에만)"
+            type="file"
+            required={false}
+          />
         </>
       );
-    case "photo":
+    case 'executives':
       return (
         <>
-          <Input name="description" label="설명" defaultValue={v("description")} />
-          <Input name="date" label="날짜" type="date" defaultValue={v("date")?.split("T")[0]} />
+          <Input name="name" label="이름" defaultValue={v('name')} />
+          <Input name="role" label="직책" defaultValue={v('role')} />
+          <Input name="studentId" label="학번" type="number" defaultValue={v('studentId')} />
+          <Input
+            name="imagePath"
+            label="프로필 이미지 (변경 시에만)"
+            type="file"
+            required={false}
+          />
+        </>
+      );
+    case 'photo':
+      return (
+        <>
+          <Input name="description" label="설명" defaultValue={v('description')} />
+          <Input name="date" label="날짜" type="date" defaultValue={v('date')?.split('T')[0]} />
           <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false} />
         </>
       );
