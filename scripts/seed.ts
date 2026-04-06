@@ -46,7 +46,7 @@ const PhotoSchema = new mongoose.Schema({ description: String, date: Date, image
 const ExecutivesSchema = new mongoose.Schema({ name: String, role: String, studentId: Number, imagePath: String });
 const ContactSchema = new mongoose.Schema({ email: String, kakaotalkLink: String, instagramLink: String });
 const ActivitiesSchema = new mongoose.Schema({ title: String, description: String, imagePath: String, pdfPath: String });
-const MainActivitiesSchema = new mongoose.Schema({title: {type: String, required: true},description: {type: String, required: true}});
+const MainActivitySchema = new mongoose.Schema({title: {type: String, required: true},description: {type: String, required: true}});
 
 function getMimeType(filePath: string): string {
   const ext = path.extname(filePath).toLowerCase();
@@ -114,7 +114,7 @@ async function main() {
   const Executives = mongoose.model("Executives", ExecutivesSchema);
   const Contact = mongoose.model("Contact", ContactSchema);
   const Activities = mongoose.model("Activities", ActivitiesSchema);
-  const MainActivities = mongoose.model("MainActivities", MainActivitiesSchema);
+  const MainActivity = mongoose.model("MainActivity", MainActivitySchema);
 
   // Studies
   console.log("=== Studies ===");
@@ -235,8 +235,8 @@ async function main() {
     }
   }
 
-  // MainActivities (메인 페이지 주요 활동)
-  console.log("\n=== MainActivities ===");
+  // MainActivity (메인 페이지 주요 활동)
+  console.log("\n=== MainActivity ===");
   for (const a of [
       {title: "🎨 디자인톤", description: "서비스 기획부터 UI 디자인, 개발 및 배포까지\n팀별로 웹/앱 서비스를 직접 구현하는 프로젝트"},
       {title: "📱 섹시한 IT", description: "최신 IT 트렌드를 카드뉴스로 제작하고\nB-CUBE 공식 인스타그램을 통해 공유하는 활동"},
@@ -245,7 +245,7 @@ async function main() {
       {title: "🖥️ 웹사이트 기획 및 개발", description: "기획팀, 디자인팀, 개발팀으로 나누어\nB-CUBE 웹사이트를 체계적으로 기획하고\n개발하며 지속적으로 발전시키는 활동"},
       {title: "💡 신입생 아이디어톤", description: "신입생끼리 서비스를 직접 기획해보고,\n문제 해결을 위한 창의적인 아이디어를 도출하며\n실전 기획 경험을 쌓는 프로젝트"},
   ]) {
-    await MainActivities.create({ title: a.title, description: a.description });
+    await MainActivity.create({ title: a.title, description: a.description });
     console.log(`  ✓ ${a.title}`);
   }
 
