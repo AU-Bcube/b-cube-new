@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FadeUp from "@/components/ui/FadeUp";
-import ActivityCard from "@/components/cards/ActivityCard";
 import ActivitiesSection from "@/features/home/ActivitiesSection";
 import ExecutivesSection from "@/features/home/ExecutivesSection";
 import InteractiveCube from "@/features/home/InteractiveCube";
 import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
-import { getActivities, getExecutives } from "@/actions/data";
+import {getActivities, getExecutives, getMainActivities} from "@/actions/data";
+import MainActivitiesSection from "@/features/home/MainActivitiesSection";
 
 export const metadata: Metadata = {
   alternates: {
@@ -15,9 +15,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [activities, executives] = await Promise.all([
+  const [activities, executives, mainActivities] = await Promise.all([
     getActivities(),
     getExecutives(),
+    getMainActivities(),
   ]);
 
   const jsonLd = {
@@ -100,90 +101,12 @@ export default async function HomePage() {
 
       {/* Introduction Section */}
       <section className="relative z-10 flex flex-col md:mt-12">
-        <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
-          <FadeUp>
-            <SectionHeading subject="Introduction" title="주요 활동" />
-          </FadeUp>
-          <div className="mt-10 grid auto-rows-fr gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
-            <FadeUp delay={1} className="h-full">
-              <ActivityCard
-                title="🎨 디자인톤"
-                content={
-                  <>
-                    서비스 기획부터 UI 디자인, 개발 및 배포까지
-                    <br />
-                    팀별로 웹/앱 서비스를 직접 구현하는 프로젝트
-                  </>
-                }
-              />
-            </FadeUp>
-            <FadeUp delay={2} className="h-full">
-              <ActivityCard
-                title="📱 섹시한 IT"
-                content={
-                  <>
-                    최신 IT 트렌드를 카드뉴스로 제작하고
-                    <br />
-                    B-CUBE 공식 인스타그램을 통해 공유하는 활동
-                  </>
-                }
-              />
-            </FadeUp>
-            <FadeUp delay={3} className="h-full">
-              <ActivityCard
-                title="📚 IT 스터디"
-                content={
-                  <>
-                    java, javascript, python 등<br />
-                    다양한 프로그래밍 스터디 진행
-                  </>
-                }
-              />
-            </FadeUp>
-            <FadeUp delay={4} className="h-full">
-              <ActivityCard
-                title="🗣️ B-CUBE I TALK"
-                content={
-                  <>
-                    IT 관련 지식과 트렌드를 공유하고
-                    <br />
-                    데이터베이스화하여 체계적으로 축적하는
-                    <br />
-                    온라인 지식 공유 활동
-                  </>
-                }
-              />
-            </FadeUp>
-            <FadeUp delay={5} className="h-full">
-              <ActivityCard
-                title="🖥️ 웹사이트 기획 및 개발"
-                content={
-                  <>
-                    기획팀, 디자인팀, 개발팀으로 나누어
-                    <br />
-                    B-CUBE 웹사이트를 체계적으로 기획하고
-                    <br />
-                    개발하며 지속적으로 발전시키는 활동
-                  </>
-                }
-              />
-            </FadeUp>
-            <FadeUp delay={6} className="h-full">
-              <ActivityCard
-                title="💡 신입생 아이디어톤"
-                content={
-                  <>
-                    신입생끼리 서비스를 직접 기획해보고,
-                    <br />
-                    문제 해결을 위한 창의적인 아이디어를 도출하며
-                    <br />
-                    실전 기획 경험을 쌓는 프로젝트
-                  </>
-                }
-              />
-            </FadeUp>
+          <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
+              <FadeUp>
+                  <SectionHeading subject="Introduction" title="주요 활동" />
+              </FadeUp>
+              <MainActivitiesSection mainActivities={mainActivities} />
           </div>
-        </div>
       </section>
 
       {/* Project Carousel Section */}
