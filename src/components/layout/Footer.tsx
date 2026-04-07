@@ -41,7 +41,7 @@ export default function Footer() {
           </span>
         </div>
         <ul className="flex items-center gap-4">
-          {SOCIAL_LINKS.map((link) => (
+          {[...SOCIAL_LINKS.map((link) => (
             <li key={link.alt}>
               <Link
                 href={link.href}
@@ -57,7 +57,9 @@ export default function Footer() {
                 />
               </Link>
             </li>
-          ))}
+          )), (<a href="https://www.netlify.com" key={"https://www.netlify.com"}>
+            <Image src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg" alt="Deploys by Netlify" width={120} height={30}></Image>
+          </a>)]}
         </ul>
       </div>
 
@@ -76,7 +78,7 @@ export default function Footer() {
           <p className="text-white/40">아주대학교 경영대학 소학회</p>
         </div>
         <div className="flex gap-3">
-          {SOCIAL_LINKS.map((link) => (
+          {[...SOCIAL_LINKS.map((link) => (
             <Link
               key={link.alt}
               href={link.href}
@@ -91,7 +93,9 @@ export default function Footer() {
                 height={22}
               />
             </Link>
-          ))}
+          )), (<a href="https://www.netlify.com" key={"https://www.netlify.com"}>
+            <Image src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg" alt="Deploys by Netlify" width={100} height={30}></Image>
+          </a>)]}
         </div>
       </div>
     </footer>
