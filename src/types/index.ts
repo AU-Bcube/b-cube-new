@@ -73,3 +73,9 @@ export type Etc = {
   pdfPath: string;
   award?: string;
 };
+
+export type MainActivity = {
+  id: string;
+  title: string;
+  description: string;
+};

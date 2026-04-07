@@ -8,6 +8,7 @@ import ActivitiesModel from "@/lib/models/Activities";
 import SexyItModel from "@/lib/models/SexyIt";
 import DesigntonModel from "@/lib/models/Designton";
 import EtcModel from "@/lib/models/Etc";
+import MainActivityModel from "@/lib/models/MainActivity"
 import type {
   Study,
   Interview,
@@ -18,6 +19,7 @@ import type {
   SexyIt,
   Designton,
   Etc,
+  MainActivity,
 } from "@/types";
 
 export async function getStudies(): Promise<Study[]> {
@@ -139,5 +141,15 @@ export async function getEtcs(): Promise<Etc[]> {
     imagePath: e.imagePath,
     pdfPath: e.pdfPath,
     award: e.award,
+  }));
+}
+
+export async function getMainActivities(): Promise<MainActivity[]> {
+  await dbConnect();
+  const docs = await MainActivityModel.find().sort({ year: -1 }).lean();
+  return docs.map((e) => ({
+    id: (e._id as object).toString(),
+    title: e.title,
+    description: e.description,
   }));
 }
