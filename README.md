@@ -8,12 +8,12 @@ b-cube.kr is an open-source club promotion platform managed by B-CUBE, a club wi
   <img src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg" alt="Deploys by Netlify" />
 </a>
 
-## CODE OF CONDUCT
+### CODE OF CONDUCT
 
-[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)<br>
+All members of B-CUBE must comply with the following *CODE OF CONDUCT*.
 
-## LICENSE
+### LICENSE
 
-Repositories Managed by [B-CUBE](https://www.b-cube.kr) and under [AU-Bcube](https://github.com/AU-Bcube) organization are licensed under the MIT License.
-
-[LICENSE.md](LICENSE.md)
+[LICENSE.md](LICENSE.md)<br>
+Repositories managed by the [B-CUBE](https://www.b-cube.kr) and under [AU-Bcube](https://github.com/AU-Bcube) organization are under the MIT License.
