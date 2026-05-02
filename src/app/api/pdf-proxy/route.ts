@@ -18,6 +18,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
   }
   
-  return NextResponse.json({ error: "throw error intentionally" }, { status: 400 });
-  // return redirect(url)
+  return redirect(url);
 }
