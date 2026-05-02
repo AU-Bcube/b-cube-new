@@ -8,8 +8,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "url parameter is required" }, { status: 400 });
   }
 
-  return NextResponse.json({ error: "throw error intentionally" }, { status: 400 });
-
   // Only allow Cloudinary / Cloudflare R2 URLs for security
   try {
     const parsed = new URL(url);
@@ -19,6 +17,7 @@ export async function GET(request: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
   }
-
-  return redirect(url)
+  
+  return NextResponse.json({ error: "throw error intentionally" }, { status: 400 });
+  // return redirect(url)
 }
