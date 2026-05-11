@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
-import { uploadImage, uploadPdf, deleteAsset } from "@/lib/storage";
 import { requireAuth } from "@/lib/auth";
 import RecruitOverview from "@/lib/models/RecruitOverview";
 
@@ -54,8 +53,6 @@ export async function DELETE(
   if (!activity)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  await deleteAsset(activity.imagePath);
-  await deleteAsset(activity.pdfPath);
   await RecruitOverview.findByIdAndDelete(id);
   revalidatePath("/", "layout");
   return NextResponse.json({ message: "삭제 완료" });
