@@ -1,6 +1,6 @@
 import type {Metadata} from "next";
 import Link from "next/link";
-import {getContact, getRecruitOverview} from "@/actions/data";
+import {getContact, getRecruitActivity, getRecruitOverview} from "@/actions/data";
 import Banner from "@/components/ui/Banner";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FadeUp from "@/components/ui/FadeUp";
@@ -27,6 +27,7 @@ export const metadata: Metadata = {
 export default async function RecruitPage() {
     const contact = await getContact();
     const recruitOverviews = await getRecruitOverview();
+    const recruitActivities = await getRecruitActivity();
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -97,7 +98,7 @@ export default async function RecruitPage() {
                 </section>
 
                 {/* 활동 분야 */}
-                <RecruitInfo/>
+                <RecruitInfo recruitActivity={recruitActivities}/>
 
                 {/* Contact Us */}
                 <ContactSection contact={contact}/>

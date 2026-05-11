@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import { requireAuth } from "@/lib/auth";
-import RecruitOverview from "@/lib/models/RecruitOverview";
+import RecruitActivity from "@/lib/models/RecruitActivity";
 
 export async function PATCH(
   req: NextRequest,
@@ -13,7 +13,7 @@ export async function PATCH(
 
   await dbConnect();
   const { id } = await params;
-  const item = await RecruitOverview.findById(id);
+  const item = await RecruitActivity.findById(id);
   if (!item)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
@@ -21,14 +21,17 @@ export async function PATCH(
   if (contentType.includes("application/json")) {
     const body = await req.json();
     if (body.title) item.title = body.title;
+    if (body.category) item.category = body.category;
     if (body.description) item.description = body.description;
   } else {
     const formData = await req.formData();
     const title = formData.get("title") as string | null;
     const description = formData.get("description") as string | null;
+    const category = formData.get("category") as string | null;
 
     if (title) item.title = title;
     if (description) item.description = description;
+    if (category) item.category = category;
   }
 
   await item.save();
@@ -36,7 +39,8 @@ export async function PATCH(
   return NextResponse.json({
     id: item._id.toString(),
     title: item.title,
-    description: item.description
+    description: item.description,
+    category: item.category
   });
 }
 
@@ -49,11 +53,11 @@ export async function DELETE(
 
   await dbConnect();
   const { id } = await params;
-  const activity = await RecruitOverview.findById(id);
+  const activity = await RecruitActivity.findById(id);
   if (!activity)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  await RecruitOverview.findByIdAndDelete(id);
+  await RecruitActivity.findByIdAndDelete(id);
   revalidatePath("/", "layout");
   return NextResponse.json({ message: "삭제 완료" });
 }
