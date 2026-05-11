@@ -79,3 +79,9 @@ export type MainActivity = {
   title: string;
   description: string;
 };
+
+export type RecruitOverview = {
+  id: string;
+  title: string;
+  description: string;
+};
