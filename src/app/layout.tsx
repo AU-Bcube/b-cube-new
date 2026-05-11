@@ -3,7 +3,7 @@ import './globals.css';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 export const metadata: Metadata = {
   title: {
@@ -90,13 +90,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <script
-          defer
-          src="https://external.searchos.io/meta-loader/v1-dev.js"
-          data-id="698c258ed125feae13f0260e"
-          data-endpoint="https://api.searchos.kr/meta"></script>
+        <GoogleTagManager gtmId={'GTM-WVR9PN5Z'}/>
       </head>
-      <GoogleAnalytics gaId="G-16CC2DB93Q" />
+
       <body>
         {/* Gradient mesh background */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
