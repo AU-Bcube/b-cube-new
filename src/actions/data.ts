@@ -8,6 +8,7 @@ import ActivitiesModel from "@/lib/models/Activities";
 import SexyItModel from "@/lib/models/SexyIt";
 import DesigntonModel from "@/lib/models/Designton";
 import RecruitOverviewModel from "@/lib/models/RecruitOverview";
+import RecruitActivityModel from "@/lib/models/RecruitActivity";
 import EtcModel from "@/lib/models/Etc";
 import MainActivityModel from "@/lib/models/MainActivity"
 import type {
@@ -21,8 +22,8 @@ import type {
   Designton,
   Etc,
   MainActivity,
-  RecruitOverview
-
+  RecruitOverview,
+  RecruitActivity
 } from "@/types";
 
 export async function getStudies(): Promise<Study[]> {
@@ -163,6 +164,17 @@ export async function getRecruitOverview(): Promise<RecruitOverview[]> {
   return docs.map((e) => ({
     id: (e._id as object).toString(),
     title: e.title,
+    description: e.description,
+  }));
+}
+
+export async function getRecruitActivity(): Promise<RecruitActivity[]> {
+  await dbConnect();
+  const docs = await RecruitActivityModel.find().sort({ year: -1 }).lean();
+  return docs.map((e) => ({
+    id: (e._id as object).toString(),
+    title: e.title,
+    category: e.category,
     description: e.description,
   }));
 }

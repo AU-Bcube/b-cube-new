@@ -85,3 +85,10 @@ export type RecruitOverview = {
   title: string;
   description: string;
 };
+
+export type RecruitActivity = {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+};
