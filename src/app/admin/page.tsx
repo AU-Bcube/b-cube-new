@@ -14,7 +14,8 @@ type Tab =
     | 'executives'
     | 'photo'
     | 'contact'
-    | 'recruit-overview';
+    | 'recruit-overview'
+    | 'recruit-activity';
 
 const TABS: { key: Tab; label: string }[] = [
     {key: 'designton', label: '디자인톤'},
@@ -28,6 +29,7 @@ const TABS: { key: Tab; label: string }[] = [
     {key: 'photo', label: '활동사진'},
     {key: 'contact', label: '연락처'},
     {key: 'recruit-overview', label: '리크루팅/모집개요'},
+    {key: 'recruit-activity', label: '리크루팅/활동분야'},
 ];
 
 type Item = Record<string, unknown>;
@@ -653,6 +655,14 @@ function renderFields(tab: Tab) {
                     <Input name="description" label="설명" type="textarea"/>
                 </>
             );
+        case 'recruit-activity':
+            return (
+                <>
+                    <Input name="category" label="카테고리"/>
+                    <Input name="title" label="제목"/>
+                    <Input name="description" label="설명" type="textarea"/>
+                </>
+            );
         default:
             return null;
     }
@@ -725,6 +735,14 @@ function renderEditFields(tab: Tab, item: Item) {
         case 'recruit-overview':
             return (
                 <>
+                    <Input name="title" label="제목" defaultValue={v('title')}/>
+                    <Input name="description" label="설명" type="textarea" defaultValue={v('description')}/>
+                </>
+            );
+        case 'recruit-activity':
+            return (
+                <>
+                    <Input name="category" label="카테고리" defaultValue={v('category')}/>
                     <Input name="title" label="제목" defaultValue={v('title')}/>
                     <Input name="description" label="설명" type="textarea" defaultValue={v('description')}/>
                 </>
