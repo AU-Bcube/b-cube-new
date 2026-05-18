@@ -1,16 +1,34 @@
-import type { Metadata } from "next";
-import SectionHeading from "@/components/ui/SectionHeading";
-import FadeUp from "@/components/ui/FadeUp";
-import ActivitiesSection from "@/features/home/ActivitiesSection";
-import ExecutivesSection from "@/features/home/ExecutivesSection";
-import InteractiveCube from "@/features/home/InteractiveCube";
-import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
-import {getActivities, getExecutives, getMainActivities} from "@/actions/data";
-import MainActivitiesSection from "@/features/home/MainActivitiesSection";
+import type { Metadata } from 'next';
+import SectionHeading from '@/components/ui/SectionHeading';
+import FadeUp from '@/components/ui/FadeUp';
+import ActivitiesSection from '@/features/home/ActivitiesSection';
+import ExecutivesSection from '@/features/home/ExecutivesSection';
+import InteractiveCube from '@/features/home/InteractiveCube';
+import { InteractiveGridPattern } from '@/components/ui/interactive-grid-pattern';
+import { getActivities, getExecutives, getMainActivities } from '@/actions/data';
+import MainActivitiesSection from '@/features/home/MainActivitiesSection';
+import AnswerBlock from '@/components/seo/AnswerBlock';
+import FaqSection from '@/components/seo/FaqSection';
+import JsonLd from '@/components/seo/JsonLd';
+import {
+  HOME_FAQS,
+  SEO_UPDATED_AT,
+  SITE,
+  absoluteUrl,
+} from '@/lib/site';
+import {
+  createBreadcrumbNode,
+  createFaqNode,
+  createItemListNode,
+  createJsonLdGraph,
+  createPageNode,
+} from '@/lib/seo';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "/",
+    canonical: '/',
   },
 };
 
@@ -21,33 +39,27 @@ export default async function HomePage() {
     getMainActivities(),
   ]);
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: '비큐브 B-CUBE',
-    description:
-      '아주대학교 경영인텔리전스학과 IT 소학회. 웹/앱 서비스 기획 및 개발.',
-    url: 'https://www.b-cube.kr',
-    isPartOf: { '@id': 'https://www.b-cube.kr/#website' },
-    about: { '@id': 'https://www.b-cube.kr/#organization' },
-    mainEntity: {
-      '@type': 'ItemList',
-      numberOfItems: activities.length,
-      itemListElement: activities.map((a, i) => ({
-        '@type': 'ListItem',
-        position: i + 1,
-        name: a.title,
-        description: a.description,
-      })),
-    },
-  };
+  const activityItems = mainActivities.map((activity) => ({
+    name: activity.title,
+    description: activity.description.replace(/\n/g, ' '),
+    url: absoluteUrl('/projects'),
+  }));
+
+  const jsonLd = createJsonLdGraph([
+    createPageNode({
+      path: '/',
+      name: SITE.title,
+      description: SITE.description,
+      mainEntity: { '@id': `${absoluteUrl('/')}#faq` },
+    }),
+    createBreadcrumbNode([{ name: '홈', path: '/' }]),
+    createFaqNode('/', HOME_FAQS),
+    createItemListNode('/', '비큐브 주요 활동', activityItems),
+  ]);
 
   return (
     <main>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       {/* Interactive grid background */}
       <InteractiveGridPattern className="z-0" />
 
@@ -60,29 +72,30 @@ export default async function HomePage() {
               className="text-center text-5xl font-bold leading-tight tracking-tight md:text-left md:text-7xl lg:text-8xl"
               style={{
                 backgroundImage:
-                  "linear-gradient(180deg, #FFFFFF 0%, #F6F6F7 40%, #518CFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                  'linear-gradient(180deg, #FFFFFF 0%, #F6F6F7 40%, #518CFF 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
-              BROAD
+              비큐브
               <br />
-              BUSINESS
-              <br />
-              BUILDER
+              B-CUBE
             </h1>
+            <p className="text-center text-sm font-bold uppercase tracking-[0.24em] text-primary-light/80 md:text-left md:text-base">
+              Broad Business Builder
+            </p>
             <h2
               className="text-center text-lg font-semibold md:text-left md:text-xl lg:text-2xl"
               style={{
                 backgroundImage:
-                  "linear-gradient(90deg, #7380B0 0%, #518CFF 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
+                  'linear-gradient(90deg, #7380B0 0%, #518CFF 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
               }}
             >
-              아주대학교 경영인텔리전스학과 소학회
+              {SITE.affiliation}
             </h2>
             <p className="max-w-lg text-center text-sm font-medium leading-6 text-on-surface-dim/70 md:text-left md:text-base md:leading-7">
               비큐브는 최신 IT 기술에 대한 이해를 바탕으로 웹 및 앱 서비스를 직접
@@ -96,17 +109,30 @@ export default async function HomePage() {
             <InteractiveCube />
           </div>
         </div>
-
       </div>
+
+      <AnswerBlock
+        id="about-bcube"
+        eyebrow="AEO Summary"
+        title="비큐브 B-CUBE는 어떤 소학회인가요?"
+        answer={SITE.extendedDescription}
+        facts={[
+          { label: '소속', value: SITE.affiliation },
+          { label: '핵심 활동', value: '디자인톤, 섹시한 IT, IT 스터디, 웹사이트 기획·개발' },
+          { label: '활동 방향', value: '기획, 디자인, 개발, 콘텐츠 제작을 연결한 실전형 프로젝트' },
+          { label: '공식 채널', value: 'Instagram, GitHub, KakaoTalk' },
+        ]}
+        updatedAt={SEO_UPDATED_AT}
+      />
 
       {/* Introduction Section */}
       <section className="relative z-10 flex flex-col md:mt-12">
-          <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
-              <FadeUp>
-                  <SectionHeading subject="Introduction" title="주요 활동" />
-              </FadeUp>
-              <MainActivitiesSection mainActivities={mainActivities} />
-          </div>
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-6 md:px-12">
+          <FadeUp>
+            <SectionHeading subject="Introduction" title="주요 활동" />
+          </FadeUp>
+          <MainActivitiesSection mainActivities={mainActivities} />
+        </div>
       </section>
 
       {/* Project Carousel Section */}
@@ -116,6 +142,12 @@ export default async function HomePage() {
           <ActivitiesSection activities={activities} />
         </div>
       </section>
+
+      <FaqSection
+        faqs={HOME_FAQS}
+        title="비큐브 핵심 정보"
+        description="비큐브의 소속, 활동, 프로젝트 경험을 질문과 답변 형태로 정리했습니다."
+      />
 
       {/* Executives Section */}
       <section className="relative z-10 mb-32 mt-32 flex flex-col items-center justify-center md:mb-48 md:mt-48">
