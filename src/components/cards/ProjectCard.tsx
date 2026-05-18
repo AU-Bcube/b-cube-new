@@ -23,39 +23,59 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const cardContent = (
+    <>
+      <div className="relative aspect-video w-full overflow-hidden">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-[rgba(8,14,30,0.8)] to-transparent" />
+        {award && (
+          <span className="absolute right-3 top-3 rounded-full border border-amber-400/30 bg-amber-500/90 px-3 py-1 text-xs font-bold text-black">
+            {award}
+          </span>
+        )}
+      </div>
+      <div className="space-y-1.5 p-5">
+        <span className="text-xs font-semibold tracking-wide text-primary-light">
+          {year}
+        </span>
+        <h5 className="truncate text-lg font-bold text-on-surface">{title}</h5>
+        {participants && (
+          <p className="text-sm text-on-surface/40">{participants}</p>
+        )}
+      </div>
+    </>
+  );
+
   return (
     <>
-      <div
-        data-no-grid
-        onClick={() => pdfUrl && setIsOpen(true)}
-        className="group cursor-pointer overflow-hidden glass hover:border-primary-light/20 hover:bg-white/6"
-      >
-        <div className="relative aspect-video w-full overflow-hidden">
-          <Image
-            src={image}
-            alt={title}
-            fill
-            className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-[rgba(8,14,30,0.8)] to-transparent" />
-          {award && (
-            <span className="absolute right-3 top-3 rounded-full border border-amber-400/30 bg-amber-500/90 px-3 py-1 text-xs font-bold text-black">
-              {award}
-            </span>
-          )}
-        </div>
-        <div className="space-y-1.5 p-5">
-          <span className="text-xs font-semibold tracking-wide text-primary-light">
-            {year}
-          </span>
-          <h5 className="truncate text-lg font-bold text-on-surface">
-            {title}
-          </h5>
-          {participants && (
-            <p className="text-sm text-on-surface/40">{participants}</p>
-          )}
-        </div>
-      </div>
+      {pdfUrl ? (
+        <a
+          data-no-grid
+          href={pdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(event) => {
+            event.preventDefault();
+            setIsOpen(true);
+          }}
+          aria-label={`${title} 결과물 PDF 보기`}
+          className="group block cursor-pointer overflow-hidden glass hover:border-primary-light/20 hover:bg-white/6"
+        >
+          {cardContent}
+        </a>
+      ) : (
+        <article
+          data-no-grid
+          className="group overflow-hidden glass hover:border-primary-light/20 hover:bg-white/6"
+        >
+          {cardContent}
+        </article>
+      )}
 
       {isOpen && pdfUrl && (
         <PdfModal
