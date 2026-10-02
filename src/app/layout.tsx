@@ -4,48 +4,60 @@ import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { SITE, absoluteUrl } from '@/lib/site';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE.url),
   title: {
-    default: '비큐브 B-cube',
-    template: '%s | 비큐브 B-cube',
+    default: SITE.title,
+    template: `%s | ${SITE.name}`,
   },
-  description: '아주대학교 경영인텔리전스학과 소학회',
-  icons: { icon: '/logo.svg' },
-  keywords: [
-    'B-cube',
-    'bcube',
-    '비큐브',
-    '동아리',
-    'IT동아리',
-    '아주대학교',
-    '경영인텔리전스학과',
-    '소학회',
-    '이비즈',
-    'e-비즈니스학과',
-    'e-business',
-    'IT기획',
-    '웹개발',
-    '앱개발',
-    '백엔드',
-    '프론트엔드',
-    '피그마',
-  ],
-  metadataBase: new URL('https://www.b-cube.kr'),
+  description: SITE.description,
+  applicationName: SITE.name,
+  authors: [{ name: SITE.name, url: SITE.url }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  category: 'education',
+  icons: { icon: SITE.logo },
+  keywords: [...SITE.keywords],
+  alternates: {
+    canonical: SITE.url,
+  },
   openGraph: {
-    title: '비큐브 B-cube',
-    description: '아주대학교 경영인텔리전스학과 소학회',
-    images: '/opengraph-image.png',
-    url: '/',
-    siteName: '비큐브 B-cube',
-    locale: 'ko_KR',
+    title: SITE.title,
+    description: SITE.description,
+    images: [
+      {
+        url: SITE.ogImage,
+        width: 1200,
+        height: 630,
+        alt: '비큐브 B-CUBE 공식 웹사이트 대표 이미지',
+      },
+    ],
+    url: SITE.url,
+    siteName: SITE.name,
+    locale: SITE.locale,
     type: 'website',
   },
-  other: {
-    'naver-site-verification': 'faeee0c5c10843f8a1f21c3ef305b36b5c7ac22b',
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE.title,
+    description: SITE.description,
+    images: [SITE.ogImage],
   },
-  alternates: {
-    canonical: '/',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  other: {
+    'naver-site-verification': SITE.naverVerification,
   },
 };
 
@@ -54,26 +66,27 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'Organization',
-      '@id': 'https://www.b-cube.kr/#organization',
-      name: 'B-CUBE 비큐브',
-      url: 'https://www.b-cube.kr',
-      logo: 'https://www.b-cube.kr/logo.svg',
-      description:
-        '아주대학교 경영인텔리전스학과 IT 소학회. 웹/앱 서비스 기획 및 개발, 디자인톤, IT 스터디 등 다양한 활동을 진행합니다.',
-      sameAs: ['https://www.instagram.com/ajou_bcube/'],
-      foundingDate: '2017',
+      '@id': `${absoluteUrl('/')}#organization`,
+      name: SITE.name,
+      alternateName: ['B-CUBE', '비큐브', '아주대 비큐브'],
+      url: SITE.url,
+      logo: absoluteUrl(SITE.logo),
+      description: SITE.description,
+      sameAs: [...SITE.sameAs],
       parentOrganization: {
         '@type': 'CollegeOrUniversity',
         name: '아주대학교',
+        url: 'https://www.ajou.ac.kr',
       },
     },
     {
       '@type': 'WebSite',
-      '@id': 'https://www.b-cube.kr/#website',
-      url: 'https://www.b-cube.kr',
-      name: '비큐브 B-CUBE',
-      publisher: { '@id': 'https://www.b-cube.kr/#organization' },
-      inLanguage: 'ko',
+      '@id': `${absoluteUrl('/')}#website`,
+      url: SITE.url,
+      name: SITE.name,
+      description: SITE.description,
+      publisher: { '@id': `${absoluteUrl('/')}#organization` },
+      inLanguage: SITE.language,
     },
   ],
 };
@@ -90,9 +103,8 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <GoogleTagManager gtmId={'GTM-WVR9PN5Z'}/>
+        <GoogleTagManager gtmId="GTM-WVR9PN5Z" />
       </head>
-
       <body>
         {/* Gradient mesh background */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">

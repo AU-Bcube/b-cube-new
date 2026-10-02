@@ -46,7 +46,8 @@ export function DotPattern({
   const dotsRef = useRef<Dot[]>([])
   const mouseRef = useRef({ x: -1000, y: -1000 })
   const animationRef = useRef<number>(0)
-  const startTimeRef = useRef(Date.now())
+  const startTimeRef = useRef<number | null>(null)
+  const drawRef = useRef<() => void>(() => {})
 
   const baseRgb = useMemo(() => hexToRgb(baseColor), [baseColor])
   const glowRgb = useMemo(() => hexToRgb(glowColor), [glowColor])
@@ -87,7 +88,7 @@ export function DotPattern({
     dotsRef.current = dots
   }, [dotSize, gap])
 
-  const draw = useCallback(() => {
+  const drawFrame = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -99,6 +100,10 @@ export function DotPattern({
 
     const { x: mx, y: my } = mouseRef.current
     const proxSq = proximity * proximity
+    if (startTimeRef.current === null) {
+      startTimeRef.current = Date.now()
+    }
+
     const time = (Date.now() - startTimeRef.current) * 0.001 * waveSpeed
 
     for (const dot of dotsRef.current) {
@@ -150,8 +155,12 @@ export function DotPattern({
       ctx.fill()
     }
 
-    animationRef.current = requestAnimationFrame(draw)
+    animationRef.current = requestAnimationFrame(drawRef.current)
   }, [proximity, baseRgb, glowRgb, dotSize, glowIntensity, waveSpeed])
+
+  useEffect(() => {
+    drawRef.current = drawFrame
+  }, [drawFrame])
 
   useEffect(() => {
     buildGrid()
@@ -166,11 +175,13 @@ export function DotPattern({
   }, [buildGrid])
 
   useEffect(() => {
-    animationRef.current = requestAnimationFrame(draw)
+    startTimeRef.current = Date.now()
+    animationRef.current = requestAnimationFrame(drawRef.current)
+
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current)
     }
-  }, [draw])
+  }, [])
 
   // Window-level mouse tracking for pointer-events-none
   useEffect(() => {

@@ -113,7 +113,13 @@ export default function AdminPage() {
     }, []);
 
     useEffect(() => {
-        if (authed) fetchItems(tab);
+        if (!authed) return;
+
+        const timeoutId = window.setTimeout(() => {
+            void fetchItems(tab);
+        }, 0);
+
+        return () => window.clearTimeout(timeoutId);
     }, [authed, tab, fetchItems]);
 
     const deleteItem = async (itemId: string) => {
