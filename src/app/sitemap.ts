@@ -1,22 +1,12 @@
-import type { MetadataRoute } from 'next';
-import { SEO_UPDATED_AT, SITE_ROUTES, absoluteUrl } from '@/lib/site';
-
-const lastModified = new Date(`${SEO_UPDATED_AT}T00:00:00+09:00`);
-
-const routes = [
-  ...SITE_ROUTES,
-  {
-    path: '/llms.txt',
-    priority: 0.4,
-    changeFrequency: 'monthly',
-  },
-] as const;
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return routes.map((route) => ({
-    url: absoluteUrl(route.path),
-    lastModified,
-    changeFrequency: route.changeFrequency,
-    priority: route.priority,
-  }));
+  const base = "https://b-cube.kr";
+
+  return [
+    { url: base, lastModified: new Date(), priority: 1.0 },
+    { url: `${base}/projects`, lastModified: new Date(), priority: 0.8 },
+    { url: `${base}/reviews`, lastModified: new Date(), priority: 0.8 },
+    { url: `${base}/recruit`, lastModified: new Date(), priority: 0.7 },
+  ];
 }
