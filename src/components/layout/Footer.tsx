@@ -3,21 +3,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { SITE } from "@/lib/site";
 
 const SOCIAL_LINKS = [
   {
-    href: SITE.social.instagram,
+    href: "https://www.instagram.com/sexyit_season2/",
     icon: "/insta_logo.svg",
     alt: "Instagram",
   },
   {
-    href: SITE.social.kakaoTalk,
+    href: "https://open.kakao.com/o/sCRuhWTg",
     icon: "/kakaoTalk_logo.svg",
     alt: "KakaoTalk",
   },
   {
-    href: SITE.social.github,
+    href: "https://github.com/AU-Bcube",
     icon: "/github_logo.svg",
     alt: "GitHub",
   },
@@ -37,10 +36,12 @@ export default function Footer() {
             <Image src="/BCUBE.svg" alt="BCUBE" width={72} height={18} />
           </Link>
           <div className="h-4 w-px bg-white/10" />
-          <span className="text-sm text-muted">{SITE.affiliation}</span>
+          <span className="text-sm text-muted">
+            아주대학교 경영대학 소학회
+          </span>
         </div>
         <ul className="flex items-center gap-4">
-          {SOCIAL_LINKS.map((link) => (
+          {[...SOCIAL_LINKS.map((link) => (
             <li key={link.alt}>
               <Link
                 href={link.href}
@@ -56,21 +57,9 @@ export default function Footer() {
                 />
               </Link>
             </li>
-          ))}
-          <li>
-            <a
-              href="https://www.netlify.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg"
-                alt="Deploys by Netlify"
-                width={120}
-                height={30}
-              />
-            </a>
-          </li>
+          )), (<a href="https://www.netlify.com" key={"https://www.netlify.com"}>
+            <Image src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg" alt="Deploys by Netlify" width={120} height={30}></Image>
+          </a>)]}
         </ul>
       </div>
 
@@ -86,10 +75,10 @@ export default function Footer() {
             <span className="font-medium text-primary-light">B</span>
             <span className="text-white/60">uilder</span>
           </p>
-          <p className="text-white/40">{SITE.affiliation}</p>
+          <p className="text-white/40">아주대학교 경영대학 소학회</p>
         </div>
         <div className="flex gap-3">
-          {SOCIAL_LINKS.map((link) => (
+          {[...SOCIAL_LINKS.map((link) => (
             <Link
               key={link.alt}
               href={link.href}
@@ -104,19 +93,9 @@ export default function Footer() {
                 height={22}
               />
             </Link>
-          ))}
-          <a
-            href="https://www.netlify.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg"
-              alt="Deploys by Netlify"
-              width={100}
-              height={30}
-            />
-          </a>
+          )), (<a href="https://www.netlify.com" key={"https://www.netlify.com"}>
+            <Image src="https://www.netlify.com/assets/badges/netlify-badge-dark.svg" alt="Deploys by Netlify" width={100} height={30}></Image>
+          </a>)]}
         </div>
       </div>
     </footer>
