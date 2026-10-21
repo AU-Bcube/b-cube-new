@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://b-cube.kr";
+  const base = "https://www.b-cube.kr";
 
   return [
     { url: base, lastModified: new Date(), priority: 1.0 },
