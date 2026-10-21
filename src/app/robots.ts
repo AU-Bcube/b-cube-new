@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/admin",
     },
-    sitemap: "https://b-cube.kr/sitemap.xml",
+    sitemap: "https://www.b-cube.kr/sitemap.xml",
   };
 }
