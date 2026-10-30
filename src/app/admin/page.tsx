@@ -2,6 +2,7 @@
 
 import {useState, useEffect, useCallback, type FormEvent} from "react";
 import Image from "next/image";
+import {ACTIVITY_REVIEW_CATEGORIES} from "@/lib/activityReviewCategories";
 
 type Tab =
     | 'designton'
@@ -10,6 +11,7 @@ type Tab =
     | 'etc'
     | 'main-activities'
     | 'activities'
+    | 'activity-review'
     | 'interview'
     | 'executives'
     | 'photo'
@@ -24,6 +26,7 @@ const TABS: { key: Tab; label: string }[] = [
     {key: 'etc', label: '기타'},
     {key: 'main-activities', label: '주요 활동'},
     {key: 'activities', label: '프로젝트'},
+    {key: 'activity-review', label: '활동 별 후기'},
     {key: 'interview', label: '인터뷰'},
     {key: 'executives', label: '운영진'},
     {key: 'photo', label: '활동사진'},
@@ -498,7 +501,7 @@ export default function AdminPage() {
                                                     {String(item.title || item.name || item.description || "")}
                                                 </p>
                                                 <p className="text-sm text-gray-400">
-                                                    {String(item.year || item.date || item.role || "")}
+                                                    {String(item.year || item.date || item.role || item.category || "")}
                                                     {typeof item.participant === "string" &&
                                                         item.participant &&
                                                         ` · ${item.participant}`}
@@ -575,6 +578,34 @@ function Input({
     );
 }
 
+function Select({
+                    name,
+                    label,
+                    options,
+                    defaultValue,
+                }: {
+    name: string;
+    label: string;
+    options: string[];
+    defaultValue?: string;
+}) {
+    return (
+        <label className="flex flex-col gap-1.5">
+            <span className="text-sm text-gray-400">{label}</span>
+            <select
+                name={name}
+                required
+                defaultValue={defaultValue}
+                className="rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                {options.map((o) => (
+                    <option key={o} value={o}>{o}</option>
+                ))}
+            </select>
+        </label>
+    );
+}
+
 function renderFields(tab: Tab) {
     switch (tab) {
         case 'designton':
@@ -620,6 +651,15 @@ function renderFields(tab: Tab) {
                 <>
                     <Input name="title" label="제목"/>
                     <Input name="description" label="설명" type="textarea"/>
+                </>
+            );
+        case 'activity-review':
+            return (
+                <>
+                    <Select name="category" label="활동" options={ACTIVITY_REVIEW_CATEGORIES}/>
+                    <Input name="name" label="이름"/>
+                    <Input name="studentId" label="학번 (예: 21)" type="number"/>
+                    <Input name="content" label="후기" type="textarea"/>
                 </>
             );
         case 'interview':
@@ -745,6 +785,20 @@ function renderEditFields(tab: Tab, item: Item) {
                     <Input name="category" label="카테고리" defaultValue={v('category')}/>
                     <Input name="title" label="제목" defaultValue={v('title')}/>
                     <Input name="description" label="설명" type="textarea" defaultValue={v('description')}/>
+                </>
+            );
+        case 'activity-review':
+            return (
+                <>
+                    <Select
+                        name="category"
+                        label="활동"
+                        options={ACTIVITY_REVIEW_CATEGORIES}
+                        defaultValue={v('category')}
+                    />
+                    <Input name="name" label="이름" defaultValue={v('name')}/>
+                    <Input name="studentId" label="학번 (예: 21)" type="number" defaultValue={v('studentId')}/>
+                    <Input name="content" label="후기" type="textarea" defaultValue={v('content')}/>
                 </>
             );
         case 'interview':
