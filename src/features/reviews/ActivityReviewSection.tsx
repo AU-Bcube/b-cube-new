@@ -10,6 +10,18 @@ interface Props {
   data: ActivityReview[];
 }
 
+// 카드 높이를 후기 글자 수로 추정해, 다음 카드를 가장 짧은 열에 넣는다
+function splitIntoColumns(reviews: ActivityReview[], count: number) {
+  const columns: ActivityReview[][] = Array.from({ length: count }, () => []);
+  const heights = new Array(count).fill(0);
+  for (const review of reviews) {
+    const shortest = heights.indexOf(Math.min(...heights));
+    columns[shortest].push(review);
+    heights[shortest] += review.content.length + 100;
+  }
+  return columns;
+}
+
 export default function ActivityReviewSection({ data }: Props) {
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [visibleCount, setVisibleCount] = useState(6);
@@ -42,17 +54,32 @@ export default function ActivityReviewSection({ data }: Props) {
         </div>
 
         {visible.length > 0 ? (
-          <div className="columns-1 gap-8.75 md:columns-3">
-            {visible.map((review) => (
-              <div key={review.id} className="mb-8.75 break-inside-avoid">
+          <>
+            <div className="flex flex-col gap-8.75 md:hidden">
+              {visible.map((review) => (
                 <ReviewCard
+                  key={review.id}
                   name={review.name}
                   studentId={review.studentId}
                   content={review.content}
                 />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+            <div className="hidden items-start gap-8.75 md:flex">
+              {splitIntoColumns(visible, 3).map((column, i) => (
+                <div key={i} className="flex flex-1 flex-col gap-8.75">
+                  {column.map((review) => (
+                    <ReviewCard
+                      key={review.id}
+                      name={review.name}
+                      studentId={review.studentId}
+                      content={review.content}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </>
         ) : (
           <p className="py-20 text-center text-base font-medium text-white/40">
             아직 등록된 후기가 없어요.
