@@ -32,7 +32,7 @@ export default function ActivityReviewSection({ data }: Props) {
   return (
     <div className="mx-auto flex max-w-287.5 flex-col items-center gap-10 px-8 md:gap-20 md:px-0">
       <div className="flex w-full flex-col gap-10">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-base font-semibold leading-8 md:text-xl">
+        <div data-filter className="flex flex-wrap items-center gap-x-1.5 gap-y-2 whitespace-nowrap text-[13px] font-semibold leading-8 md:gap-x-3 md:text-xl">
           {CATEGORIES.map((c, i) => (
             <Fragment key={c}>
               {i > 0 && <span className="text-white/40">|</span>}
