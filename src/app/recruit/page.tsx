@@ -1,12 +1,12 @@
 import type {Metadata} from "next";
 import Link from "next/link";
-import {getContact, getRecruitActivity, getRecruitOverview} from "@/actions/data";
+import {getContact, getFaqs, getRecruitActivity, getRecruitOverview} from "@/actions/data";
 import Banner from "@/components/ui/Banner";
 import SectionHeading from "@/components/ui/SectionHeading";
 import FadeUp from "@/components/ui/FadeUp";
 import ActivityCard from "@/components/cards/ActivityCard";
 import RecruitInfo from "@/features/recruit/RecruitInfo";
-import ContactSection from "@/features/recruit/ContactSection";
+import FaqSection from "@/features/recruit/FaqSection";
 import {InteractiveGridPattern} from "@/components/ui/interactive-grid-pattern";
 
 export const metadata: Metadata = {
@@ -28,6 +28,7 @@ export default async function RecruitPage() {
     const contact = await getContact();
     const recruitOverviews = await getRecruitOverview();
     const recruitActivities = await getRecruitActivity();
+    const faqs = await getFaqs();
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -100,8 +101,8 @@ export default async function RecruitPage() {
                 {/* 활동 분야 */}
                 <RecruitInfo recruitActivity={recruitActivities}/>
 
-                {/* Contact Us */}
-                <ContactSection contact={contact}/>
+                {/* FAQ */}
+                <FaqSection faqs={faqs} contact={contact}/>
             </div>
         </main>
     );
