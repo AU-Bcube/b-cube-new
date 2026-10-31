@@ -1,43 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
-import SexyIt from "@/lib/models/SexyIt";
-import { uploadImage } from "@/lib/storage";
-import { requireAuth } from "@/lib/auth";
+import SexyIt, { toKstDateString } from "@/lib/models/SexyIt";
 
+// sexyits2는 크롤러가 관리하므로 추가·수정은 지원하지 않는다
 export async function GET() {
   await dbConnect();
   const items = await SexyIt.find().sort({ date: -1 }).lean();
   return NextResponse.json(
     items.map((s) => ({
-      id: (s._id as object).toString(),
-      date: s.date.toISOString().split("T")[0],
+      id: s.ig_post_id,
+      date: toKstDateString(s.date),
       title: s.title,
       imagePath: s.imagePath,
       url: s.url,
     }))
   );
-}
-
-export async function POST(req: NextRequest) {
-  const authErr = requireAuth(req);
-  if (authErr) return authErr;
-
-  await dbConnect();
-  const formData = await req.formData();
-  const date = formData.get("date") as string;
-  const title = formData.get("title") as string;
-  const url = formData.get("url") as string;
-  const imageFile = formData.get("imagePath") as File;
-
-  const imageUrl = await uploadImage(imageFile, "bcube/sexyit");
-  await SexyIt.create({
-    date: new Date(date),
-    title,
-    imagePath: imageUrl,
-    url,
-  });
-
-  revalidatePath("/", "layout");
-  return NextResponse.json({ message: "섹시한 IT 업로드 완료" });
 }
