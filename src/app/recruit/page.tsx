@@ -86,7 +86,7 @@ export default async function RecruitPage() {
                     </FadeUp>
                     <div className="mt-10 grid w-full auto-rows-fr grid-cols-1 gap-4 md:mt-16 md:grid-cols-3 md:gap-6">
                         {recruitOverviews.map((recruitOverview, i) => (
-                            <FadeUp delay={i + 1} className="h-full">
+                            <FadeUp key={recruitOverview.id} delay={i + 1} className="h-full">
                                 <ActivityCard
                                     title={recruitOverview.title}
                                     content={recruitOverview.description.split("\n").map((row, i) => (
