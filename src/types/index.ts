@@ -86,6 +86,13 @@ export type RecruitOverview = {
   description: string;
 };
 
+export type Faq = {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+};
+
 export type RecruitActivity = {
   id: string;
   category: string;

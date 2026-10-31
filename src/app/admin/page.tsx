@@ -15,7 +15,8 @@ type Tab =
     | 'photo'
     | 'contact'
     | 'recruit-overview'
-    | 'recruit-activity';
+    | 'recruit-activity'
+    | 'faq';
 
 const TABS: { key: Tab; label: string }[] = [
     {key: 'designton', label: '디자인톤'},
@@ -30,6 +31,7 @@ const TABS: { key: Tab; label: string }[] = [
     {key: 'contact', label: '연락처'},
     {key: 'recruit-overview', label: '리크루팅/모집개요'},
     {key: 'recruit-activity', label: '리크루팅/활동분야'},
+    {key: 'faq', label: '리크루팅/FAQ'},
 ];
 
 type Item = Record<string, unknown>;
@@ -495,10 +497,10 @@ export default function AdminPage() {
                                             )}
                                             <div>
                                                 <p className="font-medium">
-                                                    {String(item.title || item.name || item.description || "")}
+                                                    {String(item.title || item.name || item.question || item.description || "")}
                                                 </p>
                                                 <p className="text-sm text-gray-400">
-                                                    {String(item.year || item.date || item.role || "")}
+                                                    {String(item.year || item.date || item.role || item.category || "")}
                                                     {typeof item.participant === "string" &&
                                                         item.participant &&
                                                         ` · ${item.participant}`}
@@ -663,6 +665,14 @@ function renderFields(tab: Tab) {
                     <Input name="description" label="설명" type="textarea"/>
                 </>
             );
+        case 'faq':
+            return (
+                <>
+                    <Input name="category" label="카테고리"/>
+                    <Input name="question" label="질문"/>
+                    <Input name="answer" label="답변" type="textarea"/>
+                </>
+            );
         default:
             return null;
     }
@@ -745,6 +755,14 @@ function renderEditFields(tab: Tab, item: Item) {
                     <Input name="category" label="카테고리" defaultValue={v('category')}/>
                     <Input name="title" label="제목" defaultValue={v('title')}/>
                     <Input name="description" label="설명" type="textarea" defaultValue={v('description')}/>
+                </>
+            );
+        case 'faq':
+            return (
+                <>
+                    <Input name="category" label="카테고리" defaultValue={v('category')}/>
+                    <Input name="question" label="질문" defaultValue={v('question')}/>
+                    <Input name="answer" label="답변" type="textarea" defaultValue={v('answer')}/>
                 </>
             );
         case 'interview':
