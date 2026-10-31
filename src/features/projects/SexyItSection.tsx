@@ -59,14 +59,16 @@ export default function SexyItSection({ data }: Props) {
               <div className="relative aspect-square w-full overflow-hidden glass glass-hover">
                 <Image
                   src={card.imagePath}
-                  alt={card.title}
+                  alt={card.title.replaceAll("_", " ")}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <p className="text-xs text-white/60">{card.date}</p>
-                  <h3 className="mt-1 text-base font-bold">{card.title}</h3>
+                  <h3 className="mt-1 text-base font-bold">
+                    {card.title.replaceAll("_", " ")}
+                  </h3>
                 </div>
               </div>
             </Link>
