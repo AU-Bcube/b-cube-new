@@ -34,6 +34,9 @@ const TABS: { key: Tab; label: string }[] = [
 
 type Item = Record<string, unknown>;
 
+// 크롤러가 관리하는 컬렉션(sexyits2)을 쓰는 탭: 조회·삭제만 가능
+const CRAWLED_TABS: Tab[] = ['sexyit'];
+
 export default function AdminPage() {
     const [authed, setAuthed] = useState(false);
     const [checking, setChecking] = useState(true);
@@ -117,7 +120,10 @@ export default function AdminPage() {
     }, [authed, tab, fetchItems]);
 
     const deleteItem = async (itemId: string) => {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
+        const message = CRAWLED_TABS.includes(tab)
+            ? "삭제하면 다음 크롤러 실행 때 Instagram의 현재 내용으로 다시 저장됩니다. 삭제하시겠습니까?"
+            : "정말 삭제하시겠습니까?";
+        if (!confirm(message)) return;
         await fetch(`/api/${tab}/${itemId}`, {method: "DELETE"});
         fetchItems(tab);
     };
@@ -432,7 +438,7 @@ export default function AdminPage() {
                         </div>
                     )}
 
-                    {!editItem && tab !== "contact" && !showAdd && (
+                    {!editItem && tab !== "contact" && !CRAWLED_TABS.includes(tab) && !showAdd && (
                         <div className="mb-6">
                             <button
                                 onClick={() => setShowAdd(true)}
@@ -443,7 +449,7 @@ export default function AdminPage() {
                         </div>
                     )}
 
-                    {!editItem && tab !== "contact" && showAdd && (
+                    {!editItem && tab !== "contact" && !CRAWLED_TABS.includes(tab) && showAdd && (
                         <div className="mb-6 rounded-xl bg-[#111827] p-6 ring-2 ring-green-500/30">
                             <div className="mb-4 flex items-center justify-between">
                                 <h2 className="text-lg font-semibold text-green-400">
@@ -506,12 +512,14 @@ export default function AdminPage() {
                                             </div>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button
-                                                onClick={() => setEditItem(item)}
-                                                className="rounded-lg px-3 py-1.5 text-sm text-blue-400 hover:bg-blue-600/20"
-                                            >
-                                                수정
-                                            </button>
+                                            {!CRAWLED_TABS.includes(tab) && (
+                                                <button
+                                                    onClick={() => setEditItem(item)}
+                                                    className="rounded-lg px-3 py-1.5 text-sm text-blue-400 hover:bg-blue-600/20"
+                                                >
+                                                    수정
+                                                </button>
+                                            )}
                                             <button
                                                 onClick={() => deleteItem(String(item.id))}
                                                 className="rounded-lg px-3 py-1.5 text-sm text-red-400 hover:bg-red-600/20"
@@ -587,15 +595,6 @@ function renderFields(tab: Tab) {
                     <Input name="award" label="수상" required={false}/>
                     <Input name="imagePath" label="이미지" type="file"/>
                     <Input name="pdfPath" label="PDF" type="file"/>
-                </>
-            );
-        case 'sexyit':
-            return (
-                <>
-                    <Input name="title" label="제목"/>
-                    <Input name="date" label="날짜" type="date"/>
-                    <Input name="url" label="인스타그램 URL" required={false}/>
-                    <Input name="imagePath" label="이미지" type="file"/>
                 </>
             );
         case 'study':
@@ -697,15 +696,6 @@ function renderEditFields(tab: Tab, item: Item) {
                     <Input name="award" label="수상" required={false} defaultValue={v('award')}/>
                     <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false}/>
                     <Input name="pdfPath" label="PDF (변경 시에만)" type="file" required={false}/>
-                </>
-            );
-        case 'sexyit':
-            return (
-                <>
-                    <Input name="title" label="제목" defaultValue={v('title')}/>
-                    <Input name="date" label="날짜" type="date" defaultValue={v('date')?.split('T')[0]}/>
-                    <Input name="url" label="인스타그램 URL" required={false} defaultValue={v('url')}/>
-                    <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false}/>
                 </>
             );
         case 'study':
