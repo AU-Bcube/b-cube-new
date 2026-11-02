@@ -7,28 +7,35 @@ interface ReviewCardProps {
 }
 
 export default function ReviewCard({ name, studentId, content }: ReviewCardProps) {
+  const paragraphs = content.split(/\n\s*\n/);
+
   return (
-    <div data-no-grid className="glass flex w-full flex-col px-6 pt-5 pb-5 md:px-8.5">
-      <div className="flex items-center gap-2.5 py-2.5">
-        <p className="text-xl font-bold leading-7 text-on-surface md:text-2xl">
-          {name}
-        </p>
-        <div className="flex items-center gap-2">
+    <div data-no-grid className="glass flex w-full flex-col rounded-[11px] px-4.5 pt-4 pb-4.5">
+      <div className="flex items-center gap-3.25">
+        <p className="text-[15px] font-bold leading-5 text-on-surface">{name}</p>
+        <div className="flex items-center gap-1.25">
           <Image
             src="/haksamo.svg"
             alt="학번"
-            width={20}
-            height={20}
-            className="opacity-40"
+            width={13}
+            height={14}
+            className="opacity-70"
           />
-          <p className="text-base font-medium leading-5 text-on-surface/40 md:text-lg">
+          <p className="text-[11px] font-medium leading-4 text-on-surface/40">
             {studentId}학번
           </p>
         </div>
       </div>
-      <p className="whitespace-pre-line pt-2.5 text-base font-medium leading-[1.4] text-on-surface md:text-lg md:leading-[22.75px]">
-        {content}
-      </p>
+      <div className="flex flex-col gap-3 pt-2.5">
+        {paragraphs.map((p, i) => (
+          <p
+            key={i}
+            className="whitespace-pre-line text-xs font-medium leading-[18.6px] text-on-surface"
+          >
+            {p}
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
