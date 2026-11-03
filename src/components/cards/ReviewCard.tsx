@@ -8,25 +8,25 @@ interface ReviewCardProps {
 
 export default function ReviewCard({ name, studentId, content }: ReviewCardProps) {
   return (
-    <div data-no-grid className="glass flex w-full flex-col px-6 pt-5 pb-5 md:px-8.5">
-      <div className="flex items-center gap-2.5 py-2.5">
-        <p className="text-xl font-bold leading-7 text-on-surface md:text-2xl">
+    <div data-no-grid className="glass flex w-full flex-col px-6 py-4 md:px-8.5 md:py-5">
+      <div className="flex items-center gap-2 py-1.5">
+        <p className="text-sm font-bold leading-6 text-on-surface md:text-base">
           {name}
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <Image
             src="/haksamo.svg"
             alt="학번"
-            width={20}
-            height={20}
+            width={16}
+            height={16}
             className="opacity-40"
           />
-          <p className="text-base font-medium leading-5 text-on-surface/40 md:text-lg">
+          <p className="text-sm font-medium leading-5 text-on-surface/40 md:text-base">
             {studentId}학번
           </p>
         </div>
       </div>
-      <p className="whitespace-pre-line pt-2.5 text-base font-medium leading-[1.4] text-on-surface md:text-lg md:leading-[22.75px]">
+      <p className="whitespace-pre-line pt-2 text-sm font-medium leading-[1.6] text-on-surface/75 md:text-base">
         {content}
       </p>
     </div>

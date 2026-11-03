@@ -32,7 +32,7 @@ export default function ActivityReviewSection({ data }: Props) {
   return (
     <div className="mx-auto flex max-w-287.5 flex-col items-center gap-10 px-8 md:gap-20 md:px-0">
       <div className="flex w-full flex-col gap-10">
-        <div data-filter className="flex flex-wrap items-center gap-x-1.5 gap-y-2 whitespace-nowrap text-[13px] font-semibold leading-8 md:gap-x-3 md:text-xl">
+        <div data-filter className="flex flex-wrap items-center gap-x-1.5 gap-y-2 whitespace-nowrap text-sm font-semibold leading-8 md:gap-x-3 md:text-base">
           {CATEGORIES.map((c, i) => (
             <Fragment key={c}>
               {i > 0 && <span className="text-white/40">|</span>}
@@ -55,7 +55,7 @@ export default function ActivityReviewSection({ data }: Props) {
 
         {visible.length > 0 ? (
           <>
-            <div className="flex flex-col gap-8.75 md:hidden">
+            <div className="flex flex-col gap-5 md:hidden">
               {visible.map((review) => (
                 <ReviewCard
                   key={review.id}
@@ -65,9 +65,9 @@ export default function ActivityReviewSection({ data }: Props) {
                 />
               ))}
             </div>
-            <div className="hidden items-start gap-8.75 md:flex">
+            <div className="hidden items-start gap-5 md:flex">
               {splitIntoColumns(visible, 3).map((column, i) => (
-                <div key={i} className="flex flex-1 flex-col gap-8.75">
+                <div key={i} className="flex flex-1 flex-col gap-5">
                   {column.map((review) => (
                     <ReviewCard
                       key={review.id}
