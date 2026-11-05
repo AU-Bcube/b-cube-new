@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
@@ -8,9 +8,10 @@ interface PdfModalProps {
   title: string;
   pdfUrl: string;
   onClose: () => void;
+  children?: ReactNode;
 }
 
-export default function PdfModal({ title, pdfUrl, onClose }: PdfModalProps) {
+export default function PdfModal({ title, pdfUrl, onClose, children }: PdfModalProps) {
   const proxiedUrl = `/api/pdf-proxy?url=${encodeURIComponent(pdfUrl)}`;
 
   // Lock body scroll
@@ -54,10 +55,11 @@ export default function PdfModal({ title, pdfUrl, onClose }: PdfModalProps) {
         </div>
 
         {/* PDF content */}
-        <div className="min-h-0 flex-1">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          {children && <div className="p-5 md:p-8">{children}</div>}
           <iframe
             src={`/pdf-viewer.html?pdfUrl=${encodeURIComponent(proxiedUrl)}`}
-            className="h-full w-full border-0"
+            className="block h-full w-full border-0"
             title="PDF Preview"
           />
         </div>

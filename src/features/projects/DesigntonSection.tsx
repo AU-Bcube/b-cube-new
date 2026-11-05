@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ProjectCard from "@/components/cards/ProjectCard";
 import TabButton from "@/components/ui/TabButton";
+import DesigntonDetail from "./DesigntonDetail";
 import type { Designton } from "@/types";
 
 interface Props {
@@ -35,6 +36,7 @@ export default function DesigntonSection({ data }: Props) {
                 participants={item.participant}
                 pdfUrl={item.pdfPath}
                 award={item.award}
+                details={<DesigntonDetail item={item} />}
               />
             ))}
           </div>
