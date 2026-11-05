@@ -100,7 +100,7 @@ export default function FaqSection({ faqs, contact }: FaqSectionProps) {
           <p className="text-lg font-bold text-on-surface md:text-xl">
             여전히 궁금한 점이 있다면?
           </p>
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="mx-auto grid w-fit gap-3 sm:auto-cols-fr sm:grid-flow-col">
             {contact.instagramLink && (
               <ContactButton
                 href={contact.instagramLink}
@@ -135,7 +135,7 @@ function ContactButton({ href, label, icon, external }: ContactButtonProps) {
     <a
       href={href}
       {...(external && { target: "_blank", rel: "noopener noreferrer" })}
-      className="flex items-center gap-2 rounded-full border border-white/20 bg-surface/80 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-surface"
+      className="flex items-center justify-center gap-2 rounded-full border border-white/20 bg-surface/80 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-surface"
     >
       {icon}
       {label}
