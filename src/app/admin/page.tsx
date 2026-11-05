@@ -40,11 +40,8 @@ const CRAWLED_TABS: Tab[] = ['sexyit'];
 export default function AdminPage() {
     const [authed, setAuthed] = useState(false);
     const [checking, setChecking] = useState(true);
-    const [id, setId] = useState("");
-    const [pw, setPw] = useState("");
     const [tab, setTab] = useState<Tab>("designton");
     const [msg, setMsg] = useState("");
-    const [loginLoading, setLoginLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState<Item[]>([]);
     const [editItem, setEditItem] = useState<Item | null>(null);
@@ -65,27 +62,8 @@ export default function AdminPage() {
             .finally(() => setChecking(false));
     }, []);
 
-    const login = async (e: FormEvent) => {
-        e.preventDefault();
-        setLoginLoading(true);
-        setMsg("");
-        try {
-            const res = await fetch("/api/auth", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({id, password: pw}),
-            });
-            if (res.ok) setAuthed(true);
-            else setMsg("로그인 실패");
-        } catch {
-            setMsg("네트워크 오류");
-        }
-        setLoginLoading(false);
-    };
-
-    const logout = async () => {
-        await fetch("/api/auth", {method: "DELETE"});
-        setAuthed(false);
+    const logout = () => {
+        window.location.href = "/cdn-cgi/access/logout";
     };
 
     const fetchItems = useCallback(async (t: Tab) => {
@@ -236,34 +214,15 @@ export default function AdminPage() {
     if (!authed) {
         return (
             <div className="flex h-screen items-center justify-center bg-[#0a0f1e]">
-                <form
-                    onSubmit={login}
-                    className="flex w-full max-w-sm flex-col gap-4 rounded-2xl bg-[#111827] p-8 shadow-2xl"
-                >
-                    <h1 className="text-center text-2xl font-bold text-white">
+                <div className="flex w-full max-w-sm flex-col gap-4 rounded-2xl bg-[#111827] p-8 text-center shadow-2xl">
+                    <h1 className="text-2xl font-bold text-white">
                         B-CUBE Admin
                     </h1>
-                    <input
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                        placeholder="아이디"
-                        className="rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <input
-                        type="password"
-                        value={pw}
-                        onChange={(e) => setPw(e.target.value)}
-                        placeholder="비밀번호"
-                        className="rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <button
-                        disabled={loginLoading}
-                        className="rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                        {loginLoading ? "로그인 중..." : "로그인"}
-                    </button>
-                    {msg && <p className="text-center text-red-400">{msg}</p>}
-                </form>
+                    <p className="text-red-400">접근 권한을 확인할 수 없습니다.</p>
+                    <p className="text-sm text-gray-400">
+                        Cloudflare Access 로그인 상태를 확인한 뒤 다시 시도해 주세요.
+                    </p>
+                </div>
             </div>
         );
     }
