@@ -131,6 +131,12 @@ export async function getDesigntons(): Promise<Designton[]> {
     imagePath: d.imagePath,
     pdfPath: d.pdfPath,
     award: d.award,
+    summary: d.summary,
+    period: d.period,
+    type: d.type,
+    members: d.members ?? [],
+    link: d.link,
+    description: d.description,
   }));
 }
 
