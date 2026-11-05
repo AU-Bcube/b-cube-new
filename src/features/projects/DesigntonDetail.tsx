@@ -7,7 +7,7 @@ export default function DesigntonDetail({ item }: { item: Designton }) {
   const members = item.members ?? [];
 
   return (
-    <div className="flex flex-col gap-6 text-on-surface">
+    <div className="flex flex-col gap-6 break-keep text-on-surface">
       <section className="rounded-2xl bg-[#0a1c45] px-6 py-5 shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
         <h3 className="text-xl font-bold md:text-2xl">{item.title}</h3>
         {item.summary && <p className="mt-2 text-sm">{item.summary}</p>}
