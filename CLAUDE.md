@@ -30,17 +30,17 @@ Pages are Server Components that fetch data via **server actions** in `src/actio
 - `/projects` — Project showcase with category tabs
 - `/reviews` — Interviews and photo gallery
 - `/recruit` — Recruitment info
-- `/admin` — Admin dashboard (cookie-based auth, 7-day expiry)
+- `/admin` — Admin dashboard (Cloudflare Access)
 
 ### API Routes (`src/app/api/`)
 
-RESTful CRUD for 9 resources: `activities`, `designton`, `sexyit`, `study`, `etc`, `interview`, `executives`, `photo`, `contact`. Plus `auth` (login/logout/check) and `pdf-proxy`. Each resource follows `GET/POST` at root and `GET/PUT/DELETE` at `[id]`.
+RESTful CRUD for 9 resources: `activities`, `designton`, `sexyit`, `study`, `etc`, `interview`, `executives`, `photo`, `contact`. Plus `auth` (session check) and `pdf-proxy`. Each resource follows `GET/POST` at root and `GET/PUT/DELETE` at `[id]`.
 
 ### Source Organization
 
 - `src/components/` — Reusable UI: `cards/` (ActivityCard, ProjectCard, ProfileCard), `layout/` (Navigation, Footer), `ui/` (FadeUp, Carousel, PdfModal, etc.)
 - `src/features/` — Page-specific sections grouped by route: `home/`, `projects/`, `reviews/`, `recruit/`
-- `src/lib/models/` — Mongoose schemas for all 9 resources + Admin
+- `src/lib/models/` — Mongoose schemas for all 9 resources
 - `src/lib/mongodb.ts` — MongoDB connection with global pooling
 - `src/lib/storage.ts` — R2 upload/delete helpers (`uploadImage`, `uploadPdf`)
 - `src/types/index.ts` — Shared TypeScript interfaces for all models
@@ -58,10 +58,12 @@ Tailwind CSS 4 with custom theme in `globals.css`: primary (#14439F), accent (#7
 Required in `.env.local`:
 - `MONGODB_URI` — MongoDB connection string
 - `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_PUBLIC_URL` — Cloudflare R2 credentials
+- `CF_ACCESS_ISSUER` — Cloudflare Access issuer (`https://<team>.cloudflareaccess.com`)
+- `CF_ACCESS_AUD` — AUD tag of the Cloudflare Access application
 
 ## Key Patterns
 
 - File uploads use `FormData` and go through R2 via `src/lib/storage.ts`
-- Admin auth uses bcryptjs with HTTP-only secure cookies
+- Admin auth verifies the Cloudflare Access `CF_Authorization` JWT in `src/lib/auth.ts` (RS256 via JWKS; `iss`, `aud`, `exp`); any failure returns 401
 - Remote images allowed from `*.r2.dev` and `b-cube.kr` (configured in `next.config.ts`)
 - HTML lang is `ko` with Korean metadata and Naver site verification

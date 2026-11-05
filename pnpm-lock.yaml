@@ -26,9 +26,6 @@ importers:
       '@vercel/speed-insights':
         specifier: ^1.3.1
         version: 1.3.1(next@16.3.6(@babel/core@7.29.0(supports-color@10.2.2))(@types/node@20.19.33)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
-      bcryptjs:
-        specifier: ^3.0.3
-        version: 3.0.3
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -41,6 +38,9 @@ importers:
       framer-motion:
         specifier: ^12.33.0
         version: 12.33.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      jose:
+        specifier: ^6.2.15
+        version: 6.2.15
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.3)
@@ -3115,10 +3115,6 @@ packages:
     resolution: {integrity: sha512-ipDqC8FrAl/76p2SSWKSI+H9tFwm7vYqXQrItCuiVPt26Km0jS+NzSsBWAaBusvSbQcfJG+JitdMm+wZAgTYqg==}
     hasBin: true
 
-  bcryptjs@3.0.3:
-    resolution: {integrity: sha512-GlF5wPWnSa/X5LKM1o0wz0suXIINz1iHRLvTS+sLyi7XPbe5ycmYI3DlZqVGZZtDgl4DmasFg7gOB3JYbphV5g==}
-    hasBin: true
-
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
 
@@ -4251,8 +4247,8 @@ packages:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
 
-  jose@6.1.3:
-    resolution: {integrity: sha512-0TpaTfihd4QMNwrz/ob2Bp7X04yuxJkjRGi4aKmOqwhov54i6u79oCv7T+C7lo70MKH6BesI3vscD1yb/yzKXQ==}
+  jose@6.2.15:
+    resolution: {integrity: sha512-qdF6ewcZARtef63fJ9AKKZPgxw+t7USH6HLXYcD4CrdmSvDp79rpJSPFEKc90QBeGS63u1KQtN2MZQHC0yDIzA==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -7405,7 +7401,7 @@ snapshots:
     dependencies:
       '@hono/node-server': 1.19.9(hono@4.13.12)
       ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
+      ajv-formats: 3.0.1
       content-type: 1.0.5
       cors: 2.8.6
       cross-spawn: 7.0.6
@@ -7414,7 +7410,7 @@ snapshots:
       express: 5.2.1(supports-color@10.2.2)
       express-rate-limit: 8.2.1(express@5.2.1(supports-color@10.2.2))
       hono: 4.13.12
-      jose: 6.1.3
+      jose: 6.2.15
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
       raw-body: 3.0.2
@@ -9231,8 +9227,8 @@ snapshots:
     dependencies:
       humanize-ms: 1.2.1
 
-  ajv-formats@3.0.1(ajv@8.17.1):
-    optionalDependencies:
+  ajv-formats@3.0.1:
+    dependencies:
       ajv: 8.17.1
 
   ajv@6.12.6:
@@ -9367,8 +9363,6 @@ snapshots:
   base64-js@1.5.1: {}
 
   baseline-browser-mapping@2.9.19: {}
-
-  bcryptjs@3.0.3: {}
 
   bidi-js@1.0.3:
     dependencies:
@@ -10676,7 +10670,7 @@ snapshots:
 
   jiti@2.6.1: {}
 
-  jose@6.1.3: {}
+  jose@6.2.15: {}
 
   js-tokens@4.0.0: {}
 

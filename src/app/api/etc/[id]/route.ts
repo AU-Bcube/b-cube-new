@@ -9,7 +9,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
 
   await dbConnect();
@@ -65,7 +65,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
 
   await dbConnect();
