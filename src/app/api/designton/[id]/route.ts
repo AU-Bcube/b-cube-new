@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import Designton from "@/lib/models/Designton";
 import { uploadImage, uploadPdf, deleteAsset } from "@/lib/storage";
 import { requireAuth } from "@/lib/auth";
+import { parseMembers, REQUIRED_TEXT_FIELDS, OPTIONAL_TEXT_FIELDS } from "@/lib/designton";
 
 export async function PATCH(
   req: NextRequest,
@@ -18,26 +19,40 @@ export async function PATCH(
   if (!item)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
+  // 관리자 수정 화면은 파일이 없으면 JSON, 있으면 FormData로 보낸다. 두 경로를 같은 규칙으로 처리한다.
   const contentType = req.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
-    const body = await req.json();
-    if (body.title) item.title = body.title;
-    if (body.year) item.year = body.year;
-    if (body.participant !== undefined) item.participant = body.participant;
-    if (body.award !== undefined) item.award = body.award;
-  } else {
-    const formData = await req.formData();
-    const title = formData.get("title") as string | null;
-    const year = formData.get("year") as string | null;
-    const participant = formData.get("participant") as string | null;
-    const award = formData.get("award") as string | null;
+  const isJson = contentType.includes("application/json");
+  const body: Record<string, unknown> = isJson ? await req.json() : {};
+  const formData = isJson ? null : await req.formData();
+  const has = (key: string) => (isJson ? key in body : formData!.has(key));
+  const text = (key: string) =>
+    String((isJson ? body[key] : formData!.get(key)) ?? "").trim();
+
+  const emptied: string[] = Object.entries(REQUIRED_TEXT_FIELDS)
+    .filter(([key]) => has(key) && !text(key))
+    .map(([, label]) => label);
+  const members = has("members")
+    ? parseMembers(isJson ? body.members : formData!.get("members"))
+    : null;
+  if (members !== null && members.length === 0) emptied.push("팀원");
+  if (emptied.length > 0) {
+    return NextResponse.json(
+      { error: `필수 항목이 비어 있습니다: ${emptied.join(", ")}` },
+      { status: 400 }
+    );
+  }
+
+  for (const key of Object.keys(REQUIRED_TEXT_FIELDS)) {
+    if (has(key)) item.set(key, text(key));
+  }
+  for (const key of OPTIONAL_TEXT_FIELDS) {
+    if (has(key)) item.set(key, text(key) || undefined);
+  }
+  if (members !== null) item.members = members;
+
+  if (formData) {
     const imageFile = formData.get("imagePath") as File | null;
     const pdfFile = formData.get("pdfPath") as File | null;
-
-    if (title) item.title = title;
-    if (year) item.year = year;
-    if (participant) item.participant = participant;
-    if (award !== null) item.award = award || undefined;
     if (imageFile && imageFile.size > 0) {
       await deleteAsset(item.imagePath);
       item.imagePath = await uploadImage(imageFile, "designton");
@@ -58,6 +73,12 @@ export async function PATCH(
     imagePath: item.imagePath,
     pdfPath: item.pdfPath,
     award: item.award,
+    summary: item.summary,
+    period: item.period,
+    type: item.type,
+    members: item.members ?? [],
+    link: item.link,
+    description: item.description,
   });
 }
 

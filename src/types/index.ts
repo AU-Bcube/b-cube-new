@@ -62,6 +62,11 @@ export type SexyIt = {
   url: string;
 };
 
+export type DesigntonMember = {
+  name: string;
+  role?: string;
+};
+
 export type Designton = {
   id: string;
   title: string;
@@ -70,6 +75,12 @@ export type Designton = {
   imagePath: string;
   pdfPath: string;
   award?: string;
+  summary?: string;
+  period?: string;
+  type?: string;
+  members?: DesigntonMember[];
+  link?: string;
+  description?: string;
 };
 
 export type Etc = {
