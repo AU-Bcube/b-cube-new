@@ -11,6 +11,7 @@ import RecruitOverviewModel from "@/lib/models/RecruitOverview";
 import RecruitActivityModel from "@/lib/models/RecruitActivity";
 import EtcModel from "@/lib/models/Etc";
 import MainActivityModel from "@/lib/models/MainActivity"
+import FaqModel from "@/lib/models/Faq";
 import type {
   Study,
   Interview,
@@ -23,7 +24,8 @@ import type {
   Etc,
   MainActivity,
   RecruitOverview,
-  RecruitActivity
+  RecruitActivity,
+  Faq
 } from "@/types";
 
 export async function getStudies(): Promise<Study[]> {
@@ -176,5 +178,16 @@ export async function getRecruitActivity(): Promise<RecruitActivity[]> {
     title: e.title,
     category: e.category,
     description: e.description,
+  }));
+}
+
+export async function getFaqs(): Promise<Faq[]> {
+  await dbConnect();
+  const docs = await FaqModel.find().sort({ _id: 1 }).lean();
+  return docs.map((f) => ({
+    id: (f._id as object).toString(),
+    category: f.category,
+    question: f.question,
+    answer: f.answer,
   }));
 }
