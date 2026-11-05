@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
 import PdfModal from "@/components/ui/PdfModal";
 
@@ -11,6 +11,7 @@ interface ProjectCardProps {
   participants?: string;
   pdfUrl?: string;
   award?: string;
+  details?: ReactNode;
 }
 
 export default function ProjectCard({
@@ -20,6 +21,7 @@ export default function ProjectCard({
   participants,
   pdfUrl,
   award,
+  details,
 }: ProjectCardProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,7 +64,9 @@ export default function ProjectCard({
           title={title}
           pdfUrl={pdfUrl}
           onClose={() => setIsOpen(false)}
-        />
+        >
+          {details}
+        </PdfModal>
       )}
     </>
   );

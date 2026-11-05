@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import Designton from "@/lib/models/Designton";
 import { uploadImage, uploadPdf } from "@/lib/storage";
 import { requireAuth } from "@/lib/auth";
+import { parseMembers, REQUIRED_TEXT_FIELDS, OPTIONAL_TEXT_FIELDS } from "@/lib/designton";
 
 export async function GET() {
   await dbConnect();
@@ -17,6 +18,12 @@ export async function GET() {
       imagePath: d.imagePath,
       pdfPath: d.pdfPath,
       award: d.award,
+      summary: d.summary,
+      period: d.period,
+      type: d.type,
+      members: d.members ?? [],
+      link: d.link,
+      description: d.description,
     }))
   );
 }
@@ -27,22 +34,40 @@ export async function POST(req: NextRequest) {
 
   await dbConnect();
   const formData = await req.formData();
-  const title = formData.get("title") as string;
-  const year = formData.get("year") as string;
-  const participant = formData.get("participant") as string;
-  const award = formData.get("award") as string | null;
-  const imageFile = formData.get("imagePath") as File;
-  const pdfFile = formData.get("pdfPath") as File;
+  const text = (key: string) => String(formData.get(key) ?? "").trim();
+  const members = parseMembers(formData.get("members"));
+  const imageFile = formData.get("imagePath") as File | null;
+  const pdfFile = formData.get("pdfPath") as File | null;
 
-  const imageUrl = await uploadImage(imageFile, "bcube/designton");
-  const pdfUrl = await uploadPdf(pdfFile, "bcube/designton");
+  const missing: string[] = Object.entries(REQUIRED_TEXT_FIELDS)
+    .filter(([key]) => !text(key))
+    .map(([, label]) => label);
+  if (members.length === 0) missing.push("팀원");
+  if (!imageFile || imageFile.size === 0) missing.push("이미지");
+  if (!pdfFile || pdfFile.size === 0) missing.push("PDF");
+  if (missing.length > 0) {
+    return NextResponse.json(
+      { error: `필수 항목이 비어 있습니다: ${missing.join(", ")}` },
+      { status: 400 }
+    );
+  }
+
+  const imageUrl = await uploadImage(imageFile!, "bcube/designton");
+  const pdfUrl = await uploadPdf(pdfFile!, "bcube/designton");
+
+  const optional = Object.fromEntries(
+    OPTIONAL_TEXT_FIELDS.filter((key) => text(key)).map((key) => [key, text(key)])
+  );
   await Designton.create({
-    title,
-    year,
-    participant,
+    title: text("title"),
+    year: text("year"),
+    summary: text("summary"),
+    type: text("type"),
+    description: text("description"),
+    members,
+    ...optional,
     imagePath: imageUrl,
     pdfPath: pdfUrl,
-    ...(award && { award }),
   });
 
   revalidatePath("/", "layout");
