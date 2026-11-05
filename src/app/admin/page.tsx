@@ -2,6 +2,7 @@
 
 import {useState, useEffect, useCallback, type FormEvent} from "react";
 import Image from "next/image";
+import type {DesigntonMember} from "@/types";
 
 type Tab =
     | 'designton'
@@ -583,9 +584,71 @@ function Input({
     );
 }
 
+function MembersInput({defaultValue = []}: { defaultValue?: DesigntonMember[] }) {
+    const [rows, setRows] = useState<DesigntonMember[]>(
+        defaultValue.length > 0 ? defaultValue : [{name: "", role: ""}]
+    );
+    const update = (i: number, key: keyof DesigntonMember, value: string) =>
+        setRows((r) => r.map((m, j) => (j === i ? {...m, [key]: value} : m)));
+
+    return (
+        <div className="flex flex-col gap-1.5 md:col-span-2">
+            <span className="text-sm text-gray-400">팀원 (이름 필수, 역할 선택)</span>
+            {/* 파일 없이 수정하면 폼이 JSON 객체로 바뀌어 같은 이름의 칸은 하나만 남으므로, 팀원은 숨은 칸 하나에 JSON으로 담는다 */}
+            <input type="hidden" name="members" value={JSON.stringify(rows)}/>
+            {rows.map((m, i) => (
+                <div key={i} className="flex gap-2">
+                    <input
+                        value={m.name}
+                        onChange={(e) => update(i, "name", e.target.value)}
+                        placeholder="이름"
+                        required={i === 0}
+                        className="w-40 rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <input
+                        value={m.role ?? ""}
+                        onChange={(e) => update(i, "role", e.target.value)}
+                        placeholder="역할 (예: 팀장)"
+                        className="flex-1 rounded-lg bg-[#1e293b] px-4 py-3 text-white outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                        type="button"
+                        onClick={() => setRows((r) => (r.length > 1 ? r.filter((_, j) => j !== i) : r))}
+                        className="rounded-lg px-3 text-sm text-red-400 hover:bg-red-600/20"
+                    >
+                        삭제
+                    </button>
+                </div>
+            ))}
+            <button
+                type="button"
+                onClick={() => setRows((r) => [...r, {name: "", role: ""}])}
+                className="self-start rounded-lg px-3 py-1.5 text-sm text-blue-400 hover:bg-blue-600/20"
+            >
+                + 팀원 추가
+            </button>
+        </div>
+    );
+}
+
 function renderFields(tab: Tab) {
     switch (tab) {
         case 'designton':
+            return (
+                <>
+                    <Input name="title" label="제목 *"/>
+                    <Input name="year" label="연도 *"/>
+                    <Input name="summary" label="한 줄 설명 *"/>
+                    <Input name="type" label="형태 * (예: 앱 / 번개모임 플랫폼)"/>
+                    <Input name="period" label="기간 (예: 2024.03.22 ~ 2024.06.07)" required={false}/>
+                    <Input name="link" label="링크" type="url" required={false}/>
+                    <Input name="award" label="수상" required={false}/>
+                    <MembersInput/>
+                    <Input name="description" label="프로젝트 설명 *" type="textarea"/>
+                    <Input name="imagePath" label="이미지 *" type="file"/>
+                    <Input name="pdfPath" label="PDF *" type="file"/>
+                </>
+            );
         case 'etc':
             return (
                 <>
@@ -682,6 +745,21 @@ function renderEditFields(tab: Tab, item: Item) {
 
     switch (tab) {
         case 'designton':
+            return (
+                <>
+                    <Input name="title" label="제목 *" defaultValue={v('title')}/>
+                    <Input name="year" label="연도 *" defaultValue={v('year')}/>
+                    <Input name="summary" label="한 줄 설명 *" defaultValue={v('summary')}/>
+                    <Input name="type" label="형태 *" defaultValue={v('type')}/>
+                    <Input name="period" label="기간" required={false} defaultValue={v('period')}/>
+                    <Input name="link" label="링크" type="url" required={false} defaultValue={v('link')}/>
+                    <Input name="award" label="수상" required={false} defaultValue={v('award')}/>
+                    <MembersInput defaultValue={Array.isArray(item.members) ? (item.members as DesigntonMember[]) : []}/>
+                    <Input name="description" label="프로젝트 설명 *" type="textarea" defaultValue={v('description')}/>
+                    <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false}/>
+                    <Input name="pdfPath" label="PDF (변경 시에만)" type="file" required={false}/>
+                </>
+            );
         case 'etc':
             return (
                 <>
