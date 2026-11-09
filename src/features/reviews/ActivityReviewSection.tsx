@@ -30,7 +30,7 @@ export default function ActivityReviewSection({ data }: Props) {
   const visible = filtered.slice(0, visibleCount);
 
   return (
-    <div className="mx-auto flex max-w-266.5 flex-col items-center gap-8.5 px-8 md:px-0">
+    <div className="mx-auto mt-16 flex max-w-266.5 flex-col items-center gap-8.5 px-8 md:box-content md:px-12">
       <div className="flex w-full flex-col gap-[19px]">
         <div data-filter className="flex flex-wrap items-center gap-2 whitespace-nowrap text-sm font-semibold leading-5 md:text-base">
           {CATEGORIES.map((c, i) => (
