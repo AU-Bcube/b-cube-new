@@ -13,6 +13,14 @@ export type Interview = {
   imagePath: string;
 };
 
+export type ActivityReview = {
+  id: string;
+  category: string;
+  name: string;
+  studentId: string;
+  content: string;
+};
+
 export type Executive = {
   id: string;
   name: string;
