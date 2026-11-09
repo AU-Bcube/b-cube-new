@@ -13,7 +13,7 @@ interface ReviewTabsProps {
   photos: Photo[];
 }
 
-const TAB_LIST = ["활동 별 후기", "OB한마디", "활동사진"];
+const TAB_LIST = ["활동별 후기", "OB한마디", "활동사진"];
 
 export default function ReviewTabs({
   activityReviews,
@@ -25,11 +25,12 @@ export default function ReviewTabs({
   return (
     <div className="relative z-10">
       <section className="flex flex-col items-center justify-center">
-        <div className="my-8 flex flex-wrap justify-center gap-2 md:my-16">
+        <div className="mt-8 mb-8 flex flex-wrap justify-center gap-[7px] md:mt-9.5 md:mb-8.75">
           {TAB_LIST.map((tab, i) => (
             <TabButton
               key={tab}
               label={tab}
+              size="sm"
               selected={selectedIndex === i}
               onClick={() => setSelectedIndex(i)}
             />

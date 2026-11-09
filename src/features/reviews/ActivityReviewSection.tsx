@@ -30,12 +30,16 @@ export default function ActivityReviewSection({ data }: Props) {
   const visible = filtered.slice(0, visibleCount);
 
   return (
-    <div className="mx-auto flex max-w-287.5 flex-col items-center gap-10 px-8 md:gap-20 md:px-0">
-      <div className="flex w-full flex-col gap-10">
-        <div data-filter className="flex flex-wrap items-center gap-x-1.5 gap-y-2 whitespace-nowrap text-sm font-semibold leading-8 md:gap-x-3 md:text-base">
+    <div className="mx-auto flex max-w-266.5 flex-col items-center gap-8.5 px-8 md:px-0">
+      <div className="flex w-full flex-col gap-[19px]">
+        <div data-filter className="flex flex-wrap items-center gap-2 whitespace-nowrap text-sm font-semibold leading-5 md:text-base">
           {CATEGORIES.map((c, i) => (
             <Fragment key={c}>
-              {i > 0 && <span className="text-white/40">|</span>}
+              {i > 0 && (
+                <span className="text-[10px] font-normal leading-[15px] text-white/40 opacity-65">
+                  |
+                </span>
+              )}
               <button
                 className={`transition-colors duration-300 ${
                   category === c
@@ -55,7 +59,7 @@ export default function ActivityReviewSection({ data }: Props) {
 
         {visible.length > 0 ? (
           <>
-            <div className="flex flex-col gap-5 md:hidden">
+            <div className="flex flex-col gap-3.75 md:hidden">
               {visible.map((review) => (
                 <ReviewCard
                   key={review.id}
@@ -65,9 +69,9 @@ export default function ActivityReviewSection({ data }: Props) {
                 />
               ))}
             </div>
-            <div className="hidden items-start gap-5 md:flex">
+            <div className="hidden items-start gap-3.75 md:flex">
               {splitIntoColumns(visible, 3).map((column, i) => (
-                <div key={i} className="flex flex-1 flex-col gap-5">
+                <div key={i} className="flex min-w-0 flex-1 flex-col gap-3.75">
                   {column.map((review) => (
                     <ReviewCard
                       key={review.id}
@@ -81,7 +85,7 @@ export default function ActivityReviewSection({ data }: Props) {
             </div>
           </>
         ) : (
-          <p className="py-20 text-center text-base font-medium text-white/40">
+          <p className="py-20 text-center text-sm font-medium text-white/40">
             아직 등록된 후기가 없어요.
           </p>
         )}
@@ -91,7 +95,8 @@ export default function ActivityReviewSection({ data }: Props) {
         {visibleCount < filtered.length && (
           <TabButton
             label="더보기"
-            selected
+            size="sm"
+            selected={false}
             onClick={() => setVisibleCount((c) => c + 6)}
           />
         )}
