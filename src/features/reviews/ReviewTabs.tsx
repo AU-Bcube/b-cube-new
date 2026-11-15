@@ -25,12 +25,11 @@ export default function ReviewTabs({
   return (
     <div className="relative z-10">
       <section className="flex flex-col items-center justify-center">
-        <div className="mt-8 mb-8 flex flex-wrap justify-center gap-[7px] md:mt-9.5 md:mb-8.75">
+        <div className="mt-8 mb-8 grid grid-cols-3 gap-2 md:mt-9.5 md:mb-8.75">
           {TAB_LIST.map((tab, i) => (
             <TabButton
               key={tab}
               label={tab}
-              size="sm"
               selected={selectedIndex === i}
               onClick={() => setSelectedIndex(i)}
             />
