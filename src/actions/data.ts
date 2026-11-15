@@ -11,9 +11,11 @@ import RecruitOverviewModel from "@/lib/models/RecruitOverview";
 import RecruitActivityModel from "@/lib/models/RecruitActivity";
 import EtcModel from "@/lib/models/Etc";
 import MainActivityModel from "@/lib/models/MainActivity"
+import ActivityReviewModel from "@/lib/models/ActivityReview";
 import type {
   Study,
   Interview,
+  ActivityReview,
   Executive,
   Contact,
   Photo,
@@ -46,6 +48,18 @@ export async function getInterviews(): Promise<Interview[]> {
     studentId: String(i.studentId),
     introduction: i.introduction,
     imagePath: i.imagePath,
+  }));
+}
+
+export async function getActivityReviews(): Promise<ActivityReview[]> {
+  await dbConnect();
+  const docs = await ActivityReviewModel.find().lean();
+  return docs.map((r) => ({
+    id: (r._id as object).toString(),
+    category: r.category,
+    name: r.name,
+    studentId: String(r.studentId),
+    content: r.content,
   }));
 }
 
