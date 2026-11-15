@@ -2,55 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import dbConnect from "@/lib/mongodb";
 import SexyIt from "@/lib/models/SexyIt";
-import { uploadImage, deleteAsset } from "@/lib/storage";
 import { requireAuth } from "@/lib/auth";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const authErr = requireAuth(req);
-  if (authErr) return authErr;
-
-  await dbConnect();
-  const { id } = await params;
-  const item = await SexyIt.findById(id);
-  if (!item)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  const contentType = req.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
-    const body = await req.json();
-    if (body.title) item.title = body.title;
-    if (body.date) item.date = new Date(body.date);
-    if (body.url) item.url = body.url;
-  } else {
-    const formData = await req.formData();
-    const date = formData.get("date") as string | null;
-    const title = formData.get("title") as string | null;
-    const url = formData.get("url") as string | null;
-    const imageFile = formData.get("imagePath") as File | null;
-
-    if (date) item.date = new Date(date);
-    if (title) item.title = title;
-    if (url) item.url = url;
-    if (imageFile && imageFile.size > 0) {
-      await deleteAsset(item.imagePath);
-      item.imagePath = await uploadImage(imageFile, "sexyit");
-    }
-  }
-
-  await item.save();
-  revalidatePath("/", "layout");
-  return NextResponse.json({
-    id: item._id.toString(),
-    date: item.date.toISOString().split("T")[0],
-    title: item.title,
-    imagePath: item.imagePath,
-    url: item.url,
-  });
-}
-
+// id는 ig_post_id. 삭제하면 다음 크롤러 실행에서 Instagram의 현재 내용으로 다시 저장된다.
+// R2 이미지는 크롤러가 같은 경로에 덮어쓰므로 지우지 않는다.
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -60,12 +15,10 @@ export async function DELETE(
 
   await dbConnect();
   const { id } = await params;
-  const item = await SexyIt.findById(id);
-  if (!item)
+  const result = await SexyIt.deleteOne({ ig_post_id: id });
+  if (result.deletedCount === 0)
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  await deleteAsset(item.imagePath);
-  await SexyIt.findByIdAndDelete(id);
   revalidatePath("/", "layout");
   return NextResponse.json({ message: "삭제 완료" });
 }
