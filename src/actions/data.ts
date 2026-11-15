@@ -5,16 +5,18 @@ import ExecutivesModel from "@/lib/models/Executives";
 import ContactModel from "@/lib/models/Contact";
 import PhotoModel from "@/lib/models/Photo";
 import ActivitiesModel from "@/lib/models/Activities";
-import SexyItModel from "@/lib/models/SexyIt";
+import SexyItModel, { toKstDateString } from "@/lib/models/SexyIt";
 import DesigntonModel from "@/lib/models/Designton";
 import RecruitOverviewModel from "@/lib/models/RecruitOverview";
 import RecruitActivityModel from "@/lib/models/RecruitActivity";
 import EtcModel from "@/lib/models/Etc";
 import MainActivityModel from "@/lib/models/MainActivity"
 import FaqModel from "@/lib/models/Faq";
+import ActivityReviewModel from "@/lib/models/ActivityReview";
 import type {
   Study,
   Interview,
+  ActivityReview,
   Executive,
   Contact,
   Photo,
@@ -48,6 +50,18 @@ export async function getInterviews(): Promise<Interview[]> {
     studentId: String(i.studentId),
     introduction: i.introduction,
     imagePath: i.imagePath,
+  }));
+}
+
+export async function getActivityReviews(): Promise<ActivityReview[]> {
+  await dbConnect();
+  const docs = await ActivityReviewModel.find().lean();
+  return docs.map((r) => ({
+    id: (r._id as object).toString(),
+    category: r.category,
+    name: r.name,
+    studentId: String(r.studentId),
+    content: r.content,
   }));
 }
 
@@ -114,8 +128,8 @@ export async function getSexyIts(): Promise<SexyIt[]> {
   await dbConnect();
   const docs = await SexyItModel.find().sort({ date: -1 }).lean();
   return docs.map((s) => ({
-    id: (s._id as object).toString(),
-    date: s.date.toISOString().split("T")[0],
+    id: s.ig_post_id,
+    date: toKstDateString(s.date),
     title: s.title,
     imagePath: s.imagePath,
     url: s.url,

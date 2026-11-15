@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getInterviews, getPhotos } from "@/actions/data";
+import { getActivityReviews, getInterviews, getPhotos } from "@/actions/data";
 import Banner from "@/components/ui/Banner";
 import ReviewTabs from "@/features/reviews/ReviewTabs";
 import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern";
@@ -20,7 +20,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ReviewsPage() {
-  const [interviews, photos] = await Promise.all([
+  const [activityReviews, interviews, photos] = await Promise.all([
+    getActivityReviews(),
     getInterviews(),
     getPhotos(),
   ]);
@@ -66,7 +67,11 @@ export default async function ReviewsPage() {
         }
         description="선배들의 인터뷰와 활동 사진을 확인해 보세요."
       />
-      <ReviewTabs interviews={interviews} photos={photos} />
+      <ReviewTabs
+        activityReviews={activityReviews}
+        interviews={interviews}
+        photos={photos}
+      />
     </main>
   );
 }
