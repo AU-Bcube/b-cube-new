@@ -88,7 +88,7 @@ export default function DesigntonSection({ data }: Props) {
                 <h3 className="mt-1 truncate text-lg font-bold text-on-surface">
                   {item.title}
                 </h3>
-                <p className="mt-3 line-clamp-2 break-keep text-xs text-on-surface/70">
+                <p className="mt-2 line-clamp-2 break-keep text-sm text-on-surface/70">
                   {item.summary}
                 </p>
               </div>
@@ -101,7 +101,6 @@ export default function DesigntonSection({ data }: Props) {
             <TabButton
               label="더보기"
               selected
-              size="sm"
               onClick={() => setVisiblePosts((v) => v + 4)}
             />
           )}

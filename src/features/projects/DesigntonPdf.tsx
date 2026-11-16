@@ -20,9 +20,9 @@ export default function DesigntonPdf({ id, pdfUrl }: { id: string; pdfUrl: strin
   };
 
   return (
-    <section className="mt-10 flex flex-col gap-4 md:mt-14">
+    <section className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-on-surface md:text-2xl">PDF 뷰어</h2>
+        <h2 className="text-lg font-bold text-on-surface md:text-xl">PDF 뷰어</h2>
         <div className="flex gap-2">
           <a href={`/api/designton/${id}/download`} className={BUTTON}>
             <Download size={12} />
@@ -38,7 +38,7 @@ export default function DesigntonPdf({ id, pdfUrl }: { id: string; pdfUrl: strin
         ref={frame}
         src={viewerUrl}
         title="PDF 뷰어"
-        className="h-[80vh] w-full rounded-2xl border-0 bg-[#eeeeee]"
+        className="h-[80vh] w-full rounded-2xl border-0"
       />
     </section>
   );

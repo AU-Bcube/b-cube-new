@@ -33,7 +33,7 @@ export default async function DesigntonDetailPage({ params }: Props) {
   if (!item) notFound();
 
   return (
-    <main className="relative z-10 mx-auto flex max-w-3xl flex-col gap-5 break-keep px-6 py-10 md:py-16">
+    <main className="mx-auto flex max-w-3xl flex-col gap-6 break-keep px-6 py-10 md:gap-8 md:py-16">
       <Link
         href="/projects"
         className="flex items-center gap-1.5 self-end rounded-full border border-white/10 bg-[#141d47] px-4 py-2 text-xs text-on-surface/90 transition-colors hover:border-primary-light/30"
@@ -42,19 +42,19 @@ export default async function DesigntonDetailPage({ params }: Props) {
         목록으로
       </Link>
 
-      <section className="rounded-3xl border border-white/8 bg-linear-to-b from-[#17225a] to-[#131c4a] px-7 pb-8 pt-20 md:px-8 md:pt-24">
+      <section className="rounded-3xl border border-white/8 bg-linear-to-b from-[#17225a] to-[#131c4a] px-6 pb-8 pt-20 md:px-8 md:pt-24">
         <h1 className="text-3xl font-bold text-on-surface md:text-4xl">{item.title}</h1>
-        <p className="mt-3 text-sm text-on-surface/70">{item.summary}</p>
+        <p className="mt-3 text-sm text-on-surface/70 md:text-base">{item.summary}</p>
       </section>
 
       <details open className="group rounded-2xl border border-white/8 bg-[#141d47]">
-        <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 [&::-webkit-details-marker]:hidden">
-          <h2 className="text-base font-bold text-on-surface">프로젝트 요약</h2>
+        <summary className="flex cursor-pointer list-none items-center justify-between px-6 py-4 md:px-8 [&::-webkit-details-marker]:hidden">
+          <h2 className="text-lg font-bold text-on-surface md:text-xl">프로젝트 요약</h2>
           <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/15 text-on-surface/70">
             <ChevronDown size={12} className="transition-transform group-open:rotate-180" />
           </span>
         </summary>
-        <dl className="flex flex-col gap-4 border-t border-white/8 px-5 py-5 text-sm">
+        <dl className="flex flex-col gap-4 border-t border-white/8 px-6 py-5 text-sm md:px-8 md:text-base">
           {item.period && <Row label="기간">{item.period}</Row>}
           <Row label="형태">{item.type}</Row>
           <Row label="팀원">{item.members?.map((m) => m.name).join(", ")}</Row>
@@ -74,9 +74,9 @@ export default async function DesigntonDetailPage({ params }: Props) {
         </dl>
       </details>
 
-      <section className="mt-10 rounded-2xl border border-white/20 px-7 py-8 md:mt-14">
-        <h2 className="text-xl font-bold text-on-surface md:text-2xl">프로젝트 설명</h2>
-        <p className="mt-6 whitespace-pre-line text-sm leading-relaxed text-on-surface/80">
+      <section className="rounded-2xl border border-white/20 px-6 py-6 md:px-8">
+        <h2 className="text-lg font-bold text-on-surface md:text-xl">프로젝트 설명</h2>
+        <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-on-surface/80 md:text-base">
           {item.description}
         </p>
       </section>
