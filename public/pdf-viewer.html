@@ -11,7 +11,10 @@
             height: 100%;
             background: #0c1225;
             overflow: auto;
+            scrollbar-width: none;
         }
+        /* 스크롤은 되고 바만 숨긴다 (scrollbar-width를 모르는 사파리용) */
+        ::-webkit-scrollbar { display: none; }
         #pdf-viewer {
             width: 100%;
             min-height: 100%;
