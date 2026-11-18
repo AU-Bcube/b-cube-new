@@ -43,6 +43,10 @@ b-cube.kr is an open-source club promotion platform managed by B-CUBE, a club wi
 | `pnpm start` | 프로덕션 서버 실행 (빌드 후) |
 | `pnpm lint` | ESLint 실행 |
 
+## 크롤러의 프로젝트 페이지 재검증
+
+[크롤러의 프로젝트 페이지 재검증 안내](docs/crawler-revalidation.md)를 참고하세요.
+
 ## CODE OF CONDUCT
 
 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)<br>
