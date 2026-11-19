@@ -28,16 +28,16 @@ export default function DesigntonSection({ data }: Props) {
   const [visiblePosts, setVisiblePosts] = useState(4);
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col items-center justify-center overflow-hidden px-8 md:px-12">
-      <div className="flex w-full max-w-3xl flex-col items-start justify-start gap-10 md:gap-16">
-        <section className="flex w-full flex-col gap-2 md:gap-6">
+    <div className="mx-auto flex max-w-5xl flex-col items-center overflow-hidden px-6 md:px-12">
+      <div className="flex w-full flex-col items-start gap-10 md:gap-16">
+        <section className="flex w-full flex-col gap-4 md:gap-6">
           <h2 className="text-xl font-semibold sm:text-5xl text-gradient">
             디자인톤
           </h2>
-          <p className="text-sm text-on-surface sm:text-xl">
+          <p className="text-sm text-on-surface/70 sm:text-lg">
             팀 별로 아이디어를 기획하고 구체화하여 앱 서비스를 기획하는 활동
           </p>
-          <div className="mt-4 grid w-full gap-4 md:grid-cols-2 md:gap-5">
+          <div className="grid w-full gap-4 md:grid-cols-2 md:gap-6">
             {INFO.map(({ icon: Icon, label, text }) => (
               <div
                 key={label}
@@ -57,7 +57,7 @@ export default function DesigntonSection({ data }: Props) {
           </div>
         </section>
 
-        <section className="grid w-full auto-rows-fr gap-5 md:grid-cols-2">
+        <section className="grid w-full auto-rows-fr gap-4 md:grid-cols-2 md:gap-6">
           {data.slice(0, visiblePosts).map((item) => (
             <Link
               key={item.id}
@@ -96,7 +96,7 @@ export default function DesigntonSection({ data }: Props) {
           ))}
         </section>
 
-        <div className="mb-10 flex w-full items-center justify-center md:mb-20">
+        <div className="mb-10 flex w-full items-center justify-center md:mb-16">
           {visiblePosts < data.length && (
             <TabButton
               label="더보기"
