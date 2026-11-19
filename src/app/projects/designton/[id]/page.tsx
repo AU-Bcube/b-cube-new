@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { getDesigntons } from "@/actions/data";
 import DesigntonPdf from "@/features/projects/DesigntonPdf";
 
@@ -27,69 +28,67 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// 디자인톤 카드를 누르면 오는 상세 페이지. 선택 항목(기간, 링크)은 값이 없으면 그 줄을 그리지 않는다.
+// 디자인톤 카드를 누르면 오는 상세 페이지. PC도 모바일처럼 한 줄(최대 680px)로 보여 준다.
+// 선택 항목(기간)은 값이 없으면 그 줄을 그리지 않는다.
 export default async function DesigntonDetailPage({ params }: Props) {
   const item = await findDesignton(params);
   if (!item) notFound();
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-6 break-keep px-6 py-10 md:gap-8 md:py-16">
+    <main className="mx-auto max-w-178 break-keep px-4 pb-6 pt-8 md:pt-12">
       <Link
         href="/projects"
-        className="flex items-center gap-1.5 self-end rounded-full border border-white/10 bg-[#141d47] px-4 py-2 text-xs text-on-surface/90 transition-colors hover:border-primary-light/30"
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface/70 transition-colors hover:text-on-surface"
       >
-        <ArrowLeft size={12} />
-        목록으로
+        <ArrowLeft size={16} />
+        프로젝트 목록
       </Link>
 
-      <section className="rounded-3xl border border-white/8 bg-linear-to-b from-[#17225a] to-[#131c4a] px-6 pb-8 pt-20 md:px-8 md:pt-24">
-        <h1 className="text-3xl font-bold text-on-surface md:text-4xl">{item.title}</h1>
-        <p className="mt-3 text-sm text-on-surface/70 md:text-base">{item.summary}</p>
-      </section>
+      <p className="mt-8 text-xs font-bold tracking-[0.12em] text-primary-light">
+        {item.year} DESIGNTHON
+      </p>
+      <h1 className="mt-1 text-3xl font-bold text-on-surface md:text-4xl">{item.title}</h1>
+      <p className="mt-2 text-sm text-on-surface/70 md:text-base">{item.summary}</p>
 
-      <details open className="group rounded-2xl border border-white/8 bg-[#141d47]">
-        <summary className="flex cursor-pointer list-none items-center justify-between px-6 py-4 md:px-8 [&::-webkit-details-marker]:hidden">
+      <dl className="mt-6 flex flex-col gap-2 border-y border-white/8 py-4 text-sm">
+        <Row label="참여자">{item.members?.map((m) => m.name).join(", ")}</Row>
+        {item.period && <Row label="기간">{item.period}</Row>}
+      </dl>
+
+      <div className="mt-6 rounded-2xl border border-white/8 bg-[#141d47] p-2">
+        <div className="relative aspect-video overflow-hidden rounded-xl">
+          <Image
+            src={item.imagePath}
+            alt={`${item.title} PDF 표지`}
+            fill
+            sizes="(min-width: 712px) 664px, 100vw"
+            className="object-cover"
+            priority
+          />
+        </div>
+      </div>
+
+      <details open className="group mt-6 rounded-2xl border border-white/8 bg-[#141d47]">
+        <summary className="flex cursor-pointer list-none items-center justify-between px-6 py-4 [&::-webkit-details-marker]:hidden">
           <h2 className="text-lg font-bold text-on-surface md:text-xl">프로젝트 요약</h2>
           <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/15 text-on-surface/70">
             <ChevronDown size={12} className="transition-transform group-open:rotate-180" />
           </span>
         </summary>
-        <dl className="flex flex-col gap-4 border-t border-white/8 px-6 py-5 text-sm md:px-8 md:text-base">
-          {item.period && <Row label="기간">{item.period}</Row>}
-          <Row label="형태">{item.type}</Row>
-          <Row label="팀원">{item.members?.map((m) => m.name).join(", ")}</Row>
-          {item.link && (
-            <Row label="링크">
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-full border border-white/15 px-3 py-1 text-xs text-primary-light transition-colors hover:border-primary-light/40"
-              >
-                링크
-                <ArrowUpRight size={12} />
-              </a>
-            </Row>
-          )}
-        </dl>
-      </details>
-
-      <section className="rounded-2xl border border-white/20 px-6 py-6 md:px-8">
-        <h2 className="text-lg font-bold text-on-surface md:text-xl">프로젝트 설명</h2>
-        <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-on-surface/80 md:text-base">
+        <p className="whitespace-pre-line border-t border-white/8 px-6 py-5 text-sm leading-relaxed text-on-surface/80 md:text-base">
           {item.description}
         </p>
-      </section>
+      </details>
 
-      <DesigntonPdf id={item.id} pdfUrl={item.pdfPath} />
+      <DesigntonPdf id={item.id} title={item.title} pdfUrl={item.pdfPath} />
     </main>
   );
 }
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="grid grid-cols-[3.5rem_1fr] items-center gap-4">
-      <dt className="text-xs text-on-surface/50">{label}</dt>
+    <div className="grid grid-cols-[3.5rem_1fr] gap-4">
+      <dt className="text-xs leading-5 text-on-surface/50">{label}</dt>
       <dd className="text-on-surface/90">{children}</dd>
     </div>
   );
