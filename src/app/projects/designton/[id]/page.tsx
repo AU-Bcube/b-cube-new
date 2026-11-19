@@ -38,24 +38,24 @@ export default async function DesigntonDetailPage({ params }: Props) {
     <main className="mx-auto max-w-178 break-keep px-4 pb-6 pt-8 md:pt-12">
       <Link
         href="/projects"
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-on-surface/70 transition-colors hover:text-on-surface"
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#aeb8d4] transition-colors hover:text-white"
       >
         <ArrowLeft size={16} />
         프로젝트 목록
       </Link>
 
-      <p className="mt-8 text-xs font-bold tracking-[0.12em] text-primary-light">
+      <p className="mt-8 text-xs font-bold tracking-[0.12em] text-[#6ec1ff]">
         {item.year} DESIGNTHON
       </p>
-      <h1 className="mt-1 text-3xl font-bold text-on-surface md:text-4xl">{item.title}</h1>
-      <p className="mt-2 text-sm text-on-surface/70 md:text-base">{item.summary}</p>
+      <h1 className="mt-1 text-3xl font-bold text-white md:text-4xl">{item.title}</h1>
+      <p className="mt-2 text-sm text-[#b8c1d9] md:text-base">{item.summary}</p>
 
-      <dl className="mt-6 flex flex-col gap-2 border-y border-white/8 py-4 text-sm">
+      <dl className="mt-6 flex flex-col gap-2 border-y border-white/10 py-4 text-sm">
         <Row label="참여자">{item.members?.map((m) => m.name).join(", ")}</Row>
         {item.period && <Row label="기간">{item.period}</Row>}
       </dl>
 
-      <div className="mt-6 rounded-2xl border border-white/8 bg-[#141d47] p-2">
+      <div className="mt-6 rounded-2xl border border-white/12 bg-[#141d45] p-2 shadow-[0_14px_36px_rgba(2,5,18,0.24)]">
         <div className="relative aspect-video overflow-hidden rounded-xl">
           <Image
             src={item.imagePath}
@@ -68,14 +68,14 @@ export default async function DesigntonDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <details open className="group mt-6 rounded-2xl border border-white/8 bg-[#141d47]">
+      <details open className="group mt-6 rounded-2xl border border-white/11 bg-[#141d45] shadow-[0_12px_32px_rgba(2,5,18,0.18)]">
         <summary className="flex cursor-pointer list-none items-center justify-between px-6 py-4 [&::-webkit-details-marker]:hidden">
-          <h2 className="text-lg font-bold text-on-surface md:text-xl">프로젝트 요약</h2>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/15 text-on-surface/70">
+          <h2 className="text-lg font-bold text-white md:text-xl">프로젝트 요약</h2>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/11 text-[#b8c1d9]">
             <ChevronDown size={12} className="transition-transform group-open:rotate-180" />
           </span>
         </summary>
-        <p className="whitespace-pre-line border-t border-white/8 px-6 py-5 text-sm leading-relaxed text-on-surface/80 md:text-base">
+        <p className="whitespace-pre-line border-t border-white/10 px-6 py-5 text-sm leading-relaxed text-[#b8c1d9] md:text-base">
           {item.description}
         </p>
       </details>
@@ -88,8 +88,8 @@ export default async function DesigntonDetailPage({ params }: Props) {
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="grid grid-cols-[3.5rem_1fr] gap-4">
-      <dt className="text-xs leading-5 text-on-surface/50">{label}</dt>
-      <dd className="text-on-surface/90">{children}</dd>
+      <dt className="text-xs font-semibold leading-5 text-[#6f7c9f]">{label}</dt>
+      <dd className="text-[#d9deec]">{children}</dd>
     </div>
   );
 }

@@ -65,11 +65,12 @@ export default function DesigntonSection({ data }: Props) {
               data-no-grid
               className="group overflow-hidden rounded-2xl border border-white/8 bg-[#141d47] transition-colors hover:border-primary-light/30"
             >
-              <div className="relative aspect-16/10 w-full overflow-hidden">
+              <div className="relative aspect-video w-full overflow-hidden">
                 <Image
                   src={item.imagePath}
                   alt={item.title}
                   fill
+                  sizes="(min-width: 768px) 452px, 100vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {item.award && (

@@ -13,7 +13,7 @@ interface PdfModalProps {
 }
 
 const ACTION =
-  "flex h-8 items-center gap-1.5 rounded-lg border border-white/10 px-2.5 text-xs font-semibold text-on-surface/90 transition-colors hover:border-primary-light/30";
+  "flex h-8 items-center gap-1.5 rounded-lg border border-white/11 bg-white/4 px-2.5 text-xs font-semibold text-[#c7cee1] transition-colors hover:bg-white/9 hover:text-white";
 
 export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfModalProps) {
   const proxiedUrl = `/api/pdf-proxy?url=${encodeURIComponent(pdfUrl)}`;
@@ -51,18 +51,18 @@ export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfMod
     <div className="fixed inset-0 z-9999 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-[rgba(3,6,18,0.88)] backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative mx-4 flex h-[calc(100vh-3rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/8 bg-[#0c1225] shadow-2xl sm:mx-8 sm:h-[calc(100vh-4rem)]">
+      <div className="relative mx-4 flex h-[calc(100vh-3rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/14 bg-[#0b1026] shadow-[0_30px_100px_rgba(0,0,0,0.55)] sm:mx-8 sm:h-[calc(100vh-4rem)]">
         {/* Header */}
-        <div className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-white/6 px-5 py-3.5 md:px-6 md:py-4">
-          <h3 className="truncate text-sm font-bold text-on-surface md:text-base">
+        <div className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-white/10 bg-[#141d45] px-5 py-3.5 md:px-6 md:py-4">
+          <h3 className="truncate text-sm font-bold text-white md:text-base">
             {title}
           </h3>
-          <span className="text-xs text-on-surface/70 md:text-sm">
+          <span className="text-xs tabular-nums text-[#b8c1d9] md:text-sm">
             {page && `${page.page} / ${page.total}`}
           </span>
           <div className="flex justify-end gap-2">
@@ -72,7 +72,7 @@ export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfMod
                   <ArrowUpRight size={14} />
                   <span className="hidden sm:inline">새 탭</span>
                 </a>
-                <a href={downloadUrl} target="_blank" rel="noopener noreferrer" className={ACTION} aria-label="PDF 다운로드">
+                <a href={downloadUrl} className={ACTION} aria-label="PDF 다운로드">
                   <Download size={14} />
                   <span className="hidden sm:inline">다운로드</span>
                 </a>
@@ -81,7 +81,7 @@ export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfMod
             <button
               onClick={onClose}
               aria-label="닫기"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/6 text-on-surface/60 transition-colors hover:bg-white/12 hover:text-on-surface"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/11 bg-white/4 text-white transition-colors hover:bg-white/9"
             >
               <X size={16} />
             </button>

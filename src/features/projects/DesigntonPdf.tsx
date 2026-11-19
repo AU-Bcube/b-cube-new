@@ -15,7 +15,7 @@ export default function DesigntonPdf({ id, title, pdfUrl }: { id: string; title:
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="sticky bottom-3 z-40 mx-auto mt-8 flex w-full max-w-162 items-center justify-between rounded-xl bg-primary-light px-5 py-3.5 text-sm font-bold text-white shadow-[0_10px_36px_rgba(3,6,18,0.6)] transition-colors hover:bg-primary-light/85 md:text-base"
+        className="sticky bottom-3 z-40 mx-auto mt-8 flex w-full max-w-162 items-center justify-between rounded-xl border border-white/20 bg-[#397fe9] px-5 py-3.5 text-sm font-bold text-white shadow-[0_10px_36px_rgba(3,6,18,0.6)] transition-colors hover:bg-primary-light md:text-base"
       >
         PDF 보기
         <ArrowUpRight size={18} />
