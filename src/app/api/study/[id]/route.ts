@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import Study from "@/lib/models/Study";
 import { uploadImage, deleteAsset } from "@/lib/storage";
 import { requireAuth } from "@/lib/auth";
+import { readStudyDetails, toStudy } from "@/lib/study";
 
 export async function PATCH(
   req: NextRequest,
@@ -23,6 +24,7 @@ export async function PATCH(
     const body = await req.json();
     if (body.title) item.title = body.title;
     if (body.year) item.year = body.year;
+    item.set(readStudyDetails((k) => k in body, (k) => body[k]));
   } else {
     const formData = await req.formData();
     const title = formData.get("title") as string | null;
@@ -31,6 +33,7 @@ export async function PATCH(
 
     if (title) item.title = title;
     if (year) item.year = year;
+    item.set(readStudyDetails((k) => formData.has(k), (k) => formData.get(k)));
     if (imageFile && imageFile.size > 0) {
       await deleteAsset(item.imagePath);
       item.imagePath = await uploadImage(imageFile, "study");
@@ -39,12 +42,7 @@ export async function PATCH(
 
   await item.save();
   revalidatePath("/", "layout");
-  return NextResponse.json({
-    id: item._id.toString(),
-    year: item.year,
-    title: item.title,
-    imagePath: item.imagePath,
-  });
+  return NextResponse.json(toStudy(item.toObject()));
 }
 
 export async function DELETE(

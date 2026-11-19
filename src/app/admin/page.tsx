@@ -617,6 +617,30 @@ function Select({
     );
 }
 
+// 스터디 상세 페이지 칸. 모두 선택이고, 한 줄 소개를 쓰면 상세 페이지가 생긴다.
+function StudyDetailFields({item}: { item?: Item }) {
+    const v = (key: string) => String(item?.[key] || "");
+    const list = (key: string, separator: string) =>
+        Array.isArray(item?.[key]) ? (item[key] as string[]).join(separator) : "";
+
+    return (
+        <>
+            <Input name="summary" label="한 줄 소개 (쓰면 상세 페이지가 생김)" required={false} defaultValue={v('summary')}/>
+            <Input name="period" label="기간 (예: 2026-1, 2026-2)" required={false} defaultValue={v('period')}/>
+            <Input name="schedule" label="일정 (예: 매주 목 18:00 / 대면)" required={false} defaultValue={v('schedule')}/>
+            <Input name="level" label="난이도" required={false} defaultValue={v('level')}/>
+            <Input name="members" label="스터디원 (쉼표로 구분)" required={false} defaultValue={list('members', ", ")}/>
+            <Input name="tools" label="툴" required={false} defaultValue={v('tools')}/>
+            <Input name="outcomes" label="이런 걸 할 수 있게 돼요 (한 줄에 하나)" type="textarea" required={false}
+                   defaultValue={list('outcomes', "\n")}/>
+            <Input name="curriculum" label="커리큘럼 (한 줄에 하나)" type="textarea" required={false}
+                   defaultValue={list('curriculum', "\n")}/>
+            <Input name="notionUrl" label="결과물 노션 링크 (쓰면 결과물 및 후기가 생김)" type="url" required={false}
+                   defaultValue={v('notionUrl')}/>
+        </>
+    );
+}
+
 function renderFields(tab: Tab) {
     switch (tab) {
         case 'designton':
@@ -650,6 +674,7 @@ function renderFields(tab: Tab) {
                     <Input name="title" label="제목"/>
                     <Input name="year" label="연도"/>
                     <Input name="imagePath" label="이미지" type="file"/>
+                    <StudyDetailFields/>
                 </>
             );
         case 'activities':
@@ -789,6 +814,7 @@ function renderEditFields(tab: Tab, item: Item) {
                     <Input name="title" label="제목" defaultValue={v('title')}/>
                     <Input name="year" label="연도" defaultValue={v('year')}/>
                     <Input name="imagePath" label="이미지 (변경 시에만)" type="file" required={false}/>
+                    <StudyDetailFields item={item}/>
                 </>
             );
         case 'activities':

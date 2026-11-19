@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/mongodb";
 import StudyModel from "@/lib/models/Study";
+import { toStudy } from "@/lib/study";
 import InterviewModel from "@/lib/models/Interview";
 import ExecutivesModel from "@/lib/models/Executives";
 import ContactModel from "@/lib/models/Contact";
@@ -33,12 +34,7 @@ import type {
 export async function getStudies(): Promise<Study[]> {
   await dbConnect();
   const docs = await StudyModel.find().sort({ year: -1 }).lean();
-  return docs.map((s) => ({
-    id: (s._id as object).toString(),
-    year: s.year,
-    title: s.title,
-    imagePath: s.imagePath,
-  }));
+  return docs.map(toStudy);
 }
 
 export async function getInterviews(): Promise<Interview[]> {
