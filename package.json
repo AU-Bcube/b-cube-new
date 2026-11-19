@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.985.0",
-    "@aws-sdk/s3-request-presigner": "3.985.0",
     "@next/third-parties": "^16.1.6",
     "@opennextjs/cloudflare": "^1.18.0",
     "@react-three/drei": "^10.7.7",
