@@ -17,6 +17,7 @@ const ACTION =
 
 export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfModalProps) {
   const proxiedUrl = `/api/pdf-proxy?url=${encodeURIComponent(pdfUrl)}`;
+  const viewerUrl = `/pdf-viewer.html?pdfUrl=${encodeURIComponent(proxiedUrl)}`;
   const [page, setPage] = useState<{ page: number; total: number } | null>(null);
 
   // Lock body scroll
@@ -67,7 +68,7 @@ export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfMod
           <div className="flex justify-end gap-2">
             {downloadUrl && (
               <>
-                <a href={pdfUrl} target="_blank" rel="noopener noreferrer" className={ACTION} aria-label="새 탭에서 열기">
+                <a href={viewerUrl} target="_blank" rel="noopener noreferrer" className={ACTION} aria-label="새 탭에서 열기">
                   <ArrowUpRight size={14} />
                   <span className="hidden sm:inline">새 탭</span>
                 </a>
@@ -90,7 +91,7 @@ export default function PdfModal({ title, pdfUrl, onClose, downloadUrl }: PdfMod
         {/* PDF content */}
         <div className="min-h-0 flex-1">
           <iframe
-            src={`/pdf-viewer.html?pdfUrl=${encodeURIComponent(proxiedUrl)}`}
+            src={viewerUrl}
             className="h-full w-full border-0"
             title="PDF Preview"
           />

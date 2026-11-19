@@ -59,7 +59,7 @@ export async function PATCH(
     }
     if (pdfFile && pdfFile.size > 0) {
       await deleteAsset(item.pdfPath);
-      item.pdfPath = await uploadPdf(pdfFile, "designton");
+      item.pdfPath = await uploadPdf(pdfFile, "designton", `${item.title}.pdf`);
     }
   }
 

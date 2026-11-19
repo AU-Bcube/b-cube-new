@@ -4,6 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import Designton from "@/lib/models/Designton";
 
 // 다운로드 버튼: DB에 저장된 PDF 주소(pdfPath)로 그대로 보낸다.
+// R2 파일에 attachment 헤더가 붙어 있어 브라우저가 열지 않고 바로 저장한다 (storage.ts의 uploadPdf).
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }

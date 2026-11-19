@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
   }
 
   const imageUrl = await uploadImage(imageFile!, "bcube/designton");
-  const pdfUrl = await uploadPdf(pdfFile!, "bcube/designton");
+  const pdfUrl = await uploadPdf(pdfFile!, "bcube/designton", `${text("title")}.pdf`);
 
   const optional = Object.fromEntries(
     OPTIONAL_TEXT_FIELDS.filter((key) => text(key)).map((key) => [key, text(key)])
