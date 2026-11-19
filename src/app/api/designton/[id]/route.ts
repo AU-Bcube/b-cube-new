@@ -34,7 +34,7 @@ export async function PATCH(
   const members = has("members")
     ? parseMembers(isJson ? body.members : formData!.get("members"))
     : null;
-  if (members !== null && members.length === 0) emptied.push("팀원");
+  if (members !== null && members.length === 0) emptied.push("참여자");
   if (emptied.length > 0) {
     return NextResponse.json(
       { error: `필수 항목이 비어 있습니다: ${emptied.join(", ")}` },
@@ -75,9 +75,7 @@ export async function PATCH(
     award: item.award,
     summary: item.summary,
     period: item.period,
-    type: item.type,
     members: item.members ?? [],
-    link: item.link,
     description: item.description,
   });
 }

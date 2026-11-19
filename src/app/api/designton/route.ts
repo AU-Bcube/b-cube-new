@@ -20,9 +20,7 @@ export async function GET() {
       award: d.award,
       summary: d.summary,
       period: d.period,
-      type: d.type,
       members: d.members ?? [],
-      link: d.link,
       description: d.description,
     }))
   );
@@ -42,7 +40,7 @@ export async function POST(req: NextRequest) {
   const missing: string[] = Object.entries(REQUIRED_TEXT_FIELDS)
     .filter(([key]) => !text(key))
     .map(([, label]) => label);
-  if (members.length === 0) missing.push("팀원");
+  if (members.length === 0) missing.push("참여자");
   if (!imageFile || imageFile.size === 0) missing.push("이미지");
   if (!pdfFile || pdfFile.size === 0) missing.push("PDF");
   if (missing.length > 0) {
@@ -62,7 +60,6 @@ export async function POST(req: NextRequest) {
     title: text("title"),
     year: text("year"),
     summary: text("summary"),
-    type: text("type"),
     description: text("description"),
     members,
     ...optional,

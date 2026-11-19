@@ -77,9 +77,7 @@ export type Designton = {
   award?: string;
   summary?: string;
   period?: string;
-  type?: string;
   members?: DesigntonMember[];
-  link?: string;
   description?: string;
 };
 
