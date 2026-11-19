@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ProjectCard from "@/components/cards/ProjectCard";
+import DetailCard from "@/components/cards/DetailCard";
 import TabButton from "@/components/ui/TabButton";
 import type { Study } from "@/types";
 
@@ -27,11 +27,13 @@ export default function StudySection({ data }: Props) {
         <section className="flex w-full flex-col">
           <div className="grid w-full auto-rows-fr gap-4 md:grid-cols-2 md:gap-6">
             {data.slice(0, visiblePosts).map((item) => (
-              <ProjectCard
+              <DetailCard
                 key={item.id}
+                href={item.summary ? `/projects/study/${item.id}` : undefined}
                 image={item.imagePath}
                 year={item.year}
                 title={item.title}
+                summary={item.summary}
               />
             ))}
           </div>
