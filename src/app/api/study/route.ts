@@ -4,18 +4,12 @@ import dbConnect from "@/lib/mongodb";
 import Study from "@/lib/models/Study";
 import { uploadImage } from "@/lib/storage";
 import { requireAuth } from "@/lib/auth";
+import { readStudyDetails, toStudy } from "@/lib/study";
 
 export async function GET() {
   await dbConnect();
   const studies = await Study.find().sort({ year: -1 }).lean();
-  return NextResponse.json(
-    studies.map((s) => ({
-      id: (s._id as object).toString(),
-      year: s.year,
-      title: s.title,
-      imagePath: s.imagePath,
-    }))
-  );
+  return NextResponse.json(studies.map(toStudy));
 }
 
 export async function POST(req: NextRequest) {
@@ -27,9 +21,10 @@ export async function POST(req: NextRequest) {
   const year = formData.get("year") as string;
   const title = formData.get("title") as string;
   const imageFile = formData.get("imagePath") as File;
+  const details = readStudyDetails((k) => formData.has(k), (k) => formData.get(k));
 
   const imageUrl = await uploadImage(imageFile, "bcube/study");
-  await Study.create({ year, title, imagePath: imageUrl });
+  await Study.create({ year, title, imagePath: imageUrl, ...details });
 
   revalidatePath("/", "layout");
   return NextResponse.json({ message: "스터디 업로드 완료" });

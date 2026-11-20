@@ -3,6 +3,15 @@ export type Study = {
   year: string;
   title: string;
   imagePath: string;
+  summary?: string;
+  period?: string;
+  schedule?: string;
+  level?: string;
+  members?: string[];
+  tools?: string;
+  outcomes?: string[];
+  curriculum?: string[];
+  notionUrl?: string;
 };
 
 export type Interview = {

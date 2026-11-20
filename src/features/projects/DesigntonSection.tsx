@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { AppWindow, ArrowUpRight, BriefcaseBusiness } from "lucide-react";
+import { AppWindow, BriefcaseBusiness } from "lucide-react";
+import DetailCard from "@/components/cards/DetailCard";
 import TabButton from "@/components/ui/TabButton";
 import type { Designton } from "@/types";
 
@@ -59,41 +58,15 @@ export default function DesigntonSection({ data }: Props) {
 
         <section className="grid w-full auto-rows-fr gap-4 md:grid-cols-2 md:gap-6">
           {data.slice(0, visiblePosts).map((item) => (
-            <Link
+            <DetailCard
               key={item.id}
               href={`/projects/designton/${item.id}`}
-              data-no-grid
-              className="group overflow-hidden rounded-2xl border border-white/8 bg-[#141d47] transition-colors hover:border-primary-light/30"
-            >
-              <div className="relative aspect-video w-full overflow-hidden">
-                <Image
-                  src={item.imagePath}
-                  alt={item.title}
-                  fill
-                  sizes="(min-width: 768px) 452px, 100vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                {item.award && (
-                  <span className="absolute right-3 top-3 rounded-full border border-amber-400/30 bg-amber-500/90 px-3 py-1 text-xs font-bold text-black">
-                    {item.award}
-                  </span>
-                )}
-                <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#4b4f5e]/90 text-white">
-                  <ArrowUpRight size={14} />
-                </span>
-              </div>
-              <div className="p-5">
-                <span className="text-xs font-bold text-primary-light">
-                  {item.year}
-                </span>
-                <h3 className="mt-1 truncate text-lg font-bold text-on-surface">
-                  {item.title}
-                </h3>
-                <p className="mt-2 line-clamp-2 break-keep text-sm text-on-surface/70">
-                  {item.summary}
-                </p>
-              </div>
-            </Link>
+              image={item.imagePath}
+              year={item.year}
+              title={item.title}
+              summary={item.summary}
+              award={item.award}
+            />
           ))}
         </section>
 

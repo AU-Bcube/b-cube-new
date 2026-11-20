@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { getDesigntons } from "@/actions/data";
 import DesigntonPdf from "@/features/projects/DesigntonPdf";
+import DetailHeader from "@/features/projects/DetailHeader";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -36,24 +35,15 @@ export default async function DesigntonDetailPage({ params }: Props) {
 
   return (
     <main className="mx-auto max-w-178 break-keep px-4 pb-6 pt-8 md:pt-12">
-      <Link
-        href="/projects"
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#aeb8d4] transition-colors hover:text-white"
-      >
-        <ArrowLeft size={16} />
-        프로젝트 목록
-      </Link>
-
-      <p className="mt-8 text-xs font-bold tracking-[0.12em] text-[#6ec1ff]">
-        {item.year} DESIGNTHON
-      </p>
-      <h1 className="mt-1 text-3xl font-bold text-white md:text-4xl">{item.title}</h1>
-      <p className="mt-2 text-sm text-[#b8c1d9] md:text-base">{item.summary}</p>
-
-      <dl className="mt-6 flex flex-col gap-2 border-y border-white/10 py-4 text-sm">
-        <Row label="참여자">{item.members?.map((m) => m.name).join(", ")}</Row>
-        {item.period && <Row label="기간">{item.period}</Row>}
-      </dl>
+      <DetailHeader
+        eyebrow={`${item.year} DESIGNTHON`}
+        title={item.title}
+        summary={item.summary}
+        meta={[
+          ["참여자", item.members?.map((m) => m.name).join(", ")],
+          ["기간", item.period],
+        ]}
+      />
 
       <div className="mt-6 rounded-2xl border border-white/12 bg-[#141d45] p-2 shadow-[0_14px_36px_rgba(2,5,18,0.24)]">
         <div className="relative aspect-video overflow-hidden rounded-xl">
@@ -82,14 +72,5 @@ export default async function DesigntonDetailPage({ params }: Props) {
 
       <DesigntonPdf id={item.id} title={item.title} pdfUrl={item.pdfPath} />
     </main>
-  );
-}
-
-function Row({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="grid grid-cols-[3.5rem_1fr] gap-4">
-      <dt className="text-xs font-semibold leading-5 text-[#6f7c9f]">{label}</dt>
-      <dd className="text-[#d9deec]">{children}</dd>
-    </div>
   );
 }
