@@ -25,7 +25,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) return authErr;
 
   await dbConnect();
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const authErr = requireAuth(req);
+  const authErr = await requireAuth(req);
   if (authErr) {
     console.log("[PATCH /api/contact] AUTH FAILED");
     return authErr;
