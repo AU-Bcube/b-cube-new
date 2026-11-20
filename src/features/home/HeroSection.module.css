@@ -10,7 +10,7 @@
 }
 
 .heroInner {
-  /* 주요 활동 섹션과 같은 좌우 여백: max-w-7xl px-6 md:px-12 */
+  /* PC: 주요 활동 섹션과 같은 좌우 여백 (max-w-7xl md:px-12) */
   width: min(1280px, 100%);
   padding-inline: 48px;
   margin: 0 auto;
@@ -224,6 +224,7 @@
     display: flex;
     flex-direction: column;
     gap: 0;
+    padding-inline: 32px;
   }
 
   .heroCopy {
@@ -264,12 +265,5 @@
     animation: none;
     opacity: 1;
     transform: none;
-  }
-}
-
-/* Tailwind md(768px) 미만: 주요 활동 섹션 px-6과 동일 */
-@media (max-width: 767px) {
-  .heroInner {
-    padding-inline: 24px;
   }
 }
