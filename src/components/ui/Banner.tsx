@@ -34,8 +34,6 @@ export default function Banner({
           {action}
         </div>
       </div>
-      {/* Bottom separator */}
-      <div className="mx-6 h-px bg-linear-to-r from-transparent via-primary-light/20 to-transparent md:mx-12" />
     </div>
   );
 }
