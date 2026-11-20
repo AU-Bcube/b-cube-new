@@ -31,9 +31,20 @@ function generatePath(folder: string, fileName: string) {
   return `${folder}/${timestamp}-${baseName || "file"}${ext}`;
 }
 
+// 브라우저가 열지 않고 이 이름으로 바로 저장하게 하는 헤더.
+// filename*에는 '()*를 쓸 수 없어 encodeURIComponent가 남기는 것까지 바꾼다.
+export function attachment(fileName: string) {
+  const encoded = encodeURIComponent(fileName).replace(
+    /['()*]/g,
+    (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`
+  );
+  return `attachment; filename="download.pdf"; filename*=UTF-8''${encoded}`;
+}
+
 export async function uploadImage(
   file: File,
-  folder: string
+  folder: string,
+  contentDisposition?: string
 ): Promise<string> {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -45,17 +56,20 @@ export async function uploadImage(
       Key: key,
       Body: buffer,
       ContentType: file.type,
+      ContentDisposition: contentDisposition,
     })
   );
 
   return `${process.env.R2_PUBLIC_URL}/${key}`;
 }
 
+// PDF 주소를 열면 바로 저장된다. 사이트에서는 pdf-viewer.html이 내용을 읽어 보여 주므로 화면 표시는 그대로다.
 export async function uploadPdf(
   file: File,
-  folder: string
+  folder: string,
+  downloadName = file.name
 ): Promise<string> {
-  return uploadImage(file, folder);
+  return uploadImage(file, folder, attachment(downloadName));
 }
 
 export async function deleteAsset(url: string) {

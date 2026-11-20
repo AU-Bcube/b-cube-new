@@ -3,6 +3,7 @@
 import {useState, useEffect, useCallback, type FormEvent} from "react";
 import Image from "next/image";
 import {ACTIVITY_REVIEW_CATEGORIES} from "@/lib/activityReviewCategories";
+import type {DesigntonMember} from "@/types";
 
 type Tab =
     | 'designton'
@@ -510,9 +511,9 @@ export default function AdminPage() {
                                                 </p>
                                                 <p className="text-sm text-gray-400">
                                                     {String(item.year || item.date || item.role || item.category || "")}
-                                                    {typeof item.participant === "string" &&
-                                                        item.participant &&
-                                                        ` · ${item.participant}`}
+                                                    {(item.summary || item.participant)
+                                                        ? ` · ${item.summary || item.participant}`
+                                                        : null}
                                                 </p>
                                             </div>
                                         </div>
@@ -619,6 +620,19 @@ function Select({
 function renderFields(tab: Tab) {
     switch (tab) {
         case 'designton':
+            return (
+                <>
+                    <Input name="year" label="연도 *"/>
+                    <Input name="title" label="제목 *"/>
+                    <Input name="summary" label="한 줄 설명 *"/>
+                    <Input name="members" label="참여자 * (쉼표로 구분)"/>
+                    <Input name="period" label="기간 (예: 2024.03.22 ~ 2024.06.07)" required={false}/>
+                    <Input name="award" label="수상 (카드에 배지로 표시)" required={false}/>
+                    <Input name="description" label="프로젝트 요약 *" type="textarea"/>
+                    <Input name="imagePath" label="썸네일 * (PDF 1쪽 표지, 16:9)" type="file"/>
+                    <Input name="pdfPath" label="PDF *" type="file"/>
+                </>
+            );
         case 'etc':
             return (
                 <>
@@ -732,6 +746,27 @@ function renderEditFields(tab: Tab, item: Item) {
 
     switch (tab) {
         case 'designton':
+            return (
+                <>
+                    <Input name="year" label="연도 *" defaultValue={v('year')}/>
+                    <Input name="title" label="제목 *" defaultValue={v('title')}/>
+                    <Input name="summary" label="한 줄 설명 *" defaultValue={v('summary')}/>
+                    <Input
+                        name="members"
+                        label="참여자 * (쉼표로 구분)"
+                        defaultValue={
+                            Array.isArray(item.members)
+                                ? (item.members as DesigntonMember[]).map((m) => m.name).join(", ")
+                                : ""
+                        }
+                    />
+                    <Input name="period" label="기간" required={false} defaultValue={v('period')}/>
+                    <Input name="award" label="수상 (카드에 배지로 표시)" required={false} defaultValue={v('award')}/>
+                    <Input name="description" label="프로젝트 요약 *" type="textarea" defaultValue={v('description')}/>
+                    <Input name="imagePath" label="썸네일 (변경 시에만)" type="file" required={false}/>
+                    <Input name="pdfPath" label="PDF (변경 시에만)" type="file" required={false}/>
+                </>
+            );
         case 'etc':
             return (
                 <>

@@ -9,9 +9,12 @@
         html, body {
             width: 100%;
             height: 100%;
-            background: #0c1225;
+            background: #0b1026;
             overflow: auto;
+            scrollbar-width: none;
         }
+        /* 스크롤은 되고 바만 숨긴다 (scrollbar-width를 모르는 사파리용) */
+        ::-webkit-scrollbar { display: none; }
         #pdf-viewer {
             width: 100%;
             min-height: 100%;
@@ -59,18 +62,37 @@
             pdfjsLib.getDocument(url).promise.then(pdfDoc => {
                 document.getElementById('loading').style.display = 'none';
                 const viewer = document.getElementById('pdf-viewer');
+                const total = pdfDoc.numPages;
 
-                for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                // 화면에 가장 많이 보이는 페이지를 모달 머리줄(1 / N)에 알린다
+                const canvases = [];
+                let current = 0;
+                const update = () => {
+                    let best = 1, most = 0;
+                    canvases.forEach((c, i) => {
+                        const r = c.getBoundingClientRect();
+                        const visible = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+                        if (visible > most) { most = visible; best = i + 1; }
+                    });
+                    if (best !== current) {
+                        current = best;
+                        parent.postMessage({ type: 'pdf-page', page: best, total }, location.origin);
+                    }
+                };
+                document.addEventListener('scroll', () => requestAnimationFrame(update), { capture: true, passive: true });
+
+                for (let pageNum = 1; pageNum <= total; pageNum++) {
+                    // 페이지 순서가 섞이지 않게 캔버스를 먼저 순서대로 붙이고, 불러오면 그린다
+                    const canvas = document.createElement('canvas');
+                    viewer.appendChild(canvas);
+                    canvases.push(canvas);
+
                     pdfDoc.getPage(pageNum).then(page => {
                         const viewport = page.getViewport({ scale: 1.5 });
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-
                         canvas.height = viewport.height;
                         canvas.width = viewport.width;
-                        viewer.appendChild(canvas);
-
-                        page.render({ canvasContext: context, viewport: viewport });
+                        page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
+                        update();
                     });
                 }
             }).catch(() => {
