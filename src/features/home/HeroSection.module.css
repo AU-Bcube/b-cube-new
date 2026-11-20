@@ -6,11 +6,13 @@
   min-height: 100svh;
   display: flex;
   align-items: center;
-  padding: 112px 24px 104px;
+  padding: 112px 0 104px;
 }
 
 .heroInner {
-  width: min(1200px, 100%);
+  /* 주요 활동 섹션과 같은 좌우 여백: max-w-7xl px-6 md:px-12 */
+  width: min(1280px, 100%);
+  padding-inline: 48px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 55fr 45fr;
@@ -215,7 +217,7 @@
    */
   .hero {
     min-height: auto;
-    padding: 0 32px 72px;
+    padding: 0 0 72px;
   }
 
   .heroInner {
@@ -262,5 +264,12 @@
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Tailwind md(768px) 미만: 주요 활동 섹션 px-6과 동일 */
+@media (max-width: 767px) {
+  .heroInner {
+    padding-inline: 24px;
   }
 }
