@@ -19,9 +19,9 @@ export default function ReviewCard({ name, studentId, content }: ReviewCardProps
           <Image
             src="/haksamo.svg"
             alt="학번"
-            width={13}
-            height={14}
-            className="opacity-70"
+            width={20}
+            height={20}
+            className="size-5 shrink-0 opacity-70"
           />
           <p className="text-sm font-medium leading-5 text-on-surface/40 md:text-base">
             {studentId}학번

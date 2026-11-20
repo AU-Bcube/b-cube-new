@@ -1,0 +1,269 @@
+.hero {
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --muted: #a7aecb;
+  position: relative;
+  z-index: 10;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 112px 0 104px;
+}
+
+.heroInner {
+  /* PC: 주요 활동 섹션과 같은 좌우 여백 (max-w-7xl md:px-12) */
+  width: min(1280px, 100%);
+  padding-inline: 48px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  align-items: stretch;
+  gap: 32px;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 2;
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+}
+
+.headline button {
+  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #ffffff;
+  font-size: clamp(46px, 5.8vw, 80px);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: line-in 0.75s var(--ease) forwards;
+  animation-delay: var(--line-delay);
+  transition:
+    filter 0.25s ease,
+    opacity 0.25s ease;
+}
+
+.headline button:hover {
+  filter: brightness(1.12);
+}
+
+.headline button:nth-child(1) {
+  color: #ffffff;
+}
+
+.headline button:nth-child(2) {
+  color: #d6dbf5;
+}
+
+.headline button:nth-child(3) {
+  color: #7c9bf2;
+}
+
+.eyebrow {
+  margin: 48px 0 0;
+  color: #8e9eea;
+  font-size: 17px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.description {
+  max-width: 590px;
+  margin: 16px 0 0;
+  color: #a7aecb;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.chips button {
+  cursor: pointer;
+  border: 1px solid #2a3366;
+  border-radius: 999px;
+  padding: 9px 16px;
+  background: #151c3a;
+  color: #c9cff0;
+  font-size: 13px;
+  font-weight: 600;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.chips button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.chips button:not(:disabled):hover,
+.chips button.selected {
+  border-color: #7c9bf2;
+  color: #7c9bf2;
+  transform: translateY(-1px);
+}
+
+.cubeRegion {
+  position: relative;
+  min-height: 0;
+}
+
+.cubeRegion::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  /*
+   * 큐브 하단은 영역 높이(R)의 77.3% 지점(PC·모바일 공통).
+   * 원래(bottom: 4%) 큐브 하단 ~ 그림자 중심 = 18.7%R - 24px, 그 40%가 되도록 배치.
+   */
+  bottom: calc(15.2% - 14.4px);
+  left: 50%;
+  width: 220px;
+  height: 48px;
+  margin-left: -110px;
+  border-radius: 50%;
+  background: rgba(124, 155, 242, 0.16);
+  filter: blur(22px);
+  transform: rotateX(68deg);
+  pointer-events: none;
+}
+
+
+.threeCube {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  touch-action: none;
+}
+
+/*
+ * PC 폭: 큐브 하단 위치는 유지하고 상단이 헤드라인 첫 줄 위까지 오도록 키운다.
+ * 캔버스 높이에 비례해 큐브가 커지므로 캔버스를 키우고 위로 끌어올린다.
+ * 기본 상태에서 큐브는 캔버스 높이의 27.6%~77.3% 구간(49.7%)에 그려진다.
+ *
+ * --cube-trim: 큐브 상단을 헤드라인 위에서 아래로 내리는 양(하단은 고정).
+ *   캔버스 높이 = 155.5% - trim / 0.497
+ *   캔버스 top  = -42.9% + trim * 0.773 / 0.497
+ */
+@media (min-width: 801px) {
+  .threeCube {
+    --cube-trim: 30px;
+    inset: auto 0;
+    top: calc(-42.9% + var(--cube-trim) * 0.773 / 0.497);
+    height: calc(155.5% - var(--cube-trim) / 0.497);
+  }
+}
+
+.threeCube canvas {
+  cursor: grab;
+}
+
+.threeCube canvas:active {
+  cursor: grabbing;
+}
+
+
+
+
+
+
+
+@keyframes line-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (min-width: 801px) and (max-height: 800px) {
+  .hero {
+    padding-top: 84px;
+    padding-bottom: 96px;
+  }
+
+  .headline button {
+    font-size: clamp(44px, 5.2vw, 70px);
+  }
+
+  .eyebrow {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 800px) {
+  /*
+   * 모바일: 캔버스 위쪽 27.6%는 빈 공간이라 상단 패딩 없이도 헤더와 큐브 사이 여백이 남는다.
+   * 큐브 받침 아래 ~ 헤드라인 간격은 gap으로 확보한다.
+   */
+  .hero {
+    min-height: auto;
+    padding: 0 0 72px;
+  }
+
+  .heroInner {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-inline: 32px;
+  }
+
+  .heroCopy {
+    order: 2;
+    width: 100%;
+  }
+
+  .cubeRegion {
+    order: 1;
+    width: 100%;
+    height: 360px;
+    margin-top: -29px;
+    margin-bottom: -14px;
+  }
+
+  .headline button {
+    font-size: clamp(38px, 11.5vw, 56px);
+  }
+
+  .eyebrow {
+    margin-top: 34px;
+    font-size: 15px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .cubeRegion {
+    height: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .headline button {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
