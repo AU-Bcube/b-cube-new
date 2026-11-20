@@ -47,7 +47,7 @@ RESTful CRUD for 9 resources: `activities`, `designton`, `sexyit`, `study`, `etc
 
 ### Client vs Server Components
 
-Most components are Server Components by default. Client components (`"use client"`) are used for: Navigation (sidebar with Framer Motion), ProjectCard (PDF modal state), FadeUp/Carousel (animation/interaction), InteractiveCube, MouseGlow.
+Most components are Server Components by default. Client components (`"use client"`) are used for: Navigation (sidebar with Framer Motion), ProjectCard (PDF modal state), FadeUp/Carousel (animation/interaction), HeroSection/ThreeCube (three.js keyword cube), MouseGlow.
 
 ### Styling
 
