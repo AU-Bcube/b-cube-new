@@ -53,8 +53,10 @@
     <div id="error">PDF를 불러올 수 없습니다.</div>
     <div id="pdf-viewer"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
+    <script type="module">
+        import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.5.438/build/pdf.min.mjs';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.5.438/build/pdf.worker.min.mjs';
+
         const urlParams = new URLSearchParams(window.location.search);
         const url = urlParams.get('pdfUrl');
 
@@ -91,7 +93,7 @@
                         const viewport = page.getViewport({ scale: 1.5 });
                         canvas.height = viewport.height;
                         canvas.width = viewport.width;
-                        page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
+                        page.render({ canvas, viewport });
                         update();
                     });
                 }
