@@ -75,8 +75,11 @@
 
         // 메모리를 아끼는 방법:
         // - 화면 근처(위아래 한 화면) 페이지만 canvas로 그리고, 멀어진(세 화면 밖) 페이지는 canvas를 비운다
+        // - 해상도는 실제 표시 너비 × devicePixelRatio(최대 2)로 맞추고, canvas 한 장의 픽셀 수에 상한을 둔다
         const RENDER_MARGIN = '100% 0px';
         const RELEASE_MARGIN = '300% 0px';
+        const MAX_DPR = 2;
+        const MAX_CANVAS_PIXELS = 8 * 1024 * 1024; // iOS canvas 한도(약 16.7M) 아래로 넉넉히
 
         const url = new URLSearchParams(location.search).get('pdfUrl');
 
@@ -102,34 +105,41 @@
                 el.style.aspectRatio = defaultRatio;
                 el.dataset.index = String(n - 1);
                 viewer.appendChild(el);
-                // canvas: 화면에 붙어 있는 그림, task: 그리는 중인 작업
-                pages.push({ n, el, canvas: null, task: null, busy: false, loaded: false, near: false });
+                // canvas: 화면에 붙어 있는 그림, task: 그리는 중인 작업, width: 그릴 때의 표시 너비
+                pages.push({ n, el, canvas: null, task: null, busy: false, loaded: false, width: 0, near: false });
             }
             loadingEl.style.display = 'none';
 
             async function render(p) {
-                if (p.busy || p.canvas) return;
+                const width = p.el.clientWidth;
+                if (p.busy || !width || (p.canvas && p.width === width)) return;
                 p.busy = true;
                 let result = 'error';
                 try {
-                    result = await draw(p);
+                    result = await draw(p, width);
                 } catch {
                     // 페이지를 못 그렸다. 자리만 남겨 둔다
                 } finally {
                     p.busy = false;
                 }
-                // 그리는 사이에 화면 근처로 돌아왔으면 한 번 더
-                if (p.near && result === 'skipped') render(p);
+                // 그리는 사이에 화면 근처로 돌아왔거나 크기가 바뀌었으면 한 번 더
+                const stale = result === 'skipped' || (result === 'done' && p.el.clientWidth !== p.width);
+                if (p.near && stale) render(p);
             }
 
-            async function draw(p) {
+            async function draw(p, width) {
                 const page = await pdfDoc.getPage(p.n);
                 p.loaded = true;
                 if (!p.near) return 'skipped'; // 받아 오는 사이에 화면에서 멀어졌다
                 const base = page.getViewport({ scale: 1 });
                 p.el.style.aspectRatio = `${base.width} / ${base.height}`;
-                const viewport = page.getViewport({ scale: 1.5 });
 
+                let scale = (width * Math.min(devicePixelRatio || 1, MAX_DPR)) / base.width;
+                const pixels = base.width * base.height * scale * scale;
+                if (pixels > MAX_CANVAS_PIXELS) scale *= Math.sqrt(MAX_CANVAS_PIXELS / pixels);
+                const viewport = page.getViewport({ scale });
+
+                // 새 canvas에 다 그린 뒤 바꿔 끼워, 다시 그리는 동안 깜빡이지 않게 한다
                 const canvas = document.createElement('canvas');
                 canvas.width = Math.floor(viewport.width);
                 canvas.height = Math.floor(viewport.height);
@@ -143,7 +153,9 @@
                 } finally {
                     p.task = null;
                 }
+                if (p.canvas) freeCanvas(p.canvas);
                 p.canvas = canvas;
+                p.width = width;
                 p.el.appendChild(canvas);
                 return 'done';
             }
@@ -160,6 +172,7 @@
                 if (p.canvas) {
                     freeCanvas(p.canvas);
                     p.canvas = null;
+                    p.width = 0;
                 }
                 // 이 페이지가 쓰던 글꼴·이미지 등 내부 자원도 놓는다 (한 번도 안 받은 페이지는 건드리지 않는다)
                 if (p.loaded) {
@@ -192,6 +205,16 @@
                 renderObserver.observe(p.el);
                 releaseObserver.observe(p.el);
             }
+
+            // 모달 크기·화면 방향이 바뀌면 지금 그려진 페이지를 새 너비에 맞춰 다시 그린다
+            let resizeTimer;
+            new ResizeObserver(() => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    for (const p of pages) if (p.near) render(p);
+                    update();
+                }, 150);
+            }).observe(viewer);
 
             // 화면에 가장 많이 보이는 페이지를 모달 머리줄(1 / N)에 알린다
             let current = 0;
