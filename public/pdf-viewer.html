@@ -24,12 +24,21 @@
             padding: 16px 0;
             gap: 12px;
         }
-        canvas {
-            display: block;
-            max-width: 100%;
-            height: auto;
+        /* 페이지 자리. 그리기 전에도 비율대로 높이를 잡아 두어 스크롤 위치가 흔들리지 않는다 */
+        .page {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
             border-radius: 4px;
+            background: rgba(255,255,255,0.04);
             box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+        }
+        .page canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
         }
         #loading {
             color: rgba(255,255,255,0.5);
@@ -53,56 +62,185 @@
     <div id="error">PDF를 불러올 수 없습니다.</div>
     <div id="pdf-viewer"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const url = urlParams.get('pdfUrl');
+    <script type="module">
+        const CDN = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.5.438/build';
+        const loadingEl = document.getElementById('loading');
+        const errorEl = document.getElementById('error');
+        const viewer = document.getElementById('pdf-viewer');
 
-        if (url) {
-            pdfjsLib.getDocument(url).promise.then(pdfDoc => {
-                document.getElementById('loading').style.display = 'none';
-                const viewer = document.getElementById('pdf-viewer');
-                const total = pdfDoc.numPages;
+        const fail = () => {
+            loadingEl.style.display = 'none';
+            errorEl.style.display = 'block';
+        };
 
-                // 화면에 가장 많이 보이는 페이지를 모달 머리줄(1 / N)에 알린다
-                const canvases = [];
-                let current = 0;
-                const update = () => {
-                    let best = 1, most = 0;
-                    canvases.forEach((c, i) => {
-                        const r = c.getBoundingClientRect();
-                        const visible = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
-                        if (visible > most) { most = visible; best = i + 1; }
-                    });
-                    if (best !== current) {
-                        current = best;
-                        parent.postMessage({ type: 'pdf-page', page: best, total }, location.origin);
-                    }
-                };
-                document.addEventListener('scroll', () => requestAnimationFrame(update), { capture: true, passive: true });
+        // 메모리를 아끼는 방법:
+        // - 화면 근처(위아래 한 화면) 페이지만 canvas로 그리고, 멀어진(세 화면 밖) 페이지는 canvas를 비운다
+        // - 해상도는 실제 표시 너비 × devicePixelRatio(최대 2)로 맞추고, canvas 한 장의 픽셀 수에 상한을 둔다
+        const RENDER_MARGIN = '100% 0px';
+        const RELEASE_MARGIN = '300% 0px';
+        const MAX_DPR = 2;
+        const MAX_CANVAS_PIXELS = 8 * 1024 * 1024; // iOS canvas 한도(약 16.7M) 아래로 넉넉히
 
-                for (let pageNum = 1; pageNum <= total; pageNum++) {
-                    // 페이지 순서가 섞이지 않게 캔버스를 먼저 순서대로 붙이고, 불러오면 그린다
-                    const canvas = document.createElement('canvas');
-                    viewer.appendChild(canvas);
-                    canvases.push(canvas);
+        const url = new URLSearchParams(location.search).get('pdfUrl');
 
-                    pdfDoc.getPage(pageNum).then(page => {
-                        const viewport = page.getViewport({ scale: 1.5 });
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport });
-                        update();
-                    });
+        async function main() {
+            if (!url) return fail();
+
+            const pdfjsLib = await import(`${CDN}/pdf.min.mjs`);
+            pdfjsLib.GlobalWorkerOptions.workerSrc = `${CDN}/pdf.worker.min.mjs`;
+
+            // 서버가 Range 요청을 받아 주면 필요한 부분만 받아 온다 (안 되면 알아서 전체를 받는다)
+            const pdfDoc = await pdfjsLib.getDocument({ url, disableAutoFetch: true }).promise;
+            const total = pdfDoc.numPages;
+
+            // 자리 높이는 첫 페이지 비율로 잡고, 각 페이지를 그릴 때 실제 비율로 고친다
+            const first = await pdfDoc.getPage(1);
+            const firstViewport = first.getViewport({ scale: 1 });
+            const defaultRatio = `${firstViewport.width} / ${firstViewport.height}`;
+
+            const pages = [];
+            for (let n = 1; n <= total; n++) {
+                const el = document.createElement('div');
+                el.className = 'page';
+                el.style.aspectRatio = defaultRatio;
+                el.dataset.index = String(n - 1);
+                viewer.appendChild(el);
+                // canvas: 화면에 붙어 있는 그림, task: 그리는 중인 작업, width: 그릴 때의 표시 너비
+                pages.push({ n, el, canvas: null, task: null, busy: false, loaded: false, width: 0, near: false });
+            }
+            loadingEl.style.display = 'none';
+
+            async function render(p) {
+                const width = p.el.clientWidth;
+                if (p.busy || !width || (p.canvas && p.width === width)) return;
+                p.busy = true;
+                let result = 'error';
+                try {
+                    result = await draw(p, width);
+                } catch {
+                    // 페이지를 못 그렸다. 자리만 남겨 둔다
+                } finally {
+                    p.busy = false;
                 }
-            }).catch(() => {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-            });
-        } else {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
+                // 그리는 사이에 화면 근처로 돌아왔거나 크기가 바뀌었으면 한 번 더
+                const stale = result === 'skipped' || (result === 'done' && p.el.clientWidth !== p.width);
+                if (p.near && stale) render(p);
+            }
+
+            async function draw(p, width) {
+                const page = await pdfDoc.getPage(p.n);
+                p.loaded = true;
+                if (!p.near) return 'skipped'; // 받아 오는 사이에 화면에서 멀어졌다
+                const base = page.getViewport({ scale: 1 });
+                p.el.style.aspectRatio = `${base.width} / ${base.height}`;
+
+                let scale = (width * Math.min(devicePixelRatio || 1, MAX_DPR)) / base.width;
+                const pixels = base.width * base.height * scale * scale;
+                if (pixels > MAX_CANVAS_PIXELS) scale *= Math.sqrt(MAX_CANVAS_PIXELS / pixels);
+                const viewport = page.getViewport({ scale });
+
+                // 새 canvas에 다 그린 뒤 바꿔 끼워, 다시 그리는 동안 깜빡이지 않게 한다
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.floor(viewport.width);
+                canvas.height = Math.floor(viewport.height);
+                p.task = page.render({ canvas, viewport });
+                try {
+                    await p.task.promise;
+                } catch (err) {
+                    freeCanvas(canvas);
+                    if (err?.name === 'RenderingCancelledException') return 'skipped';
+                    throw err;
+                } finally {
+                    p.task = null;
+                }
+                if (p.canvas) freeCanvas(p.canvas);
+                p.canvas = canvas;
+                p.width = width;
+                p.el.appendChild(canvas);
+                return 'done';
+            }
+
+            function freeCanvas(canvas) {
+                // 크기를 0으로 만들어야 사파리가 canvas 메모리를 바로 돌려준다
+                canvas.width = 0;
+                canvas.height = 0;
+                canvas.remove();
+            }
+
+            function release(p) {
+                if (p.task) p.task.cancel();
+                if (p.canvas) {
+                    freeCanvas(p.canvas);
+                    p.canvas = null;
+                    p.width = 0;
+                }
+                // 이 페이지가 쓰던 글꼴·이미지 등 내부 자원도 놓는다 (한 번도 안 받은 페이지는 건드리지 않는다)
+                if (p.loaded) {
+                    p.loaded = false;
+                    pdfDoc.getPage(p.n).then((page) => page.cleanup());
+                }
+            }
+
+            const renderObserver = new IntersectionObserver((entries) => {
+                for (const e of entries) {
+                    const p = pages[e.target.dataset.index];
+                    if (e.isIntersecting) {
+                        p.near = true;
+                        render(p);
+                    }
+                }
+            }, { rootMargin: RENDER_MARGIN });
+
+            const releaseObserver = new IntersectionObserver((entries) => {
+                for (const e of entries) {
+                    const p = pages[e.target.dataset.index];
+                    if (!e.isIntersecting) {
+                        p.near = false;
+                        release(p);
+                    }
+                }
+            }, { rootMargin: RELEASE_MARGIN });
+
+            for (const p of pages) {
+                renderObserver.observe(p.el);
+                releaseObserver.observe(p.el);
+            }
+
+            // 모달 크기·화면 방향이 바뀌면 지금 그려진 페이지를 새 너비에 맞춰 다시 그린다
+            let resizeTimer;
+            new ResizeObserver(() => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    for (const p of pages) if (p.near) render(p);
+                    update();
+                }, 150);
+            }).observe(viewer);
+
+            // 화면에 가장 많이 보이는 페이지를 모달 머리줄(1 / N)에 알린다
+            let current = 0;
+            function update() {
+                let best = 1, most = 0;
+                for (const p of pages) {
+                    const r = p.el.getBoundingClientRect();
+                    if (r.bottom < 0 || r.top > innerHeight) continue;
+                    const visible = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0);
+                    if (visible > most) { most = visible; best = p.n; }
+                }
+                if (best !== current) {
+                    current = best;
+                    parent.postMessage({ type: 'pdf-page', page: best, total }, location.origin);
+                }
+            }
+            let ticking = false;
+            document.addEventListener('scroll', () => {
+                if (ticking) return;
+                ticking = true;
+                requestAnimationFrame(() => { ticking = false; update(); });
+            }, { capture: true, passive: true });
+            update();
         }
+
+        main().catch(fail);
     </script>
 </body>
 </html>
