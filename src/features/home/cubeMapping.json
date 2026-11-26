@@ -6,6 +6,6 @@
     "top":    {"keyword": "Data",     "top_left": "data_barchart.png",      "top_right": "data_python.png",          "bottom_left": "data_google-analytics.png", "bottom_right": "data_magnifier.png"},
     "bottom": {"keyword": "Teamwork", "top_left": "teamwork_handshake.svg", "top_right": "teamwork_notion.png",      "bottom_left": "teamwork_slack.png",        "bottom_right": "teamwork_people.svg"},
     "right":  {"keyword": "Network",  "top_left": "network_globe.svg",      "top_right": "network_linkedin.png",     "bottom_left": "network_kakaotalk.png",     "bottom_right": "network_link.svg"},
-    "left":   {"keyword": "Tech",     "top_left": "tech_laptop.svg",        "top_right": "tech_github.png",          "bottom_left": "tech_react.png",            "bottom_right": "tech_rocket.png"}
+    "left":   {"keyword": "Tech",     "top_left": "tech_laptop.svg",        "top_right": "tech_github.png",          "bottom_left": "tech_react.png",            "bottom_right": "tech_rocket.svg"}
   }
 }
