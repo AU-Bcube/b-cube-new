@@ -92,7 +92,6 @@ const baseFaceRotation: Record<Side, THREE.Euler> = {
 }
 
 const faces = cubeMapping.faces as Record<Side, FaceMapping>
-const pngName = (file: string) => `${file.replace(/\.[^.]+$/, '')}.png`
 
 function tileName(side: Side, [x, y, z]: Vec3) {
   const face = faces[side]
@@ -127,7 +126,7 @@ const solvedCubies: CubieState[] = ([-0.5, 0.5] as Layer[]).flatMap((x) =>
           (side): StickerData => ({
             cubieId: id,
             localFaceNormal: sideNormal[side],
-            iconFile: pngName(tileName(side, solvedPosition)),
+            iconFile: tileName(side, solvedPosition),
           }),
         )
       return {
@@ -182,7 +181,7 @@ function sideFromNormal(normal: THREE.Vector3): Side {
 
 function keywordForIcon(iconFile: string) {
   return (Object.keys(faces) as Side[]).find((side) =>
-    Object.values(faces[side]).some((value) => typeof value === 'string' && pngName(value) === iconFile),
+    Object.values(faces[side]).some((value) => typeof value === 'string' && value === iconFile),
   )
 }
 

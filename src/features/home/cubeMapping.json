@@ -1,11 +1,11 @@
 {
   "orientation_note": "각 면을 큐브 바깥에서 정면으로 바라본 기준. 윗면은 위에서 내려다보며 앞면이 아래쪽 변에 오도록, 아랫면은 아래에서 올려다보며 앞면이 위쪽 변에 오도록 본다.",
   "faces": {
-    "front":  {"keyword": "Product",  "top_left": "product_lightbulb.svg",  "top_right": "product_figma.svg",        "bottom_left": "product_jira.svg",          "bottom_right": "product_target.svg"},
-    "back":   {"keyword": "Content",  "top_left": "content_pencil.svg",     "top_right": "content_canva.svg",        "bottom_left": "content_instagram.svg",     "bottom_right": "content_clapperboard.svg"},
-    "top":    {"keyword": "Data",     "top_left": "data_barchart.svg",      "top_right": "data_python.svg",          "bottom_left": "data_google-analytics.svg", "bottom_right": "data_magnifier.svg"},
+    "front":  {"keyword": "Product",  "top_left": "product_lightbulb.svg",  "top_right": "product_figma.png",        "bottom_left": "product_jira.png",          "bottom_right": "product_target.svg"},
+    "back":   {"keyword": "Content",  "top_left": "content_pencil.png",     "top_right": "content_canva.png",        "bottom_left": "content_instagram.png",     "bottom_right": "content_clapperboard.svg"},
+    "top":    {"keyword": "Data",     "top_left": "data_barchart.png",      "top_right": "data_python.png",          "bottom_left": "data_google-analytics.png", "bottom_right": "data_magnifier.png"},
     "bottom": {"keyword": "Teamwork", "top_left": "teamwork_handshake.svg", "top_right": "teamwork_notion.png",      "bottom_left": "teamwork_slack.png",        "bottom_right": "teamwork_people.svg"},
     "right":  {"keyword": "Network",  "top_left": "network_globe.svg",      "top_right": "network_linkedin.png",     "bottom_left": "network_kakaotalk.png",     "bottom_right": "network_link.svg"},
-    "left":   {"keyword": "Tech",     "top_left": "tech_laptop.svg",        "top_right": "tech_github.svg",          "bottom_left": "tech_react.svg",            "bottom_right": "tech_rocket.svg"}
+    "left":   {"keyword": "Tech",     "top_left": "tech_laptop.svg",        "top_right": "tech_github.png",          "bottom_left": "tech_react.png",            "bottom_right": "tech_rocket.svg"}
   }
 }
